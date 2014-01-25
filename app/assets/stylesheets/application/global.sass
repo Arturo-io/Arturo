@@ -1,17 +1,18 @@
 body 
   line-height: 1.5em
+  h1,h2,h3,h4,h5
+    font-family: "adelle-sans"
   hr
     width: 75%
     margin-left: 12.5%
     margin-top: 2em
 
-  .splash 
-    font-family: "adelle-sans"
+  #splash 
     background-image: image-url('splash.jpg')
     background-size: cover
     color: #000
-    min-height: 30em
     max-width: none
+    padding-bottom: 5em
     h1
       color: #000
     ul
@@ -19,7 +20,9 @@ body
     img
       border: .3em solid #fff
       border-radius: .3em
-    .information
+    #information
       margin: 5em 5em
-  .features
+      .hidden
+        display: none
+  #features
     margin-top: 5em

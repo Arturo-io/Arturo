@@ -1,4 +1,4 @@
-  <div class="row splash">
+  <div class="row" id="splash">
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
         <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
@@ -6,24 +6,25 @@
 
       <section class="top-bar-section">
         <ul class="right">
-          <li class="has-form"><a href="#" class="button radius success">Sign Up</a></li>
-          <li class="has-form"><a href="#" class="button radius">Sign In</a></li>
+          <li class="has-form">
+            <a href="#" class="button radius alert">Authorize With Github</a>
+          </li>
         </ul>
 
       </section>
     </nav>
     
-    <div class="row information">
+    <div class="row" id="information">
       <div class="small-6 columns left">
         <h1>Arturo.io</h1>
         <h2>Tag line goes here</h2>
       </div>
 
       <div class="small-6 columns right">
-        <div class="small-6 columns">
+        <div class="small-6 columns hidden box">
           <%= image_tag("box1.jpg") %>
         </div>
-        <div class="small-6 columns">
+        <div class="small-6 columns hidden box">
           <%= image_tag("box2.jpg") %>
         </div>
       </div>
@@ -31,7 +32,7 @@
 
   </div>
 
-  <div class="row features">
+  <div class="row" id="features">
     <div class="small-4 columns">
       <h3>Github Integration</h3>
       Vel ex oblique voluptatum persequeris, ut has alii evertitur, ad pro posse vituperata. Reque dicunt quodsi ea mea, nam modus virtute aliquando in. Sea zril similique te. Quodsi volutpat no sit, eum id magna splendide complectitur. Eius lucilius liberavisse vix ut, quodsi utroque pro eu.
@@ -47,4 +48,47 @@
       Eu per omittam rationibus, veri natum volutpat cu per. Ad homero animal platonem vix, justo affert in vix
     </div>
   </div>
+
   <hr>
+  <div class="row" id="features">
+    <div class="small-4 columns">
+      <ul class="pricing-table">
+        <li class="title">Open Source</li>
+        <li class="price">Free</li>
+        <li class="description">An awesome description</li>
+        <li class="bullet-item">Unlimited <em>Public</em> Repos</li>
+        <li class="bullet-item">Unlimited Collaborators</li>
+        <li class="bullet-item">Unlimited Builds</li>
+      </ul> 
+    </div>
+ 
+    <div class="small-4 columns">
+      <ul class="pricing-table">
+        <li class="title">Solo</li>
+        <li class="price">$9.99</li>
+        <li class="description">An awesome description</li>
+        <li class="bullet-item">1 Private Repo</li>
+        <li class="bullet-item">Unlimited Public Repos</li>
+        <li class="bullet-item">Unlimited Builds</li>
+      </ul> 
+    </div>
+ 
+    <div class="small-4 columns">
+      <ul class="pricing-table">
+        <li class="title">Multi-pass</li>
+        <li class="price">$49.99</li>
+        <li class="description">An awesome description</li>
+        <li class="bullet-item">Unlimited Private Repo</li>
+        <li class="bullet-item">Unlimited Public Repos</li>
+        <li class="bullet-item">Unlimited Builds</li>
+      </ul> 
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row" id="signup">
+    <div class="small-4 small-centered columns">
+      <a href="#" class="button radius alert">Authorize With Github</a>
+    </div>
+  </div>
