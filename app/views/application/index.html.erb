@@ -15,12 +15,18 @@
     </nav>
     
     <div class="row" id="information">
-      <div class="small-6 columns left">
+      <div class="small-6 columns left hidden box">
         <h1>Arturo.io</h1>
         <h2>Tag line goes here</h2>
       </div>
 
-      <div class="small-6 columns right">
+      <div class="small-6 columns right show-for-small-up hide-for-large-only">
+        <div class="small-12 columns hidden box">
+          <%= image_tag("box1.jpg") %>
+        </div>
+      </div>
+
+      <div class="small-6 columns right show-for-large-up">
         <div class="small-6 columns hidden box">
           <%= image_tag("box1.jpg") %>
         </div>
@@ -31,6 +37,14 @@
     </div>
 
   </div>
+
+  <div class="row" id="tag-line">
+    <div class="small-4 medium-6 columns small-centered">
+      <h1>You'll love writing again!</h1>
+    </div>
+  </div>
+
+  <hr>
 
   <div class="row" id="features">
     <div class="small-4 columns">
