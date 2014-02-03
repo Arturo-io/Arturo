@@ -37,7 +37,7 @@
 // We use these to control various global styles
 // $body-bg: #fff;
 // $body-font-color: #222;
-$body-font-family: "adelle";
+$body-font-family: "proxima-nova";
 // $body-font-weight: normal;
 // $body-font-style: normal;
 
@@ -1012,7 +1012,7 @@ $font-smoothing: antialiased;
 // $include-html-top-bar-classes: $include-html-classes;
 
 // Background color for the top bar
-$topbar-bg-color: rgba(0,0,0,0);
+$topbar-bg-color: #EFEDDF;
 $topbar-bg: $topbar-bg-color;
 
 // Height and margin
@@ -1024,7 +1024,7 @@ $topbar-title-weight: bold;
 // $topbar-title-font-size: rem-calc(17);
 
 // Style the top bar dropdown elements
-$topbar-dropdown-bg: rgba(0,0,0,0);
+$topbar-dropdown-bg: #EFEDDF;
 $topbar-dropdown-link-color: #fff;
 // $topbar-dropdown-link-bg: #333;
 // $topbar-dropdown-link-weight: normal;

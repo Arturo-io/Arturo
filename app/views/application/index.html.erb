@@ -1,108 +1,119 @@
-  <div class="row" id="splash">
-    <nav class="top-bar" data-topbar>
-      <ul class="title-area">
-        <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
-      </ul>
-
-      <section class="top-bar-section">
-        <ul class="right">
-          <li class="has-form">
-            <a href="#" class="button radius alert">Authorize With Github</a>
-          </li>
+<header class="navigation contain-to-grid">
+  <div class="row">
+    <div class="small-6 left columns">
+      <h1 id="title">Arturo</h1>
+    </div>
+    <div class="small-6 right columns">
+      <nav class="top-bar" data-topbar>
+        <ul class="title-area">
+          <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
         </ul>
 
-      </section>
-    </nav>
-    
-    <div class="row" id="information">
-      <div class="small-6 columns left hidden box">
-        <h1>Arturo.io</h1>
-        <h2>Tag line goes here</h2>
-      </div>
+        <section class="top-bar-section">
+          <ul class="right">
+            <li class="has-form">
+              <a href="#" id="auth" class="button radius alert">Authorize With Github</a>
+            </li>
+            <li class="has-form">
+              <a href="#" id="signin" class="button radius">Sign In</a>
+            </li>
+          </ul>
 
-      <div class="small-6 columns right show-for-small-up hide-for-large-only">
-        <div class="small-12 columns hidden box">
-          <%= image_tag("box1.jpg") %>
+        </section>
+      </nav>
+
+    </div>
+  </div>
+</header>
+<section class="information">
+  <div class="row">
+    <div class="small-11 columns small-centered">
+      <h2 class="subheading">
+        Automate your publishing
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-6 columns">
+      <img src="http://placehold.it/650x350">
+    </div>
+    <div class="small-6 columns">
+      <div class="row">
+        <div class="small-12 columns">
+          <h3>
+            No sed quodsi gubergren efficiendi, mel mucius facilisi id. Ferri fabellas dissentiet has ex. Vel ei omnis dolore verterem, sit expetendis moderatius inciderint ex
+          </h3>
         </div>
       </div>
+      <div class="row auth-button">
+        <a href="#" id="auth" class="button radius alert">Authorize With Github</a>
+      </div>
+    </div>
+  </div>
 
-      <div class="small-6 columns right show-for-large-up">
-        <div class="small-6 columns hidden box">
-          <%= image_tag("box1.jpg") %>
+</section>
+<hr>
+<section class="moreinfo">
+  <div class="row">
+    <div class="small-6 small-centered columns">
+      <h3 class="subheading"> 
+        Some other line here
+      </h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-4 columns feature">
+      <div class="row image">
+        <img src="http://placehold.it/100x100">
+      </div>
+      <div class="row">
+        <div class="small-12 columns">
+          <h3>Automatic Publish</h3>
         </div>
-        <div class="small-6 columns hidden box">
-          <%= image_tag("box2.jpg") %>
+      </div>
+      <div class="row">
+        <div class="small-12 columns description">
+          No sed quodsi gubergren efficiendi, mel mucius facilisi id
+          No sed quodsi gubergren efficiendi, mel mucius facilisi id
         </div>
       </div>
     </div>
 
-  </div>
+    <div class="small-4 columns feature">
+      <div class="row image">
+        <img src="http://placehold.it/100x100">
+      </div>
+      <div class="row">
+        <div class="small-12 columns">
+          <h3>Automatic Publish</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-12 columns description">
+          No sed quodsi gubergren efficiendi, mel mucius facilisi id
+          No sed quodsi gubergren efficiendi, mel mucius facilisi id
+        </div>
+      </div>
+    </div>
 
-  <div class="row" id="tag-line">
-    <div class="small-4 medium-6 columns small-centered">
-      <h1>You'll love writing again!</h1>
+    <div class="small-4 columns feature">
+      <div class="row image">
+        <img src="http://placehold.it/100x100">
+      </div>
+      <div class="row">
+        <div class="small-12 columns">
+          <h3>Automatic Publish</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-12 columns description">
+          No sed quodsi gubergren efficiendi, mel mucius facilisi id
+          No sed quodsi gubergren efficiendi, mel mucius facilisi id
+        </div>
+      </div>
     </div>
   </div>
-
-  <hr>
-
-  <div class="row" id="features">
-    <div class="small-4 columns">
-      <h3>Github Integration</h3>
-      Vel ex oblique voluptatum persequeris, ut has alii evertitur, ad pro posse vituperata. Reque dicunt quodsi ea mea, nam modus virtute aliquando in. Sea zril similique te. Quodsi volutpat no sit, eum id magna splendide complectitur. Eius lucilius liberavisse vix ut, quodsi utroque pro eu.
-    </div>
-
-    <div class="small-4 columns">
-      <h3>Automatic Builds</h3>
-      Evertitur interpretaris cu usu, sit omnes alterum at, explicari splendide vel te. Cu per choro definitiones, id solum choro eam. Ad has latine equidem accusamus, pericula argumentum referrentur ne vis, error dicam cu eos. Cu pri omnes dicam quidam
-    </div>
-
-    <div class="small-4 columns">
-      <h3>Multiple Outputs</h3>
-      Eu per omittam rationibus, veri natum volutpat cu per. Ad homero animal platonem vix, justo affert in vix
-    </div>
-  </div>
-
-  <hr>
-  <div class="row" id="features">
-    <div class="small-4 columns">
-      <ul class="pricing-table">
-        <li class="title">Open Source</li>
-        <li class="price">Free</li>
-        <li class="description">An awesome description</li>
-        <li class="bullet-item">Unlimited <em>Public</em> Repos</li>
-        <li class="bullet-item">Unlimited Collaborators</li>
-        <li class="bullet-item">Unlimited Builds</li>
-      </ul> 
-    </div>
- 
-    <div class="small-4 columns">
-      <ul class="pricing-table">
-        <li class="title">Solo</li>
-        <li class="price">$9.99</li>
-        <li class="description">An awesome description</li>
-        <li class="bullet-item">1 Private Repo</li>
-        <li class="bullet-item">Unlimited Public Repos</li>
-        <li class="bullet-item">Unlimited Builds</li>
-      </ul> 
-    </div>
- 
-    <div class="small-4 columns">
-      <ul class="pricing-table">
-        <li class="title">Multi-pass</li>
-        <li class="price">$49.99</li>
-        <li class="description">An awesome description</li>
-        <li class="bullet-item">Unlimited Private Repo</li>
-        <li class="bullet-item">Unlimited Public Repos</li>
-        <li class="bullet-item">Unlimited Builds</li>
-      </ul> 
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row" id="signup">
-    <div class="small-4 small-centered columns">
-      <a href="#" class="button radius alert">Authorize With Github</a>
-    </div>
-  </div>
+</section>
+<hr>
