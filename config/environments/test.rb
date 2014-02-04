@@ -33,4 +33,6 @@ Arturo::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+  config.github_key    = 'none'
+  config.github_secret = 'none'
 end

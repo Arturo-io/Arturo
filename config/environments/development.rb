@@ -26,4 +26,6 @@ Arturo::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  config.github_key    = ENV['GITHUB_KEY']    || '65279e1360471fcf2d73'
+  config.github_secret = ENV['GITHUB_SECRET'] || '9867ebd1f13ab22316d67293e7f85ffa7c289dd0'
 end
