@@ -6,5 +6,8 @@ Arturo::Application.routes.draw do
 
   get '/user/logout',  to: 'user#logout'
 
-  get '/dashboard', to: 'dashboard#show'
+  get '/dashboard', to: 'dashboard#index'
+
+  get '/builds', to: 'builds#index'
+  get '/repositories', to: 'repositories#index'
 end

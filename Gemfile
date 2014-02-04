@@ -13,10 +13,12 @@ gem 'sqlite3'
 
 gem 'omniauth'
 gem 'omniauth-github'
+gem 'octokit'
 
 group :development, :test do
   gem 'dotenv-rails'
   gem 'rspec-rails'
+  gem 'pry'
 end
 group :production do
   gem 'rails_12factor'
