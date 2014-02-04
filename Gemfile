@@ -8,8 +8,11 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'
 gem 'unicorn'
-gem 'foundation-rails'
 gem 'sqlite3'
+
+gem 'foundation-rails'
+gem 'font-awesome-rails'
+gem 'rails-timeago'
 
 gem 'omniauth'
 gem 'omniauth-github'
@@ -20,6 +23,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
 end
+
 group :production do
   gem 'rails_12factor'
 end

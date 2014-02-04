@@ -1,5 +1,31 @@
-<div class="row">
+<div class="row repositories">
   <div class="small-12 columns">
     <h1>Repositories</h1>
+    <div class="small-11 left">
+      Repository list was last update from github <em><%= timeago_tag @repositories.first.updated_at %></em> ago.
+    </div>
+    <div class="small-1 right">
+      <A href="repositories/refresh">Sync</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Description</th>
+          <th>Hooks</th>
+          <th>Build</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @repositories.each do |repository| %> 
+        <tr class="repository">
+          <td class="name"><a href="#"><%= repository.name %></a></td>
+          <td class="description"><%= repository.description %></td>
+          <td class="hooks"><a href="#"><%= fa_icon('wrench') %></a></td>
+          <td class="toggle"><a href="#">On</a></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
