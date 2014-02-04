@@ -4,5 +4,7 @@ Arturo::Application.routes.draw do
   get '/user/login/callback',  to: 'omniauth_github#callback'
   get '/auth/github/callback', to: 'omniauth_github#callback'
 
+  get '/user/logout',  to: 'user#logout'
+
   get '/dashboard', to: 'dashboard#show'
 end
