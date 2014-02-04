@@ -12,8 +12,37 @@
   </head>
 
   <body>
+      <header class="navigation contain-to-grid">
+        <div class="row">
+          <div class="small-6 left columns">
+            <h1 id="title">Arturo</h1>
+          </div>
+          <div class="small-6 right columns">
+            <nav class="top-bar" data-topbar>
+              <ul class="title-area">
+                <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+              </ul>
 
-    <%= yield %>
+              <section class="top-bar-section">
+                <ul class="right">
+                  <li class="has-form">
+                    <a href="/user/settings">Settings</a>
+                  </li>
+                  <li class="has-form">
+                    <a href="/user/logout">Logout</a>
+                  </li>
+                </ul>
+
+              </section>
+            </nav>
+
+          </div>
+        </div>
+      </header>
+      <%= render "shared/flash" %>
+      <section class="content">
+        <%= yield %>
+      </section>
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "homepage" %>
     <script type="text/javascript" src="//use.typekit.net/jov4cdg.js"></script>

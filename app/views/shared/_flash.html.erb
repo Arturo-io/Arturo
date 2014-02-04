@@ -1,0 +1,13 @@
+<% flashes = {:notice => 'success', :alert => 'standard', :error => 'alert', :secondary => 'secondary'} %>
+<% flashes.each do |key, value| %>
+  <% if flash[key] %>
+  <div class="row">
+    <div class="small-12 columns centered flash-message">
+      <div data-alert class="alert-box radius <%= key %>">
+        <%= flash[key] %>
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+  </div>
+  <% end %>
+<% end %>

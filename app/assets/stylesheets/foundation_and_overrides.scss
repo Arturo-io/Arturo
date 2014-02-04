@@ -1025,7 +1025,7 @@ $topbar-title-weight: bold;
 
 // Style the top bar dropdown elements
 $topbar-dropdown-bg: #EFEDDF;
-$topbar-dropdown-link-color: #fff;
+$topbar-dropdown-link-color: #EFEDDF;
 // $topbar-dropdown-link-bg: #333;
 // $topbar-dropdown-link-weight: normal;
 // $topbar-dropdown-toggle-size: 5px;
@@ -1033,9 +1033,9 @@ $topbar-dropdown-link-color: #fff;
 // $topbar-dropdown-toggle-alpha: 0.4;
 
 // Set the link colors and styles for top-level nav
-$topbar-link-color: #fff;
-$topbar-link-color-hover: #fff;
-$topbar-link-color-active: #fff;
+$topbar-link-color: #007dce;
+$topbar-link-color-hover: #007dce;
+$topbar-link-color-active: #007dce;
 // $topbar-link-weight: normal;
 // $topbar-link-font-size: rem-calc(13);
 // $topbar-link-hover-lightness: -10%; // Darken by 10%
