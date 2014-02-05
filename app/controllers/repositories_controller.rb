@@ -3,5 +3,6 @@ class RepositoriesController < ApplicationController
 
   def index
     @repositories = Repo.where(user: current_user)
+                        .page(params[:page]).per(25)
   end
 end

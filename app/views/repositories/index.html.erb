@@ -2,10 +2,10 @@
   <div class="small-12 columns">
     <h1>Repositories</h1>
     <div class="small-11 left">
-      Repository list was last update from github <em><%= timeago_tag @repositories.first.updated_at %></em> ago.
+      Repository list was last update from github <em><%= timeago_tag Time.now %></em> ago.
     </div>
     <div class="small-1 right">
-      <A href="repositories/refresh">Sync</a>
+      <a class="button secondary radius tiny" href="repositories/sync">Sync</a>
     </div>
     <table>
       <thead>
@@ -27,5 +27,8 @@
       <% end %>
       </tbody>
     </table>
+    <div class="small-3 right">
+      <%= paginate @repositories %>
+    </div>
   </div>
 </div>

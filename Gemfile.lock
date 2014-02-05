@@ -59,6 +59,9 @@ GEM
     json (1.8.1)
     jwt (0.1.11)
       multi_json (>= 1.5)
+    kaminari (0.15.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.8.1)
     libv8 (3.16.14.3)
     mail (2.5.4)
@@ -180,6 +183,7 @@ DEPENDENCIES
   font-awesome-rails
   foundation-rails
   jquery-rails
+  kaminari
   octokit
   omniauth
   omniauth-github

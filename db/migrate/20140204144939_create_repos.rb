@@ -1,7 +1,7 @@
 class CreateRepos < ActiveRecord::Migration
   def change
     create_table :repos do |t|
-      t.integer :user_id
+      t.belongs_to :user
       t.string  :name
       t.string  :full_name
       t.boolean :private

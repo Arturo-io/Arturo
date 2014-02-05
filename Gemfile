@@ -13,6 +13,7 @@ gem 'sqlite3'
 gem 'foundation-rails'
 gem 'font-awesome-rails'
 gem 'rails-timeago'
+gem 'kaminari'
 
 gem 'omniauth'
 gem 'omniauth-github'
