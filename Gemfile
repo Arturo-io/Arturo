@@ -21,9 +21,14 @@ gem 'octokit'
 gem 'sidekiq'
 
 group :development, :test do
+  gem 'sinatra'
   gem 'dotenv-rails'
   gem 'rspec-rails'
   gem 'pry'
+end
+
+group :test do
+  gem 'rspec-sidekiq'
 end
 
 group :production do

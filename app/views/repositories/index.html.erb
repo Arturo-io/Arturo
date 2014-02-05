@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="small-12 columns">
-        Repository list was last update from github <em><%= timeago_tag @repositories.first.updated_at %></em>.
+        Repository list was last update from github <em><%= timeago_tag @last_updated %></em>.
         <a class="button secondary radius tiny sync right" href="repositories/sync">Sync</a>
       </div>
     </div>
