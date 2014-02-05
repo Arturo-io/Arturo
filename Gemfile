@@ -18,6 +18,7 @@ gem 'kaminari'
 gem 'omniauth'
 gem 'omniauth-github'
 gem 'octokit'
+gem 'sidekiq'
 
 group :development, :test do
   gem 'dotenv-rails'
