@@ -8,37 +8,11 @@
     <div class="row">
       <div class="small-12 columns">
         Repository list was last update from github <em><%= timeago_tag @last_updated %></em>.
-        <a class="button secondary radius tiny sync right" href="repositories/sync">Sync</a>
+        <a class="button secondary radius tiny sync right" href="repositories/sync">
+          <%= fa_icon(@sync_icon) %> Sync
+        </a>
       </div>
     </div>
-    <div class="row">
-      <div class="small-12 columns">
-        <table>
-          <thead>
-            <tr>
-              <th>Repository</th>
-              <th>Description</th>
-              <th>Hooks</th>
-              <th>Build</th>
-            </tr>
-          </thead>
-          <tbody>
-          <% @repositories.each do |repository| %> 
-            <tr class="repository">
-              <td class="name"><a href="#"><%= repository.name %></a></td>
-              <td class="description"><%= repository.description %></td>
-              <td class="hooks"><a href="#"><%= fa_icon('wrench') %></a></td>
-              <td class="toggle"><a href="#">On</a></td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-6 small-centered columns">
-        <%= paginate @repositories %>
-      </div>
-    </div>
+    <%= render(@partial) %> 
   </div>
 </div>

@@ -1,0 +1,34 @@
+    <div class="row">
+      <div class="small-12 columns">
+        <table>
+          <thead>
+            <tr>
+              <th>Repository</th>
+              <th>Description</th>
+              <th>Hooks</th>
+              <th>Build</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @repositories.each do |repository| %> 
+            <tr class="repository">
+              <td class="name"><a href="#"><%= repository.name %></a></td>
+              <td class="description"><%= repository.description %></td>
+              <td class="hooks"><a href="#"><%= fa_icon('wrench') %></a></td>
+              <td class="toggle">
+                <a href="#">
+                  <%= repository.follow ? fa_icon('check-square') : fa_icon('minus-square') %>
+                </a>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 small-centered columns">
+        <%= paginate @repositories %>
+      </div>
+    </div>
+
