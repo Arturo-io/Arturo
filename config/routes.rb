@@ -8,10 +8,10 @@ Arturo::Application.routes.draw do
 
   get '/dashboard', to: 'dashboard#index'
 
-  get '/builds', to: 'builds#index'
+  get '/builds', to: 'build#index'
 
-  get '/repositories',      to: 'repositories#index'
-  get '/repositories/sync', to: 'repositories#sync'
+  get '/repositories',      to: 'repository#index'
+  get '/repositories/sync', to: 'repository#sync'
 
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq'

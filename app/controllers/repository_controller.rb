@@ -1,4 +1,4 @@
-class RepositoriesController < ApplicationController
+class RepositoryController < ApplicationController
   protect_from_forgery with: :exception
 
   def sync

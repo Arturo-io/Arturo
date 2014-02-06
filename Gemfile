@@ -9,6 +9,7 @@ gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'
 gem 'unicorn'
 gem 'sqlite3'
+gem 'turbolinks'
 
 gem 'foundation-rails'
 gem 'font-awesome-rails'

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RepositoriesController do
+describe RepositoryController do
   before do 
     create_user(id: 42)
     session[:user_id] = 42
