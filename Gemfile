@@ -8,7 +8,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'
 gem 'unicorn'
-gem 'sqlite3'
+gem 'pg'
 
 gem 'foundation-rails', '~> 5.0.0'
 gem 'font-awesome-rails'
