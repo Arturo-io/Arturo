@@ -18,7 +18,7 @@ class RepositoryController < ApplicationController
   def index
     @repositories = Repo.where(user: current_user)
                         .page(params[:page]).per(25)
-    @last_updated = Time.now
+    @last_updated = current_user[:last_sync_at]
 
     @partial      = @repositories.empty? ? 'no_repos' : 'repo_list'
     @sync_icon    = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'

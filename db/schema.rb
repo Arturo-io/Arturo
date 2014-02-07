@@ -45,9 +45,10 @@ ActiveRecord::Schema.define(version: 20140204144939) do
     t.string   "auth_token"
     t.string   "image_url"
     t.string   "role"
+    t.string   "login"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "login"
+    t.datetime "last_sync_at"
     t.boolean  "loading_repos", default: false
   end
 

@@ -12,6 +12,13 @@ describe RepoSyncWorker do
     expect(RepoSyncWorker).to have(1).job
   end
 
+  it 'sets last_sync_at on user to true' do
+    Time.stub(:now).and_return(112233)
+    User.any_instance.should_receive(:last_sync_at=).with(112233)
+    Github::Repo.stub(:sync)
+    RepoSyncWorker.new.perform(42)
+  end
+
   it 'sets loading_repo on user to true' do
     User.any_instance.should_receive(:loading_repos=).with(false)
     Github::Repo.stub(:sync)
