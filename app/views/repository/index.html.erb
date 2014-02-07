@@ -6,8 +6,12 @@
       </div>
     </div>
     <div class="row">
-      <div class="small-12 columns">
-        Repository list was last update from github <em><%= timeago_tag @last_updated %></em>.
+      <div class="small-9 columns">
+        <div class="information">
+          Repository list was last update from github <em><%= timeago_tag @last_updated %></em>.
+        </div>
+      </div>
+      <div class="small-3 columns">
         <a class="button secondary radius tiny sync right" href="repositories/sync">
           <%= fa_icon(@sync_icon) %> Sync
         </a>
