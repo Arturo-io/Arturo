@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20140204144939) do
     t.string   "name"
     t.string   "full_name"
     t.boolean  "private"
-    t.string   "description"
+    t.text     "description"
     t.integer  "github_id"
     t.integer  "github_user_id"
     t.boolean  "fork"
