@@ -27,14 +27,16 @@ class RepositoryController < ApplicationController
   end
 
   def follow
-    authorize_action_for(Repo.find(params[:id]))
+    repo = Repo.find(params[:id])
+    authorize_action_for repo
 
-    Follower.create(user: current_user, repo_id: params[:id])
-    redirect_to repositories_path
+    Follower.create(user: current_user, repo: repo)
+    redirect_to repositories_path, notice: "You are now following #{repo.name}"
   end
 
   def unfollow
-    Follower.where(user: current_user, repo_id: params[:id]).first.destroy
-    redirect_to repositories_path
+    repo = Repo.find(params[:id])
+    Follower.where(user: current_user, repo: repo).first.destroy
+    redirect_to repositories_path, notice: "You are no longer following #{repo.name}"
   end
 end

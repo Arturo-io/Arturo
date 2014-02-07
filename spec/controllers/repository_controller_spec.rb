@@ -128,6 +128,18 @@ describe RepositoryController do
       expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(0)
     end
 
+    it 'has a notice for a follow' do
+      put :follow, id: 99
+      expect(flash[:notice]).to match /test/
+    end
+
+    it 'has a notice for a follow' do
+      Follower.create(user_id: 42, repo_id: 99)
+
+      delete :unfollow, id: 99
+      expect(flash[:notice]).to match /test/
+    end
+
     it 'can unfollow a repo' do
       Follower.create(user_id: 42, repo_id: 99)
 
