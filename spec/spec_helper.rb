@@ -24,3 +24,7 @@ def create_user(options = {})
   }.merge(options)
   User.create(options)
 end
+
+Authority.configure do |config|
+  config.logger = Logger.new('/dev/null')
+end

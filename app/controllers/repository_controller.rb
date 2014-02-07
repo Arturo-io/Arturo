@@ -1,6 +1,10 @@
 class RepositoryController < ApplicationController
   protect_from_forgery with: :exception
 
+  before_filter :check_login
+  authority_actions follow: :read, unfollow: :read, sync: :read
+  authorize_actions_for ApplicationAuthorizer
+
   def sync
     if(current_user[:loading_repos])
       redirect_to repositories_path, alert: 'Sync already in progress'
@@ -23,6 +27,8 @@ class RepositoryController < ApplicationController
   end
 
   def follow
+    authorize_action_for(Repo.find(params[:id]))
+
     Follower.create(user: current_user, repo_id: params[:id])
     redirect_to repositories_path
   end

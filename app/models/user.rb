@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include Authority::UserAbilities
+
   has_many :repos
   has_many :followers
 

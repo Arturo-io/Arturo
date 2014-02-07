@@ -28,6 +28,9 @@ GEM
     addressable (2.3.5)
     arel (4.0.2)
     atomic (1.1.14)
+    authority (2.9.0)
+      activesupport (>= 3.0.0)
+      rake (>= 0.8.7)
     builder (3.1.4)
     celluloid (0.15.2)
       timers (~> 1.1.0)
@@ -197,6 +200,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  authority
   dotenv-rails
   font-awesome-rails
   foundation-rails (~> 5.0.0)

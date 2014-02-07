@@ -6,6 +6,17 @@ describe RepositoryController do
     session[:user_id] = 42
   end
 
+  context '#check_login' do
+    it 'requires a user to be logged in' do
+      session[:user_id] = nil
+      get :sync;  assert_response :forbidden
+      get :index; assert_response :forbidden
+
+      get :follow,   id: 1; assert_response :forbidden
+      get :unfollow, id: 1; assert_response :forbidden
+    end
+  end
+
   context '#sync' do
     it 'sets the users loading_repos to true' do
       get :sync
@@ -34,6 +45,7 @@ describe RepositoryController do
       get :sync
       assert_redirected_to repositories_path
     end
+
   end
 
   context '#index' do
@@ -100,12 +112,20 @@ describe RepositoryController do
 
   context 'follow/unfollow'  do
     before do
+      create_user(id: 41)
       Repo.create(id: 99, user_id: 42, name: 'test')
+      Repo.create(id: 11, user_id: 41, name: 'test')
     end
 
     it 'can follow a repo' do
       put :follow, id: 99 
       expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(1)
+    end
+
+    it 'cant follow someone elses repo' do
+      put :follow, id: 11 
+      assert_response :forbidden
+      expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(0)
     end
 
     it 'can unfollow a repo' do

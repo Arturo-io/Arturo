@@ -20,6 +20,8 @@ gem 'omniauth-github'
 gem 'octokit'
 gem 'sidekiq'
 
+gem 'authority'
+
 group :development, :test do
   gem 'sinatra'
   gem 'dotenv-rails'
