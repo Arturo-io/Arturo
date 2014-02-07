@@ -18,7 +18,9 @@ Arturo::Application.routes.draw do
   end
 
 
-  require 'sidekiq/web'
-  mount Sidekiq::Web, at: '/sidekiq'
+  if(Rails.env.development?) 
+    require 'sidekiq/web'
+    mount Sidekiq::Web, at: '/sidekiq'
+  end
 
 end
