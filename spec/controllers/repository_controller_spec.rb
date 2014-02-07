@@ -7,7 +7,6 @@ describe RepositoryController do
   end
 
   context '#sync' do
-
     it 'sets the users loading_repos to true' do
       get :sync
       user = User.find(42)
@@ -38,10 +37,7 @@ describe RepositoryController do
   end
 
   context '#index' do
-
-
     render_views
-
     it 'renders a no repos template when repos are empty' do
       get :index
       expect(response).to render_template('_no_repos')
@@ -80,5 +76,52 @@ describe RepositoryController do
       repos = assigns(:repositories) 
       expect(repos.count).to eq(25)
     end
+    
+    context 'followers' do
+      it 'assigns a list of repo ids that are being followed' do
+        Repo.create(id: 99, user_id: 42, name: 'test')
+        Follower.create(user_id: 42, repo_id: 99)
+
+        get :index
+        following = assigns(:following)
+        expect(following).not_to be_nil
+
+        expect(following.include?(99)).to eq(true)
+      end
+
+      it 'assigns an empty array when nothing is followed' do
+        get :index
+        following = assigns(:following)
+        expect(following).to eq([])
+      end
+
+    end
   end
+
+  context 'follow/unfollow'  do
+    before do
+      Repo.create(id: 99, user_id: 42, name: 'test')
+    end
+
+    it 'can follow a repo' do
+      put :follow, id: 99 
+      expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(1)
+    end
+
+    it 'can unfollow a repo' do
+      Follower.create(user_id: 42, repo_id: 99)
+
+      delete :unfollow, id: 99 
+      expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(0)
+    end
+
+    it 'redirects after a follow and unfollow' do
+      put :follow, id: 99 
+      assert_redirected_to repositories_path
+
+      delete :unfollow, id: 99 
+      assert_redirected_to repositories_path
+    end
+  end
+
 end

@@ -14,8 +14,21 @@ class RepositoryController < ApplicationController
   def index
     @repositories = Repo.where(user: current_user)
                         .page(params[:page]).per(25)
-    @partial   = @repositories.empty? ? 'no_repos' : 'repo_list'
-    @sync_icon = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'
     @last_updated = Time.now
+
+    @partial      = @repositories.empty? ? 'no_repos' : 'repo_list'
+    @sync_icon    = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'
+
+    @following    = Follower.where(user: current_user).map(&:repo_id)
+  end
+
+  def follow
+    Follower.create(user: current_user, repo_id: params[:id])
+    redirect_to repositories_path
+  end
+
+  def unfollow
+    Follower.where(user: current_user, repo_id: params[:id]).first.destroy
+    redirect_to repositories_path
   end
 end

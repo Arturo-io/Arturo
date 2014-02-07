@@ -11,14 +11,12 @@
           </thead>
           <tbody>
           <% @repositories.each do |repository| %> 
-            <tr class="repository">
+              <tr class="repository">
               <td class="name"><a href="#"><%= repository.name %></a></td>
               <td class="description"><%= repository.description %></td>
               <td class="hooks"><a href="#"><%= fa_icon('wrench') %></a></td>
               <td class="toggle">
-                <a href="#">
-                  <%= repository.follow ? fa_icon('check-square') : fa_icon('minus-square') %>
-                </a>
+                <%= following_link(@following, repository) %>
               </td>
             </tr>
           <% end %>

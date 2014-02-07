@@ -1,17 +1,22 @@
 Arturo::Application.routes.draw do
   root to: 'homepage#index'
 
-  get '/user/login/callback',  to: 'omniauth_github#callback'
   get '/auth/github/callback', to: 'omniauth_github#callback'
-
-  get '/user/logout',  to: 'user#logout'
-
   get '/dashboard', to: 'dashboard#index'
-
   get '/builds', to: 'build#index'
 
-  get '/repositories',      to: 'repository#index'
-  get '/repositories/sync', to: 'repository#sync'
+  scope '/user', as: :user do
+    get '/logout',          to: 'user#logout'
+    get '/login/callback',  to: 'omniauth_github#callback'
+  end
+
+  scope '/repositories', as: :repositories do
+    get    '/',           to: 'repository#index'
+    get    '/sync',       to: 'repository#sync'
+    put    '/:id/follow', to: 'repository#follow',   as: :follow
+    delete '/:id/follow', to: 'repository#unfollow', as: :unfollow 
+  end
+
 
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq'

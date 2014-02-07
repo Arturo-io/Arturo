@@ -13,9 +13,14 @@
 
 ActiveRecord::Schema.define(version: 20140204144939) do
 
+  create_table "followers", force: true do |t|
+    t.integer "user_id"
+    t.integer "repo_id"
+    t.boolean "following", default: true
+  end
+
   create_table "repos", force: true do |t|
     t.integer  "user_id"
-    t.boolean  "follow",         default: false
     t.string   "name"
     t.string   "full_name"
     t.boolean  "private"
