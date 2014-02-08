@@ -31,12 +31,14 @@ class RepositoryController < ApplicationController
     authorize_action_for repo
 
     Follower.create(user: current_user, repo: repo)
+    GithubCreateHookWorker.perform_async(repo[:id])
     redirect_to repositories_path, notice: "You are now following #{repo.name}"
   end
 
   def unfollow
     repo = Repo.find(params[:id])
     Follower.where(user: current_user, repo: repo).first.destroy
+    GithubRemoveHookWorker.perform_async(repo[:id])
     redirect_to repositories_path, notice: "You are no longer following #{repo.name}"
   end
 end

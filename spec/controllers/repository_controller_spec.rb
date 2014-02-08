@@ -120,6 +120,18 @@ describe RepositoryController do
     it 'can follow a repo' do
       put :follow, id: 99 
       expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(1)
+
+    end
+    it 'creates a job for removing a hook on unfollow' do
+      Follower.create(user_id: 42, repo_id: 99)
+
+      delete :unfollow, id: 99
+      expect(GithubRemoveHookWorker).to have(1).job
+    end
+
+    it 'creates a job for adding a hook on follow' do
+      put :follow, id: 99
+      expect(GithubCreateHookWorker).to have(1).job
     end
 
     it 'cant follow someone elses repo' do
