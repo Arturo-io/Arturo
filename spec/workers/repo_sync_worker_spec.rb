@@ -30,7 +30,7 @@ describe RepoSyncWorker do
   end
 
   it 'sends a Pusher notification' do
-    user_channel = User.find(42).digest
+    user_channel = "#{User.find(42).digest}-repositories"
 
     Pusher.should_receive(:trigger) do |channel, event, message|
       expect(channel).to eq(user_channel) 
