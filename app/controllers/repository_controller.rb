@@ -24,7 +24,7 @@ class RepositoryController < ApplicationController
     @sync_icon    = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'
 
     @following    = Follower.where(user: current_user).map(&:repo_id)
-    @pusher_channel = current_user.digest
+    @pusher_channel = "#{current_user.digest}-repositories"
   end
 
   def follow
