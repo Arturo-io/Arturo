@@ -22,6 +22,7 @@ gem 'sidekiq'
 
 gem 'authority'
 gem 'pusher'
+gem 'intercom-rails', '~> 0.2.24'
 
 group :development, :test do
   gem 'sinatra'
