@@ -7,6 +7,10 @@ class User < ActiveRecord::Base
   validates_presence_of   :uid, :provider, :name, :auth_token
   validates_uniqueness_of :uid
 
+  def digest
+    Digest::MD5.hexdigest("#{login}#{uid}")
+  end
+
   def update_from_omniauth(auth = {})
     token = auth['credentials'] && auth['credentials']['token']
     return unless token

@@ -14,6 +14,6 @@
 //= require jquery_ujs
 //= require foundation
 //= require rails-timeago
-//= require_tree .
+//= require pusher.min
 
 $(function(){ $(document).foundation(); });

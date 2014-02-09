@@ -21,6 +21,7 @@ gem 'octokit'
 gem 'sidekiq'
 
 gem 'authority'
+gem 'pusher'
 
 group :development, :test do
   gem 'sinatra'

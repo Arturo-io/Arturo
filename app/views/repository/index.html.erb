@@ -20,3 +20,13 @@
     <%= render(@partial) %> 
   </div>
 </div>
+
+<script type="text/javascript"<>
+  $(document).ready(function(){
+    var pusher  = new Pusher("<%= Rails.configuration.pusher_key %>");
+    var channel = pusher.subscribe('<%= @pusher_channel %>');
+    channel.bind('sync_complete', function(data) {
+      if(data.completed) location.reload();
+    });
+  });
+</script>

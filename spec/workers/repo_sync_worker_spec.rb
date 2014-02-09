@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe RepoSyncWorker do
-  before { create_user(id: 42) }
+  before do
+    create_user(id: 42)
+    Pusher.stub(:trigger)
+  end
+
   it 'calls sync on Github::Repo' do
     Github::Repo.should_receive(:sync).with(42)
     RepoSyncWorker.new.perform(42)
@@ -21,6 +25,19 @@ describe RepoSyncWorker do
 
   it 'sets loading_repo on user to true' do
     User.any_instance.should_receive(:loading_repos=).with(false)
+    Github::Repo.stub(:sync)
+    RepoSyncWorker.new.perform(42)
+  end
+
+  it 'sends a Pusher notification' do
+    user_channel = User.find(42).digest
+
+    Pusher.should_receive(:trigger) do |channel, event, message|
+      expect(channel).to eq(user_channel) 
+      expect(event).to eq('sync_complete')
+      expect(message).to eq({completed: true})
+    end
+
     Github::Repo.stub(:sync)
     RepoSyncWorker.new.perform(42)
   end

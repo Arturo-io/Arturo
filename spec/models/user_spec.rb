@@ -2,6 +2,25 @@ require 'spec_helper'
 
 describe User do
 
+  context '#digest' do
+    it 'can create a hash of the username' do
+      create_user(id: 1234, login: "some_user", uid: "uid")
+
+      user = User.find(1234)
+      expect(user.digest).to eq('d64db13b5eae78bc43093ad0b9cb9f35')
+    end
+
+    it 'changes the hash when the login changes' do
+      create_user(id: 1234, login: "some_user", uid: "uid")
+
+      user   = User.find(1234)
+      original_digest = user.digest
+      user.uid   = "Test"
+      user.login = "some_other_user"
+      expect(original_digest).not_to eq(user.digest)
+    end
+  end
+
   context '#create_with_omniauth' do
     it 'creates a user with a given auth hash' do
       auth = {

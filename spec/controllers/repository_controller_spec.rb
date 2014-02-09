@@ -67,6 +67,11 @@ describe RepositoryController do
       assert_not_nil assigns(:repositories)
     end
 
+    it 'assigns a pusher channel' do
+      get :index
+      assert_not_nil assigns(:pusher_channel)
+    end
+
     it 'only gets the current signed in users repositories' do
       create_user(id: 43)
 

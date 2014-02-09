@@ -35,4 +35,8 @@ Arturo::Application.configure do
   config.active_support.deprecation = :stderr
   config.github_key    = 'none'
   config.github_secret = 'none'
+
+  config.pusher_app_id = 'none'
+  config.pusher_key    = 'none'
+  config.pusher_secret = 'none'
 end

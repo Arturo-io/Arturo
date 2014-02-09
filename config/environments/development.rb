@@ -28,4 +28,8 @@ Arturo::Application.configure do
   config.assets.debug = true
   config.github_key    = ENV['GITHUB_KEY']    || '65279e1360471fcf2d73'
   config.github_secret = ENV['GITHUB_SECRET'] || '9867ebd1f13ab22316d67293e7f85ffa7c289dd0'
+
+  config.pusher_app_id = ENV['PUSHER_APP_ID'] || '65611'
+  config.pusher_key    = ENV['PUSHER_KEY']    || '3f0c6e069a53455c4c74'
+  config.pusher_secret = ENV['PUSHER_SECRET'] || 'c22d241a491bdbc7e0b6'
 end
