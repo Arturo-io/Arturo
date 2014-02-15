@@ -1,0 +1,40 @@
+    <div class="row builds">
+      <div class="small-12 columns">
+        <table>
+          <thead>
+            <tr>
+              <th>Repository</th>
+              <th>Branch</th>
+              <th>Commit</th>
+              <th>Author</th>
+              <th>Status</th>
+              <th>Elapsed</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @builds.each do |build| %> 
+              <tr class="build">
+                <td class="name">
+                  <a href="https://www.github.com/<%= build.repo.full_name %>" target="_blank">
+                    <%= build.repo.name %>
+                    #<%= build.id %>
+                  </a>
+                </td>
+              <td class="branch"><%= build.branch %></td>
+              <td class="commit"><%= build.commit %></td>
+              <td class="author"><%= build.author %></td>
+              <td class="status <%= build.status.downcase %>"><%= build.status %></td>
+              <td class="elapsed">10 ms</td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 small-centered columns">
+        <%= paginate @builds %>
+      </div>
+    </div>
+
+
