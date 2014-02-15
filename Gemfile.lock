@@ -98,6 +98,7 @@ GEM
       omniauth (~> 1.2)
     pg (0.17.1)
     polyglot (0.3.3)
+    proxies (0.2.1)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -159,6 +160,8 @@ GEM
     rspec-sidekiq (1.0.0)
       rspec (>= 2.0.0)
       sidekiq (>= 2.4.0)
+    s3 (0.3.20)
+      proxies (~> 0.2.0)
     sass (3.2.14)
     sass-rails (4.0.1)
       railties (>= 4.0.0, < 5.0)
@@ -231,6 +234,7 @@ DEPENDENCIES
   rails_12factor
   rspec-rails
   rspec-sidekiq
+  s3
   sass-rails (~> 4.0)
   sidekiq
   sinatra

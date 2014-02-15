@@ -30,21 +30,37 @@ describe BuildController do
     end
   end 
 
+  context '#resolve_partial' do
+    it 'returns no_builds when builds is empty' do
+      double = double()
+      double.stub(:empty?).and_return false
+      partial = controller.send(:resolve_partial, double)
+      expect(partial).to eq('build_list')
+    end
+
+    it 'returns no_builds when builds is empty' do
+      double = double()
+      double.stub(:empty?).and_return true
+      partial = controller.send(:resolve_partial, double)
+      expect(partial).to eq('no_builds')
+    end 
+  end
   context '#index' do
     before do
       create_user(id: 42)
       session[:user_id] = 42
     end
 
-    it 'assigns the correct partial' do
-      controller.stub(:user_builds).and_return([])
-      get :index 
-      expect(assigns(:partial)).to eq('no_builds')
-
-        
-      controller.stub(:user_builds).and_return([Build.new])
+    it 'assigns build_list when builds is not empty' do
+      controller.stub(:resolve_partial).and_return 'build_list'
       get :index 
       expect(assigns(:partial)).to eq('build_list')
+    end
+
+    it 'assings no_builds to partial when empty' do
+      controller.stub(:resolve_partial).and_return 'no_builds'
+      get :index 
+      expect(assigns(:partial)).to eq('no_builds')
     end
   end
 end
