@@ -19,6 +19,8 @@ gem 'omniauth'
 gem 'omniauth-github'
 gem 'octokit'
 gem 'sidekiq'
+gem 'docverter'
+gem 's3'
 
 gem 'authority'
 gem 'pusher'
