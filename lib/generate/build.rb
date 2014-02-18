@@ -3,7 +3,7 @@ class Generate::Build
               :auth_token, :formats,
               :client
 
-  def initialize(repo_id, formats = [:pdf])
+  def initialize(repo_id, formats = [:pdf, :epub, :mobi])
     @repo       = Repo.joins(:user).find(repo_id)
     @full_name  = repo[:full_name]
     @auth_token = repo.user[:auth_token]
