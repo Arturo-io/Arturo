@@ -36,6 +36,10 @@ Arturo::Application.configure do
   config.github_key    = 'none'
   config.github_secret = 'none'
 
+  config.s3_bucket = 'none'
+  config.s3_key    = 'none'
+  config.s3_secret = 'none'
+
   config.pusher_app_id = 'none'
   config.pusher_key    = 'none'
   config.pusher_secret = 'none'

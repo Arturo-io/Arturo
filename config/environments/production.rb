@@ -80,6 +80,10 @@ Arturo::Application.configure do
   config.github_key    = ENV['GITHUB_KEY']
   config.github_secret = ENV['GITHUB_SECRET']
 
+  config.s3_bucket = ENV['S3_BUCKET']
+  config.s3_key    = ENV['S3_KEY']
+  config.s3_secret = ENV['S3_SECRET']
+
   config.pusher_app_id = ENV['PUSHER_APP_ID']
   config.pusher_key    = ENV['PUSHER_KEY']
   config.pusher_secret = ENV['PUSHER_SECRET']

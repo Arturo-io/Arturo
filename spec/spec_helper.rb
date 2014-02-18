@@ -25,6 +25,10 @@ def create_user(options = {})
   User.create(options)
 end
 
+def read_fixture_file(path)
+  File.read("#{Rails.root}/spec/fixtures/#{path}")
+end
+
 Authority.configure do |config|
   config.logger = Logger.new('/dev/null')
 end
