@@ -1,9 +1,10 @@
 class Generate::Manifest
-  attr_reader :client, :repo
+  attr_reader :client, :repo, :sha
 
-  def initialize(repo, client = default_client)
+  def initialize(repo, sha = nil, client = default_client)
     @repo   = repo 
     @client = client
+    @sha    = sha
   end
 
   def config
@@ -17,7 +18,7 @@ class Generate::Manifest
   end
 
   def read_remote_file(path)
-    Github::File.fetch(repo, path, client)
+    Github::File.fetch(repo, path, client, sha)
   end
 
   private

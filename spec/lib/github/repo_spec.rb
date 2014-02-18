@@ -11,6 +11,26 @@ describe Github::Repo do
     ]
   end
 
+  context '#fetch_repo' do
+    it 'can get a single repo from github' do
+      client = double('Octokit::Client')
+      client.stub(:repo).and_return({hash: "value"})
+
+      repo_hash = subject.fetch_repo(client, "ortuna/progit-bana")
+      expect(repo_hash).to eq({hash: "value"})
+    end
+  end
+
+  context '#last_commit' do
+    it 'can get the last commit on a repo' do
+      client = double('Octokit::Client')
+      client.stub(:commits).and_return([OpenStruct.new(sha: "some_sha")])
+
+      commit = subject.last_commit(client, "ortuna/progit-bana")
+      expect(commit.sha).to eq("some_sha")
+    end
+  end
+
   context '#sync' do
     before {  create_user(id: 42, login: "ortuna") }
 
@@ -47,7 +67,7 @@ describe Github::Repo do
     end
   end
 
-  context '#fetch_form_github' do
+  context '#fetch_from_github' do
     it 'fetches a list of repos from client' do
       client =  double() 
       client.stub(:repos).and_return(example_repo_list)

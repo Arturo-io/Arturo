@@ -12,7 +12,19 @@ describe Github::File do
       OpenStruct.new(content: "cmVhZG1lIQ==")
     end
 
-    content = subject.fetch("ortuna/progit-bana", "readme.md", client) 
+    content = subject.fetch("ortuna/progit-bana", "readme.md", nil, client) 
+    expect(content).to eq("readme!")
+  end
+
+  it 'can retreive a file from the right SHA' do
+    client = double("Github::Octkit")
+
+    client.stub(:contents) do |_, options|
+      expect(options[:ref]).to eq("some_sha")
+      OpenStruct.new(content: "cmVhZG1lIQ==")
+    end
+
+    content = subject.fetch("ortuna/progit-bana", "readme.md", "some_sha", client) 
     expect(content).to eq("readme!")
   end
 end

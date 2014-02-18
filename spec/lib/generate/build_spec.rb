@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe Generate::Build do
   before do
-    user = create_user(auth_token: 'abc1234')
-    Repo.create(id: 1, user: user, full_name: "progit-bana")
-    @build = Generate::Build.new(1, [:pdf])
+    user  = create_user(auth_token: 'abc1234')
+    repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
+    ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
+    @build = Generate::Build.new(99, [:pdf])
   end
 
   it 'creates the right client' do
@@ -23,7 +24,7 @@ describe Generate::Build do
       .any_instance
       .stub(:book_content)
       .and_return("some repos content")
-    content = @build.content("ortuna/some_repo")
+    content = @build.content("ortuna/some_repo", "some_sha")
     expect(content).to eq("some repos content")
   end
 
@@ -44,13 +45,12 @@ describe Generate::Build do
     expect(build.formats).to eq([:pdf])
   end
 
-  it 'can get the current SHA' do
-    @build.stub_chain(:client, :commits, :first, :sha).and_return("abc124")
-    expect(@build.latest_sha("some_repo")).to eq("abc124")
+  it 'find the correct sha to build from' do
+    expect(@build.sha).to eq("shaaaabbcc")
   end
 
   it 'can create an asset' do
-    @build.should_receive(:sha).and_return("aabbccdd")
+    @build.should_receive(:sha).twice.and_return("aabbccdd")
     @build.should_receive(:content).and_return("")
     @build.should_receive(:convert).and_return("")
     @build.should_receive(:upload).and_return(OpenStruct.new(url: "some_asset.pdf"))

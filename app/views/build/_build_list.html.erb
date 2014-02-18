@@ -23,7 +23,9 @@
               <td class="branch"><%= build.branch %></td>
               <td class="commit"><%= build.commit %></td>
               <td class="author"><%= build.author %></td>
-              <td class="status <%= build.status.downcase %>"><%= build.status %></td>
+              <td class="status <%= build.status.downcase%>">
+                <%= build.status.capitalize %>
+              </td>
               <td class="elapsed">10 ms</td>
             </tr>
           <% end %>

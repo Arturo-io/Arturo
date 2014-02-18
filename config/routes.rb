@@ -5,6 +5,8 @@ Arturo::Application.routes.draw do
   get '/dashboard', to: 'dashboard#index'
   get '/builds', to: 'build#index'
 
+  post '/hooks/github', to: 'hook#github'
+
   scope '/user', as: :user do
     get '/logout',          to: 'user#logout'
     get '/login/callback',  to: 'omniauth_github#callback'

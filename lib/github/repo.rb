@@ -8,6 +8,14 @@ class Github::Repo
     create_from_array(user_id, repos)
   end
 
+  def self.fetch_repo(client, target_name)
+    client.repo(target_name)
+  end
+
+  def self.last_commit(client, target_name)
+    client.commits(target_name).first
+  end
+
   def self.fetch_from_github(client, target_name)
     client.repos(target_name)
   end

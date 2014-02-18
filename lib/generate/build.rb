@@ -1,10 +1,11 @@
 class Generate::Build 
   attr_reader :repo, :full_name, 
               :auth_token, :formats,
-              :client
+              :client, :build
 
-  def initialize(repo_id, formats = [:pdf, :epub, :mobi])
-    @repo       = Repo.joins(:user).find(repo_id)
+  def initialize(build_id, formats = [:pdf, :epub, :mobi])
+    @build      = ::Build.find(build_id)
+    @repo       = Repo.joins(:user).find(@build[:repo_id])
     @full_name  = repo[:full_name]
     @auth_token = repo.user[:auth_token]
     @formats    = formats
@@ -12,7 +13,7 @@ class Generate::Build
   end
 
   def execute
-    full_content = content(full_name)
+    full_content = content(full_name, sha)
     formats.map do |format|
       output = convert(full_content.force_encoding('UTF-8'), format).force_encoding('UTF-8')
       upload(full_name, "#{sha}.#{format.to_s}", output).url
@@ -20,11 +21,7 @@ class Generate::Build
   end
 
   def sha
-    @sha ||= latest_sha(full_name)
-  end
-
-  def latest_sha(repo_name)
-    client.commits(repo_name).first.sha
+    @sha ||= build[:commit]
   end
 
   def upload(repo_name, file_name, content)
@@ -35,8 +32,8 @@ class Generate::Build
     Generate::Convert.run(content, format_to)
   end
 
-  def content(full_name)
-    Generate::Manifest.new(full_name, client).book_content
+  def content(full_name, sha)
+    Generate::Manifest.new(full_name, client, sha).book_content
   end
 
   def github_client(auth_token)

@@ -1,8 +1,14 @@
 class BuildWorker
  include Sidekiq::Worker
   
-  def perform(repo_id)
-    assets = Generate::Build.new(repo_id, [:pdf, :epub, :mobi]).execute
+  def perform(build_id)
+    build = Build.find(build_id)
+    build.update(status: :building)
+
+    assets = Generate::Build.new(build_id, [:pdf, :epub, :mobi]).execute
+
+    build.reload
+    build.update(status: :completed)
   end
 
 end

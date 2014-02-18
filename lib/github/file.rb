@@ -1,8 +1,10 @@
 require 'base64'
 
 class Github::File 
-  def self.fetch(repo, path, client = default_client)
-    content = client.contents(repo, path: path).content
+  def self.fetch(repo, path, ref = nil, client = default_client)
+    options = { path: path,
+                ref:  ref || "master" }
+    content = client.contents(repo, options).content
     Base64.decode64(content)
   end
 
