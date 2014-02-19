@@ -33,11 +33,14 @@ describe BuildWorker do
     BuildWorker.new.perform(9)
   end
 
-  it 'updates the build to be started' do
+  it 'updates the build to be completed' do
+    time  = Time.now
+    Time.stub(:now).and_return(time)
+
     build = double("Build").as_null_object
     Build.stub(:find).and_return(build)
 
-    build.should_receive(:update).with(status: :completed)
+    build.should_receive(:update).with(status: :completed, ended_at: time)
     Generate::Build.stub_chain(:new, :execute).and_return([])
     BuildWorker.new.perform(9)
   end

@@ -11,7 +11,7 @@ class BuildWorker
     end
 
     build.reload
-    build.update(status: :completed)
+    build.update(status: :completed, ended_at: Time.now)
   end
 
 end
