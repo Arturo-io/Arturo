@@ -5,6 +5,7 @@ class BuildController < ApplicationController
   def index
     @builds  = user_builds.page(params[:page]).per(25)
     @partial = resolve_partial(@builds)
+    @pusher_channel = "#{current_user.digest}-builds"
   end
 
   def show

@@ -8,12 +8,11 @@
               <th>Commit</th>
               <th>Author</th>
               <th>Status</th>
-              <th>Elapsed</th>
             </tr>
           </thead>
           <tbody>
           <% @builds.each do |build| %> 
-              <tr class="build">
+            <tr class="build" id="<%= build.id %>">
                 <td class="name">
                   <%= link_to "#{build.repo.full_name} ##{build.id}", build_path(build) %>
                 </td>
@@ -21,9 +20,8 @@
               <td class="commit"><%= build.commit %></td>
               <td class="author"><%= build.author %></td>
               <td class="status <%= build.status.downcase%>">
-                <%= build.status.capitalize %>
+                <%= build.status %>
               </td>
-              <td class="elapsed">10 ms</td>
             </tr>
           <% end %>
           </tbody>
@@ -37,3 +35,17 @@
     </div>
 
 
+    <script type="text/javascript"<>
+      $(document).ready(function(){
+        var pusher  = new Pusher("<%= Rails.configuration.pusher_key %>");
+        var channel = pusher.subscribe('<%= @pusher_channel %>');
+        channel.bind('status_update', function(data) {
+          var $el       = $(".build#" + data.id + " .status"),
+              newStatus = data.status;
+
+          $el.removeClass()
+            .addClass("status " + newStatus)
+            .html(newStatus);
+        });
+      });
+    </script>

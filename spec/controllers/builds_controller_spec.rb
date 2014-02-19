@@ -45,6 +45,34 @@ describe BuildController do
       expect(partial).to eq('no_builds')
     end 
   end
+
+  context '#show' do
+    before do
+      create_user(id: 42)
+      session[:user_id] = 42
+
+      Repo.create(id: 99, user_id: 42, full_name: "repo")
+      Build.create(id: 1, repo_id: 99, status: :new)
+      Asset.create(url: "http://www.google.com", build_id: 1)
+    end
+
+    it 'assigns the build' do
+      get :show, id: 1
+      expect(assigns(:build)[:status]).to eq("new")
+    end
+
+    it 'assigns the repo' do
+      get :show, id: 1
+      expect(assigns(:repo)[:full_name]).to eq("repo")
+    end
+
+    it 'assigns the assets' do
+      get :show, id: 1
+      expect(assigns(:assets).first[:url]).to eq("http://www.google.com")
+    end
+
+  end
+
   context '#index' do
     before do
       create_user(id: 42)
@@ -62,5 +90,12 @@ describe BuildController do
       get :index 
       expect(assigns(:partial)).to eq('no_builds')
     end
+
+    it 'assigns the pusher_channel' do
+      get :index
+      expect(assigns(:pusher_channel)).to eq("#{User.find(42).digest}-builds")
+    end
+
+
   end
 end

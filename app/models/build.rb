@@ -5,6 +5,15 @@ class Build < ActiveRecord::Base
   has_one    :user, through: :repo
   has_many   :assets
   
+  def update_status(status)
+    update(status: status) 
+    pusher_channel = user.digest << "-builds"
+
+    Pusher.trigger(pusher_channel, 
+                   'status_update', 
+                   {id: id, status: status})
+  end
+
   def self.queue_build(repo_id)
     repo   = Repo.find(repo_id) 
     client = Octokit::Client.new(access_token: repo.user[:auth_token])
@@ -26,4 +35,5 @@ class Build < ActiveRecord::Base
                       status: :queued)
 
   end
+
 end

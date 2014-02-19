@@ -83,8 +83,30 @@ describe Build do
     it 'has the user relationship' do
       expect(@build.user[:login]).to eq("ortuna")
     end
-
-
   end
 
+  context '#update_status' do
+    before do
+      user   = create_user(id: 42, login: "ortuna")
+      repo   = Repo.new(full_name: "test_repo")
+      @build = Build.new(id: 99, user: user, repo: repo)
+    end
+
+    it 'updates the builds status' do
+      Pusher.stub(:trigger)
+      @build.update_status(:completed)
+      expect(Build.find(99)).not_to be_nil
+    end
+
+    it 'sends pusher updates' do
+      Pusher.should_receive(:trigger) do |channel, trigger, data|
+        expect(channel).to eq("#{User.find(42).digest}-builds") 
+        expect(trigger).to eq("status_update") 
+        expect(data[:id]).to eq(99) 
+        expect(data[:status]).to eq(:completed) 
+      end
+      @build.update_status(:completed)
+    end
+
+  end
 end

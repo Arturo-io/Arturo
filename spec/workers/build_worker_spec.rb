@@ -2,9 +2,11 @@ require 'spec_helper'
 
 describe BuildWorker do 
   before do
-    user = create_user(auth_token: 'abc1234')
+    user = create_user(id: 42, auth_token: 'abc1234')
     repo = Repo.create(user: user, full_name: "progit-bana")
     Build.create(id: 9, repo: repo)
+
+    Pusher.stub(:trigger)
   end
 
   it 'queues up a job' do
@@ -12,48 +14,39 @@ describe BuildWorker do
     expect(BuildWorker).to have(1).job
   end
 
-  it 'creates and calls execute on a new Generate::Build' do
-    double = double("Generate::Build")
-    double.stub(:execute).and_return([])
-    Generate::Build.should_receive(:new) do |build_id, formats|
-      expect(formats).to eq([:pdf, :epub, :mobi])
-      expect(build_id).to eq(9)
-      double
+  context 'with fake double' do
+    before do
+      @double = double("Generate::Build").as_null_object
+      @double.stub(:execute).and_return([])
+
+      Generate::Build.stub_chain(:new, :execute).and_return([])
+      Build.stub(:find).and_return(@double)
     end
 
-    BuildWorker.new.perform(9)
-  end
+    it 'creates and calls execute on a new Generate::Build' do
+      Generate::Build.should_receive(:new) do |build_id, formats|
+        expect(formats).to eq([:pdf, :epub, :mobi])
+        expect(build_id).to eq(9)
+        @double
+      end
 
-  it 'updates the build to be started' do
-    build = double("Build").as_null_object
-    Build.stub(:find).and_return(build)
+      BuildWorker.new.perform(9)
+    end
 
-    build.should_receive(:update).with(status: :building)
-    Generate::Build.stub_chain(:new, :execute).and_return([])
-    BuildWorker.new.perform(9)
-  end
+    it 'creates an asset for the URLs' do
+      assets = [ 'http://reddit.com' , 'http://google.com']
+      Generate::Build.stub_chain(:new, :execute).and_return(assets)
 
-  it 'updates the build to be completed' do
-    time  = Time.now
-    Time.stub(:now).and_return(time)
+      Asset.should_receive(:create).twice.and_return(nil)
+      BuildWorker.new.perform(9)
+    end
 
-    build = double("Build").as_null_object
-    Build.stub(:find).and_return(build)
+    it 'calls #update_status on the build' do
+      @double.should_receive(:update_status).with(:building)
+      @double.should_receive(:update_status).with(:completed)
+      BuildWorker.new.perform(9)
+    end
 
-    build.should_receive(:update).with(status: :completed, ended_at: time)
-    Generate::Build.stub_chain(:new, :execute).and_return([])
-    BuildWorker.new.perform(9)
-  end
-
-  it 'creates an asset for the URLs' do
-    build = double("Build").as_null_object
-    Build.stub(:find).and_return(build)
-
-    assets = [ 'http://reddit.com' , 'http://google.com']
-    Generate::Build.stub_chain(:new, :execute).and_return(assets)
-
-    Asset.should_receive(:create).twice.and_return(nil)
-    BuildWorker.new.perform(9)
   end
 
 end

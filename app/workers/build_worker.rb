@@ -3,7 +3,7 @@ class BuildWorker
   
   def perform(build_id)
     build = Build.find(build_id)
-    build.update(status: :building)
+    build.update_status(:building)
 
     assets = Generate::Build.new(build_id, [:pdf, :epub, :mobi]).execute
     assets.each do |asset|
@@ -11,7 +11,8 @@ class BuildWorker
     end
 
     build.reload
-    build.update(status: :completed, ended_at: Time.now)
+    build.update_status(:completed)
+    build.update(ended_at: Time.now)
   end
 
 end
