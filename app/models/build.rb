@@ -27,12 +27,13 @@ class Build < ActiveRecord::Base
     repo          = Repo.find(repo_id) 
     latest_commit = Github::Repo.last_commit(client, repo[:full_name])
     Build.new(branch: repo[:default_branch],
-                      repo:   repo,
-                      started_at: Time.now,
-                      commit: latest_commit.sha,
-                      author: latest_commit.author.login,
-                      message: latest_commit.commit.message,
-                      status: :queued)
+              repo:   repo,
+              started_at: Time.now,
+              commit: latest_commit.sha,
+              author: latest_commit.author.login,
+              message: latest_commit.commit.message,
+              commit_url: latest_commit.rels[:html].href,
+              status: :queued)
 
   end
 

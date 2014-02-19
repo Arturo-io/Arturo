@@ -31,8 +31,9 @@ describe Build do
           expect(repo_name).to eq("test_repo")
           author = OpenStruct.new(login: "ortuna")
           commit = OpenStruct.new(message: "a commit message")
+          rels   = { html: OpenStruct.new(href: 'http://example.com') }
 
-          OpenStruct.new(sha: "abc123", author: author, commit: commit)
+          OpenStruct.new(sha: "abc123", author: author, commit: commit, rels: rels)
         end
 
         build = Build.from_github(double('Octokit::Client'), 99)
@@ -41,6 +42,7 @@ describe Build do
         expect(build.author).to  eq("ortuna")
         expect(build.branch).to  eq("master")
         expect(build.message).to eq("a commit message")
+        expect(build.commit_url).to eq("http://example.com")
         expect(build.status).to  eq(:queued)
       end
     end
@@ -52,6 +54,7 @@ describe Build do
                           commit: "some commit",
                           author: "some author",
                           message: "some message",
+                          commit_url: "http://example.com",
                           status: :queued)
 
         Build.stub(:from_github).and_return(build)
