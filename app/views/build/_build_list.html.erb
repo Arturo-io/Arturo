@@ -10,22 +10,9 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="body">
           <% @builds.each do |build| %> 
-            <tr class="build" id="<%= build.id %>">
-                <td class="name">
-                  <%= link_to "#{build.repo.full_name} ##{build.id}", build_path(build) %>
-                </td>
-              <td class="branch"><%= build.branch %></td>
-              <td class="commit">
-                  <%= link_to build.commit, build.commit_url, target: '_blank' %>
-              </td>
-
-              <td class="author"><%= build.author %></td>
-              <td class="status <%= build.status.downcase%>">
-                <%= build.status %>
-              </td>
-            </tr>
+            <%= render 'build_list_single', build: build %>
           <% end %>
           </tbody>
         </table>
@@ -42,6 +29,10 @@
       $(document).ready(function(){
         var pusher  = new Pusher("<%= Rails.configuration.pusher_key %>");
         var channel = pusher.subscribe('<%= @pusher_channel %>');
+        channel.bind('new', function(template) {
+          var $el = $(".builds .body").prepend(template);
+        });
+
         channel.bind('status_update', function(data) {
           var $el       = $(".build#" + data.id + " .status"),
               newStatus = data.status;

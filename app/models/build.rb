@@ -7,20 +7,34 @@ class Build < ActiveRecord::Base
   
   def update_status(status)
     update(status: status) 
-    pusher_channel = user.digest << "-builds"
-
-    Pusher.trigger(pusher_channel, 
-                   'status_update', 
-                   {id: id, status: status})
+    Pusher.trigger(pusher_channel, 'status_update', {id: id, status: status})
   end
+
+  def pusher_channel
+    user.digest << "-builds"
+  end
+
+  def render_string
+    view = ActionView::Base.new(Rails.configuration.paths["app/views"])
+    view.extend ActionView::Helpers
+    view.extend Rails.application.routes.url_helpers
+    view.extend ActionDispatch::Routing::UrlFor
+    view.class_eval do
+      def default_url_options; {} end
+    end
+
+    view.render(:partial => 'build/build_list_single', locals: { build: self })
+  end
+
 
   def self.queue_build(repo_id)
     repo   = Repo.find(repo_id) 
-    client = Octokit::Client.new(access_token: repo.user[:auth_token])
-    build  = from_github(client, repo_id)
+    build  = from_github(client(repo.user), repo_id)
     build.save
 
     BuildWorker.perform_async(build[:id])
+
+    Pusher.trigger(build.pusher_channel, 'new', build.render_string)
   end
 
   def self.from_github(client, repo_id)
@@ -35,6 +49,11 @@ class Build < ActiveRecord::Base
               commit_url: latest_commit.rels[:html].href,
               status: :queued)
 
+  end
+
+  private
+  def self.client(user)
+    Octokit::Client.new(access_token: user[:auth_token])
   end
 
 end

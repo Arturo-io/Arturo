@@ -96,6 +96,8 @@ describe BuildController do
       expect(assigns(:pusher_channel)).to eq("#{User.find(42).digest}-builds")
     end
 
+    it 'can get json back' do
 
+    end
   end
 end

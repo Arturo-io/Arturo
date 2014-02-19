@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Build do
+  before { Pusher.stub(:trigger) }
+
   it 'has the correct sort order' do
     user   = create_user(login: "ortuna")
     repo   = Repo.new(id: 99, full_name: "test_repo")
@@ -18,14 +20,14 @@ describe Build do
 
   context 'queue' do
     before do
-      user = create_user(login: "ortuna")
+      user = create_user(id: 42, login: "ortuna")
       Repo.create(user: user, 
                   id: 99, 
                   full_name: "test_repo",
                   default_branch: "master")
     end
-    context '.from_github' do
 
+    context '.from_github' do
       it 'instantiates a build from latest github commit' do
         Github::Repo.should_receive(:last_commit) do |client, repo_name|
           expect(repo_name).to eq("test_repo")
@@ -50,6 +52,7 @@ describe Build do
     context '.queue_build' do
       before do
         build = Build.new(repo_id: 99, 
+                          id: 100,
                           started_at: Time.now,
                           commit: "some commit",
                           author: "some author",
@@ -66,6 +69,18 @@ describe Build do
 
       it 'queues a build' do
         BuildWorker.should_receive(:perform_async)
+        Build.queue_build(99)
+      end
+
+      it 'triggers a pusher update' do
+        Pusher.should_receive(:trigger) do |channel, trigger, rendered_string|
+          expect(channel).to eq("#{User.find(42).digest}-builds")
+          expect(trigger).to eq("new")
+          expect(rendered_string).to match(/some commit/)
+          expect(rendered_string).to match(/some author/)
+          expect(rendered_string).to match(/#100/)
+        end
+
         Build.queue_build(99)
       end
     end
