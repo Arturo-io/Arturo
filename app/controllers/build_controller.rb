@@ -7,6 +7,12 @@ class BuildController < ApplicationController
     @partial = resolve_partial(@builds)
   end
 
+  def show
+    @build  = Build.includes(:assets).find(params[:id])
+    @repo   = @build.repo
+    @assets = @build.assets
+  end
+
   private
   def resolve_partial(builds)
     builds.empty? ? 'no_builds' : 'build_list' 

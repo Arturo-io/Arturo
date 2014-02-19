@@ -15,10 +15,7 @@
           <% @builds.each do |build| %> 
               <tr class="build">
                 <td class="name">
-                  <a href="https://www.github.com/<%= build.repo.full_name %>" target="_blank">
-                    <%= build.repo.name %>
-                    #<%= build.id %>
-                  </a>
+                  <%= link_to "#{build.repo.full_name} ##{build.id}", build_path(build) %>
                 </td>
               <td class="branch"><%= build.branch %></td>
               <td class="commit"><%= build.commit %></td>

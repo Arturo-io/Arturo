@@ -1,0 +1,114 @@
+    <div class="row build">
+      <div class="small-12 columns">
+        <div class="row">
+          <h2><%= @repo.full_name %></h2>
+        </div>
+
+        <div class="row">
+
+          <div class="small-6 columns left">
+            <div class="small-3 columns title">
+              Author:
+            </div>
+            <div class="small-9 columns">
+              <%= @build.author %>
+            </div>
+          </div>
+
+          <div class="small-6 columns right">
+            <div class="small-3 columns title">
+              Branch: 
+            </div>
+            <div class="small-9 columns">
+              <%= @build.branch %>
+            </div>
+          </div>
+
+
+        </div>
+        
+        <div class="row">
+
+          <div class="small-6 columns left">
+            <div class="small-3 columns title">
+              Status:
+            </div>
+            <div class="small-9 columns">
+              <%= @build.status.capitalize %>
+            </div>
+          </div>
+
+          <div class="small-6 columns left">
+            <div class="small-3 columns title">
+              Commit:
+            </div>
+            <div class="small-9 columns">
+              <%= @build.commit %>
+            </div>
+          </div>
+ 
+        </div>
+
+        <div class="row">
+
+          <div class="small-6 columns left">
+            <div class="small-3 columns title">
+              Started:
+            </div>
+            <div class="small-9 columns">
+              <%= @build.started_at %>
+            </div>
+          </div>
+
+          <div class="small-6 columns left">
+            <div class="small-3 columns title">
+              Ended:
+            </div>
+            <div class="small-9 columns">
+              <%= @build.ended_at %>
+            </div>
+          </div>
+ 
+        </div>
+
+
+        <div class="row">
+          <div class="small-12 columns left">
+            <br/>
+            <br/>
+            <b>Commit Log: </b>
+            <br/>
+            <%= @build.message %>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row">
+          <h3> Assets </h3>
+        </div>
+
+        <div class="row">
+          <table class="assets">
+            <thead>
+              <tr>
+                <th>File Name</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+            <% @assets.each do |asset| %> 
+                <tr class="asset">
+                  <td class="url">
+                    <%= link_to File.basename(asset.url), asset.url %>
+                  </td>
+                  <td class="created">
+                    <%= timeago_tag asset.created_at %>
+                  </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+

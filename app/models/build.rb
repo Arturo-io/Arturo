@@ -2,7 +2,8 @@ class Build < ActiveRecord::Base
   default_scope { order(created_at: :desc) }
 
   belongs_to :repo
-  has_one :user, through: :repo
+  has_one    :user, through: :repo
+  has_many   :assets
   
   def self.queue_build(repo_id)
     repo   = Repo.find(repo_id) 

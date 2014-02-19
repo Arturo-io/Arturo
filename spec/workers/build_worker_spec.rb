@@ -14,7 +14,7 @@ describe BuildWorker do
 
   it 'creates and calls execute on a new Generate::Build' do
     double = double("Generate::Build")
-    double.stub(:execute)
+    double.stub(:execute).and_return([])
     Generate::Build.should_receive(:new) do |build_id, formats|
       expect(formats).to eq([:pdf, :epub, :mobi])
       expect(build_id).to eq(9)
@@ -29,7 +29,7 @@ describe BuildWorker do
     Build.stub(:find).and_return(build)
 
     build.should_receive(:update).with(status: :building)
-    Generate::Build.stub_chain(:new, :execute)
+    Generate::Build.stub_chain(:new, :execute).and_return([])
     BuildWorker.new.perform(9)
   end
 
@@ -38,10 +38,19 @@ describe BuildWorker do
     Build.stub(:find).and_return(build)
 
     build.should_receive(:update).with(status: :completed)
-    Generate::Build.stub_chain(:new, :execute)
+    Generate::Build.stub_chain(:new, :execute).and_return([])
     BuildWorker.new.perform(9)
   end
 
-  it 'informs pusher about the start of a build'
-  it 'informs pusher about the end of a build'
+  it 'creates an asset for the URLs' do
+    build = double("Build").as_null_object
+    Build.stub(:find).and_return(build)
+
+    assets = [ 'http://reddit.com' , 'http://google.com']
+    Generate::Build.stub_chain(:new, :execute).and_return(assets)
+
+    Asset.should_receive(:create).twice.and_return(nil)
+    BuildWorker.new.perform(9)
+  end
+
 end

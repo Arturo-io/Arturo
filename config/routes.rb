@@ -2,8 +2,10 @@ Arturo::Application.routes.draw do
   root to: 'homepage#index'
 
   get '/auth/github/callback', to: 'omniauth_github#callback'
-  get '/dashboard', to: 'dashboard#index'
-  get '/builds', to: 'build#index'
+
+  get '/dashboard',  to: 'dashboard#index'
+  get '/builds',     to: 'build#index'
+  get '/builds/:id', to: 'build#show', as: :build
 
   post '/hooks/github', to: 'hook#github'
 
