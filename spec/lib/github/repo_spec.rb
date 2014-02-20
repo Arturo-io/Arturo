@@ -72,7 +72,7 @@ describe Github::Repo do
       client =  double() 
       client.stub(:repos).and_return(example_repo_list)
 
-      repos = subject.fetch_from_github(client, "ortuna") 
+      repos = subject.fetch_from_github(client) 
       expect(repos.first.attrs[:name]).to eq("expected_name0")
     end
   end

@@ -4,7 +4,7 @@ class Github::Repo
   def self.sync(user_id)
     user   = User.find(user_id)
     client = client(user[:auth_token])
-    repos  = fetch_from_github(client, user[:login])
+    repos  = fetch_from_github(client)
     create_from_array(user_id, repos)
   end
 
@@ -16,8 +16,8 @@ class Github::Repo
     client.commits(target_name).first
   end
 
-  def self.fetch_from_github(client, target_name)
-    client.repos(target_name)
+  def self.fetch_from_github(client)
+    client.repos
   end
 
   def self.create_from_array(user_id, repos_hash)

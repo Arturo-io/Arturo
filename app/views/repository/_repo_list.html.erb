@@ -6,6 +6,7 @@
               <th>Repository</th>
               <th>Description</th>
               <th>Hooks</th>
+              <th>Private</th>
               <th>Build</th>
             </tr>
           </thead>
@@ -23,6 +24,10 @@
                   <%= fa_icon('wrench') %>
                 </a>
               </td>
+              <td class="visibility">
+                <%= repository.private ? fa_icon('eye-slash') : fa_icon('eye', class: 'fade')%>
+              </td>
+ 
               <td class="toggle">
                 <%= following_link(@following, repository) %>
               </td>
