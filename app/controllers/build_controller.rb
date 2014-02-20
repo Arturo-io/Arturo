@@ -1,6 +1,8 @@
 class BuildController < ApplicationController
+  protect_from_forgery with: :exception
 
-  #TODO: Security
+  before_filter :check_login, except: [:show]
+  authorize_actions_for BuildAuthorizer, except: :index
 
   def index
     @builds  = user_builds.page(params[:page]).per(25)
@@ -9,7 +11,9 @@ class BuildController < ApplicationController
   end
 
   def show
-    @build  = Build.includes(:assets).find(params[:id])
+    @build  = Build.includes(:assets, :user).find(params[:id])
+    authorize_action_for @build
+
     @repo   = @build.repo
     @assets = @build.assets
   end

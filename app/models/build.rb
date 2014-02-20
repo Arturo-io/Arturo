@@ -1,4 +1,6 @@
 class Build < ActiveRecord::Base
+  include Authority::Abilities
+
   default_scope { order(created_at: :desc) }
 
   belongs_to :repo

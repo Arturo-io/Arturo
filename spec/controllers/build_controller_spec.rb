@@ -49,11 +49,16 @@ describe BuildController do
   context '#show' do
     before do
       create_user(id: 42)
-      session[:user_id] = 42
+      create_user(id: 43, uid: "some_other_user")
 
       Repo.create(id: 99, user_id: 42, full_name: "repo")
+      Repo.create(id: 100, user_id: 43, full_name: "repo private", private: true)
+
       Build.create(id: 1, repo_id: 99, status: :new)
+      Build.create(id: 2, repo_id: 100, status: :new)
       Asset.create(url: "http://www.google.com", build_id: 1)
+
+      session[:user_id] = 42
     end
 
     it 'assigns the build' do
@@ -71,6 +76,32 @@ describe BuildController do
       expect(assigns(:assets).first[:url]).to eq("http://www.google.com")
     end
 
+    it 'allows for a public repo' do
+      session[:user_id] = nil
+
+      get :show, id: 1
+      assert_response :success
+    end
+
+    it 'forbids for public access to a private repo' do
+      session[:user_id] = nil
+
+      get :show, id: 2
+      assert_response :forbidden
+    end
+
+    it 'allows a owner of the private repo' do
+      session[:user_id] = 43
+
+      get :show, id: 2
+      assert_response :success
+    end
+
+    it 'forbids access to a non-owner user for a private repo' do
+      session[:user_id] = 42
+      get :show, id: 2
+      assert_response :forbidden
+    end
   end
 
   context '#index' do
@@ -96,8 +127,12 @@ describe BuildController do
       expect(assigns(:pusher_channel)).to eq("#{User.find(42).digest}-builds")
     end
 
-    it 'can get json back' do
+    it 'only allows logged in users to view a list' do
+      session[:user_id] = nil
 
+      get :index
+      assert_response :forbidden
     end
+
   end
 end
