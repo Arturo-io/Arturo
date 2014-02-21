@@ -1,7 +1,10 @@
 require 'spec_helper'
 
 describe Build do
-  before { Pusher.stub(:trigger) }
+  before do 
+    Pusher.stub(:trigger)
+    Build.any_instance.stub(:render_string)
+  end
 
   it 'has the correct sort order' do
     user   = create_user(login: "ortuna")
@@ -76,9 +79,6 @@ describe Build do
         Pusher.should_receive(:trigger) do |channel, trigger, rendered_string|
           expect(channel).to eq("#{User.find(42).digest}-builds")
           expect(trigger).to eq("new")
-          expect(rendered_string).to match(/some commit/)
-          expect(rendered_string).to match(/some author/)
-          expect(rendered_string).to match(/#100/)
         end
 
         Build.queue_build(99)
@@ -121,7 +121,7 @@ describe Build do
         expect(channel).to eq("#{User.find(42).digest}-builds") 
         expect(trigger).to eq("status_update") 
         expect(data[:id]).to eq(99) 
-        expect(data[:status]).to eq(:completed) 
+        expect(data[:status]).to match(/completed/) 
       end
       @build.update_status(:completed)
     end

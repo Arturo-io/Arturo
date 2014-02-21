@@ -38,9 +38,7 @@
           var $el       = $(".build#" + data.id + " .status"),
               newStatus = data.status;
 
-          $el.removeClass()
-            .addClass("status " + newStatus)
-            .html(newStatus);
+          $el.html(newStatus);
         });
       });
     </script>

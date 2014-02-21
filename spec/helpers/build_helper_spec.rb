@@ -6,7 +6,7 @@ describe BuildHelper do
       long_message = "a"*55
 
       output = message(long_message)
-      expect(output.length).to eq(25)
+      expect(output.length).to eq(50)
     end
 
     it 'works with a nil or empty message' do
@@ -17,13 +17,17 @@ describe BuildHelper do
 
   context 'status_has_spinner?' do
     it 'is true for any /build/ status' do
-      ['building pdf', 'Building Stuff'].each do |status|
+      ['building pdf', 'Building Stuff', 'Uploading pdf'].each do |status|
         expect(status_has_spinner?(status)).to eq(true)
       end
     end
 
     it 'is true for queued' do
       expect(status_has_spinner?('queUed')).to eq(true)
+    end
+
+    it 'works with symbols' do
+      expect(status_has_spinner?(:queued)).to eq(true)
     end
   end
 

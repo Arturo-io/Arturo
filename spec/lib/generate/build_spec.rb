@@ -6,6 +6,7 @@ describe Generate::Build do
     repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
     @build = Generate::Build.new(99, [:pdf])
+    Pusher.stub(:trigger) 
   end
 
   it 'creates the right client' do
@@ -34,7 +35,7 @@ describe Generate::Build do
       expect(content).to eq("content")
     end
 
-    @build.upload("some_repo", "some_file.txt", "content")
+    @build.upload("some_repo", "some_file.txt", "content", :txt)
   end
 
   it 'has the right options' do
@@ -57,6 +58,25 @@ describe Generate::Build do
 
     build = @build
     expect(build.execute).to eq(["some_asset.pdf"]) 
+  end
+
+  context '#notifications' do
+
+    it 'updates build status on convert' do
+      Generate::Convert.stub(:run) 
+
+      Build.any_instance.should_receive(:update_status).with("building pdf")
+      @build.convert("#title", :pdf)
+    end
+
+    it 'updates build status on upload' do
+      Generate::S3.stub(:save) 
+
+      Build.any_instance.should_receive(:update_status).with("uploading pdf")
+      @build.upload("my_repo", "some_file.txt", "title", :pdf)
+    end
+
+
   end
 
 end

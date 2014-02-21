@@ -16,7 +16,7 @@ class Generate::Build
     full_content = content(full_name, sha)
     formats.map do |format|
       output = convert(full_content.force_encoding('UTF-8'), format).force_encoding('UTF-8')
-      upload(full_name, "#{sha}.#{format.to_s}", output).url
+      upload(full_name, "#{sha}.#{format.to_s}", output, format).url
     end
   end
 
@@ -24,12 +24,14 @@ class Generate::Build
     @sha ||= build[:commit]
   end
 
-  def upload(repo_name, file_name, content)
+  def upload(repo_name, file_name, content, format)
+    @build.update_status("uploading #{format.to_s}")
     Generate::S3.save("#{repo_name}/#{file_name}", content)
   end
 
-  def convert(content, format_to) 
-    Generate::Convert.run(content, format_to)
+  def convert(content, format) 
+    @build.update_status("building #{format.to_s}")
+    Generate::Convert.run(content, format)
   end
 
   def content(full_name, sha)

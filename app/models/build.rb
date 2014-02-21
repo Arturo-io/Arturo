@@ -9,7 +9,7 @@ class Build < ActiveRecord::Base
   
   def update_status(status)
     update(status: status) 
-    Pusher.trigger(pusher_channel, 'status_update', {id: id, status: status})
+    Pusher.trigger(pusher_channel, 'status_update', {id: id, status: status_html(status)})
   end
 
   def pusher_channel
@@ -18,6 +18,8 @@ class Build < ActiveRecord::Base
 
   def render_string
     view = ActionView::Base.new(Rails.configuration.paths["app/views"])
+    view.extend BuildHelper
+    view.extend FontAwesome::Rails::IconHelper
     view.extend ActionView::Helpers
     view.extend Rails.application.routes.url_helpers
     view.extend ActionDispatch::Routing::UrlFor
@@ -26,6 +28,17 @@ class Build < ActiveRecord::Base
     end
 
     view.render(:partial => 'build/build_list_single', locals: { build: self })
+  end
+  
+  def status_html(status)
+    view = ActionView::Base.new(Rails.configuration.paths["app/views"])
+    view.extend BuildHelper
+    view.extend FontAwesome::Rails::IconHelper
+    view.extend ActionView::Helpers
+    view.extend Rails.application.routes.url_helpers
+    view.extend ActionDispatch::Routing::UrlFor
+
+    view.build_status(status)
   end
 
 
