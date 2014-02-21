@@ -1,15 +1,17 @@
         <tr class="build" id="<%= build.id %>">
-                <td class="name">
-                  <%= link_to "#{build.repo.full_name} ##{build.id}", url_for(controller: 'build', action: 'show', id: build[:id], only_path: true) %>
-                </td>
-              <td class="branch"><%= build.branch %></td>
-              <td class="commit">
-                  <%= link_to build.commit, build.commit_url, target: '_blank' %>
-              </td>
-
-              <td class="author"><%= build.author %></td>
-              <td class="status <%= build.status.downcase%>">
-                <%= build.status %>
-              </td>
-            </tr>
+          <td class="name">
+            <%= link_to "#{build.repo.name} ##{build.id}", url_for(controller: 'build', action: 'show', id: build[:id], only_path: true) %>
+          </td>
+          <td class="branch"><%= build.branch %></td>
+          <td class="commit">
+            <%= link_to "#{build.commit[0..5]}...", build.commit_url, target: '_blank' %>
+          </td>
+          <td class="message">
+            <%= (build.message && build.message[0..25]) %>
+          </td>
+          <td class="author"><%= build.author %></td>
+          <td class="status <%= build.status.downcase%>">
+            <%= build.status %>
+          </td>
+        </tr>
 

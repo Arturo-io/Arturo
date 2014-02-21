@@ -18,7 +18,9 @@
                     <%= repository.name %>
                   </a>
                 </td>
-              <td class="description"><%= repository.description %></td>
+              <td class="description">
+                <%= repository.description %>
+              </td>
               <td class="hooks">
                 <a href="https://www.github.com/<%= repository.full_name %>/settings/hooks" target="_blank">
                   <%= fa_icon('wrench') %>
