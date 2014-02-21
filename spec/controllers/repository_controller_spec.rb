@@ -48,6 +48,42 @@ describe RepositoryController do
 
   end
 
+  context '#show' do
+    render_views
+
+    before do 
+      Repo.create(id: 1, user_id: 42, name: 'some_repo', private: false)
+      Repo.create(id: 2, user_id: 42, name: 'private', private: true)
+    end
+
+    it 'finds the right repo' do
+      get :show, id:  1
+      expect(assigns(:repo)[:name]).to eq("some_repo")
+    end
+
+    it 'shows a public repo to anon. users' do
+      session[:user_id] = nil 
+
+      get :show, id: 1
+      assert_response :success
+    end
+
+    it 'denies a private repo to anon users' do
+      session[:user_id] = nil 
+
+      get :show, id: 2 
+      assert_response :forbidden
+    end
+
+    it 'assigns the last 5 builds for that repo' do
+      10.times { Build.create(repo_id: 1) }
+      get :show, id: 1
+      expect(assigns(:builds)).not_to be_nil
+      expect(assigns(:builds).count).to eq(5)
+    end
+
+  end
+
   context '#index' do
     render_views
     it 'renders a no repos template when repos are empty' do
@@ -141,20 +177,21 @@ describe RepositoryController do
 
     it 'cant follow someone elses repo' do
       put :follow, id: 11 
+
       assert_response :forbidden
       expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(0)
     end
 
     it 'has a notice for a follow' do
       put :follow, id: 99
-      expect(flash[:notice]).to match /test/
+      expect(flash[:notice]).to match(/test/)
     end
 
     it 'has a notice for a follow' do
       Follower.create(user_id: 42, repo_id: 99)
 
       delete :unfollow, id: 99
-      expect(flash[:notice]).to match /test/
+      expect(flash[:notice]).to match(/test/)
     end
 
     it 'can unfollow a repo' do

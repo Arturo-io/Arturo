@@ -1,9 +1,11 @@
 class RepositoryController < ApplicationController
   protect_from_forgery with: :exception
+  before_filter :check_login, except: [:show]
 
-  before_filter :check_login
-  authority_actions follow: :read, unfollow: :read, sync: :read
-  authorize_actions_for ApplicationAuthorizer
+  authorize_actions_for RepoAuthorizer
+  authority_actions follow:   'update', 
+                    unfollow: 'update', 
+                    sync:     'read'
 
   def sync
     if(current_user[:loading_repos])
@@ -27,6 +29,12 @@ class RepositoryController < ApplicationController
     @pusher_channel = "#{current_user.digest}-repositories"
   end
 
+  def show
+    @repo   = Repo.includes(:builds).find(params[:id])
+    @builds = @repo.builds.page(params[:page]).per(5)
+    authorize_action_for @repo
+  end
+
   def follow
     repo = Repo.find(params[:id])
     authorize_action_for repo
@@ -38,6 +46,8 @@ class RepositoryController < ApplicationController
 
   def unfollow
     repo = Repo.find(params[:id])
+    authorize_action_for repo
+
     Follower.where(user: current_user, repo: repo).first.destroy
     GithubRemoveHookWorker.perform_async(repo[:id])
     redirect_to repositories_path, notice: "You are no longer following #{repo.name}"

@@ -9,5 +9,6 @@ Bundler.require(:default, Rails.env)
 module Arturo
   class Application < Rails::Application
     config.autoload_paths += %W(#{config.root}/lib)
+    config.badge_url = "http://arturo-badges.herokuapp.com/badge/"
   end
 end

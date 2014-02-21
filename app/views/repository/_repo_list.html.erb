@@ -12,28 +12,7 @@
           </thead>
           <tbody>
           <% @repositories.each do |repository| %> 
-              <tr class="repository">
-                <td class="name">
-                  <a href="https://www.github.com/<%= repository.full_name %>" target="_blank">
-                    <%= repository.name %>
-                  </a>
-                </td>
-              <td class="description">
-                <%= repository.description %>
-              </td>
-              <td class="hooks">
-                <a href="https://www.github.com/<%= repository.full_name %>/settings/hooks" target="_blank">
-                  <%= fa_icon('wrench') %>
-                </a>
-              </td>
-              <td class="visibility">
-                <%= repository.private ? fa_icon('eye-slash') : fa_icon('eye', class: 'fade')%>
-              </td>
- 
-              <td class="toggle">
-                <%= following_link(@following, repository) %>
-              </td>
-            </tr>
+            <%= render 'repo_list_single', repository: repository %>
           <% end %>
           </tbody>
         </table>

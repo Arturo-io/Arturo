@@ -1,0 +1,10 @@
+<div class="row repositories">
+  <div class="row builds">
+    <%= image_tag(badge_url(repo_id: @repo.id)) %>
+    <%= badge_url(repo_id: @repo.id) %>
+  </div>
+  <div class="row builds">
+    <h3>Builds History</h3>
+    <%= render('build/build_list') %>
+  </div>
+</div>

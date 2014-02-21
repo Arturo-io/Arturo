@@ -1,7 +1,6 @@
 class ApplicationAuthorizer < Authority::Authorizer
   def self.default(adjective, user)
-    return true if user
-    false 
+    user ? true : false
   end
 
   def readable_by?(user)
