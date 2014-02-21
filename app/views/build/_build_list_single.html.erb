@@ -7,11 +7,11 @@
             <%= link_to "#{build.commit[0..5]}...", build.commit_url, target: '_blank' %>
           </td>
           <td class="message">
-            <%= (build.message && build.message[0..25]) %>
+            <%= message(build.message) %>
           </td>
           <td class="author"><%= build.author %></td>
           <td class="status <%= build.status.downcase%>">
-            <%= build.status %>
+            <%= build_status(build.status) %>
           </td>
         </tr>
 
