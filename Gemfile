@@ -25,6 +25,7 @@ gem 's3'
 gem 'authority'
 gem 'pusher'
 gem 'intercom-rails', '~> 0.2.24'
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'sinatra'
