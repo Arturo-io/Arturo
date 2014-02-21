@@ -39,7 +39,7 @@
               Commit:
             </div>
             <div class="small-9 columns">
-              <%= link_to @build.commit, @build.commit_url, target: '_blank' %>
+              <%= link_to (@build.commit && @build.commit[0..16]) << "...", @build.commit_url, target: '_blank' %>
             </div>
           </div>
  
