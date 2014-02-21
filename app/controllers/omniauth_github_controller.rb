@@ -8,7 +8,7 @@ class OmniauthGithubController < ApplicationController
     if user
       user.update_from_omniauth(auth)
       session[:user_id] = user[:id]
-      redirect_to dashboard_path, notice: "You have been logged in"
+      redirect_to repositories_path, notice: "You have been logged in"
     else
       redirect_to root_path, error: "A login error has occured"
     end
