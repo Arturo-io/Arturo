@@ -49,7 +49,6 @@ describe RepositoryController do
   end
 
   context '#show' do
-    render_views
 
     before do 
       Repo.create(id: 1, user_id: 42, name: 'some_repo', private: false)
@@ -76,10 +75,18 @@ describe RepositoryController do
     end
 
     it 'assigns the last 5 builds for that repo' do
-      10.times { Build.create(repo_id: 1) }
+      10.times { Build.create(repo_id: 1, status: :completed) }
+
       get :show, id: 1
       expect(assigns(:builds)).not_to be_nil
       expect(assigns(:builds).count).to eq(5)
+    end
+
+    it 'assings a badge markdown value' do
+      get :show, id: 1
+
+      expect(assigns(:badge_markdown)).to match(/badge\/1/)
+      expect(assigns(:badge_markdown)).to match(/repositories\/1/)
     end
 
   end

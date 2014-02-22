@@ -32,6 +32,7 @@ class RepositoryController < ApplicationController
   def show
     @repo   = Repo.includes(:builds).find(params[:id])
     @builds = @repo.builds.page(params[:page]).per(5)
+    @badge_markdown = badge_markdown(@repo[:id])
     authorize_action_for @repo
   end
 
@@ -51,5 +52,14 @@ class RepositoryController < ApplicationController
     Follower.where(user: current_user, repo: repo).first.destroy
     GithubRemoveHookWorker.perform_async(repo[:id])
     redirect_to repositories_path, notice: "You are no longer following #{repo.name}"
+  end
+
+  private
+  def badge_markdown(repo_id)
+  #[![Build Status](https://travis-ci.org/padrino/padrino-framework.png?branch=master)]
+   #kll(https://travis-ci.org/padrino/padrino-framework)
+    badge_url = badge_url(repo_id: repo_id, only_path: false)
+    repo_url  = repositories_show_url(id: repo_id)
+    "[![Build Status](#{badge_url})](#{repo_url})"
   end
 end

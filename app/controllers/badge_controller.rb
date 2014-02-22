@@ -2,7 +2,7 @@ class BadgeController < ApplicationController
   def show
     redirect_url = "http://arturo-badges.herokuapp.com/badge/"
     redirect_url = redirect_url << badge_params(params[:repo_id], :master)
-    redirect_url = redirect_url << ".png"
+    redirect_url = redirect_url << "@2x.png"
     redirect_to redirect_url
   end
 

@@ -1,6 +1,7 @@
 <div class="row repositories">
   <div class="row builds">
     <%= image_tag(badge_url(repo_id: @repo.id)) %>
+    <%= text_field_tag('md', @badge_markdown) %>
     <%= badge_url(repo_id: @repo.id) %>
   </div>
   <div class="row builds">

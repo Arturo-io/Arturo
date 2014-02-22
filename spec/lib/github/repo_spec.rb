@@ -41,7 +41,7 @@ describe Github::Repo do
 
       subject.sync(42)
       expect(Repo.count).to eq(4)
-      expect(Repo.first[:name]).to eq("expected_name0")
+      expect(Repo.find(1)[:name]).to eq("expected_name0")
     end
   end
 

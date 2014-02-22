@@ -7,7 +7,7 @@ describe BadgeController do
     it 'redirects you when visiting' do
       controller.stub(:badge_params).and_return("build-12-brightgreen")
       get :show, repo_id: 1, branch: :master
-      assert_redirected_to url << "build-12-brightgreen.png"
+      assert_redirected_to url << "build-12-brightgreen@2x.png"
     end
   end
 
