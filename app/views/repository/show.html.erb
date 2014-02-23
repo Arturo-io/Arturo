@@ -1,12 +1,7 @@
 <div class="row repositories">
-  <div class="row">
-    <div class="columns small-3">
-      <%= image_tag(badge_url(repo_id: @repo.id)) %>
-    </div>
-    <div class="columns small-9">
-      <%= text_field_tag('md', @badge_markdown) %>
-    </div>
-  </div>
+  <%= render('repo_badge', image: badge_url(repo_id: @repo.id),
+                           markdown: @badge_markdown) %> 
+  <%= render('last_build',  build: @last_build) %>
   <div class="row builds">
     <h3>Builds History</h3>
     <%= render('build/build_list') %>

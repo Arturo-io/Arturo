@@ -88,6 +88,28 @@ describe RepositoryController do
       expect(assigns(:badge_markdown)).to match(/badge\/1/)
       expect(assigns(:badge_markdown)).to match(/repositories\/1/)
     end
+    
+    context 'last build and assets' do
+      before do
+        Build.create(id: 1, repo_id: 1, status: :completed)
+        Build.create(id: 2, repo_id: 1, status: :failed)
+        Asset.create(build_id: 1, url: 'http://www.google.com')
+      end
+
+      it 'assigns the latest assets' do
+        get :show, id: 1
+        last_assets = assigns(:last_assets)
+        expect(last_assets.first[:url]).to eq('http://www.google.com')
+      end
+
+      it 'assigns the latest build' do
+        get :show, id: 1
+
+        last_build = assigns(:last_build)
+        expect(last_build[:id]).to eq(1)
+      end
+    end
+    
 
   end
 
