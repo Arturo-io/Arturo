@@ -11,7 +11,7 @@
                 </a>
               </td>
               <td class="visibility">
-                <%= repository.private ? fa_icon('eye-slash') : fa_icon('eye', class: 'fade')%>
+                <%= repository.private ? fa_icon('eye-slash', title: "Private") : fa_icon('eye', class: 'fade', title: "Public")%>
               </td>
  
               <td class="toggle">
