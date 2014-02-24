@@ -9,7 +9,8 @@ class Build < ActiveRecord::Base
   
   def update_status(status)
     update(status: status) 
-    Pusher.trigger(pusher_channel, 'status_update', {id: id, status: status_html(status)})
+    data = { id: id, css_class: status, status: status_html(status) }
+    Pusher.trigger(pusher_channel, 'status_update', data)
   end
 
   def pusher_channel

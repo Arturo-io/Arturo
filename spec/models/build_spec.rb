@@ -86,6 +86,8 @@ describe Build do
       end
 
       it 'triggers a pusher update' do
+        Repo.any_instance.stub(:cancel_builds)
+
         Pusher.should_receive(:trigger) do |channel, trigger, rendered_string|
           expect(channel).to eq("#{User.find(42).digest}-builds")
           expect(trigger).to eq("new")
@@ -132,6 +134,7 @@ describe Build do
         expect(trigger).to eq("status_update") 
         expect(data[:id]).to eq(99) 
         expect(data[:status]).to match(/completed/) 
+        expect(data[:css_class]).to match(/completed/) 
       end
       @build.update_status(:completed)
     end
