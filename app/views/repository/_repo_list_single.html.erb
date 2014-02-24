@@ -1,6 +1,6 @@
               <tr class="repository">
                 <td class="name">
-                  <%= link_to repository.name, repositories_show_path(repository) %>
+                  <%= repository_link(@following, repository) %> 
                 </td>
               <td class="description">
                 <%= repository.description %>

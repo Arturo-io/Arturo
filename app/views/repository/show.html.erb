@@ -1,7 +1,7 @@
 <div class="row repositories">
   <%= render('repo_badge', image: badge_url(repo_id: @repo.id),
                            markdown: @badge_markdown) %> 
-  <%= render('last_build',  build: @last_build) %>
+  <%= render('last_build',  build: @last_build) if @last_build %>
   <div class="row builds">
     <h3>Builds History</h3>
     <%= render('build/build_list') %>

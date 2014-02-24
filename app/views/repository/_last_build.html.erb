@@ -1,5 +1,5 @@
 <div class="row">
   <h3>Last Build: <%= link_to "##{build.id}", build_path(build) %></h3>   
-  <%= render('build/assets', assets: @last_assets) %>
+  <%= render('build/assets', assets: @last_assets) if @last_assets%>
 </div>
 

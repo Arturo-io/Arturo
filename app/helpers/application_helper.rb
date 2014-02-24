@@ -1,4 +1,13 @@
 module ApplicationHelper
+
+  def repository_link(following_ids, repository)
+    if following_ids.include?(repository.id)
+      link_to repository.name, repositories_show_path(repository) 
+    else
+      repository.name
+    end
+  end
+
   def following_link(following_ids, repository)
     is_following = following_ids.include?(repository.id)
     icon         = following_icon(is_following)
