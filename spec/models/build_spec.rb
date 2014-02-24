@@ -43,7 +43,7 @@ describe Build do
           OpenStruct.new(sha: "abc123", author: author, commit: commit, rels: rels)
         end
 
-        build = Build.from_github(double('Octokit::Client'), 99)
+        build = Build.from_github(double('Octokit::Client'), 99, 'sha99')
 
         expect(build.commit).to  eq("abc123")
         expect(build.author).to  eq("ortuna")
@@ -69,22 +69,22 @@ describe Build do
       end
 
       it 'creates a build' do
-        expect { Build.queue_build(99) }.to change { Build.count }.by(1)
+        expect { Build.queue_build(99, 'sha123') }.to change { Build.count }.by(1)
       end
 
       it 'queues a build' do
         BuildWorker.should_receive(:perform_async)
-        Build.queue_build(99)
+        Build.queue_build(99, 'sha123')
       end
 
       it 'tracks the job_id' do 
-        Build.queue_build(99)
+        Build.queue_build(99, 'sha123')
         expect(Build.find(100)[:job_id]).not_to be_nil
       end
 
       it 'stops other builds that are already running' do
         Repo.any_instance.should_receive(:cancel_builds).once
-        Build.queue_build(99)
+        Build.queue_build(99, 'sha123')
       end
 
       it 'triggers a pusher update' do
@@ -95,7 +95,7 @@ describe Build do
           expect(trigger).to eq("new")
         end
 
-        Build.queue_build(99)
+        Build.queue_build(99, 'sha123')
       end
     end
 

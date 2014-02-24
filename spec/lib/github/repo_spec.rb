@@ -21,12 +21,12 @@ describe Github::Repo do
     end
   end
 
-  context '#last_commit' do
-    it 'can get the last commit on a repo' do
+  context '#commit' do
+    it 'can get the commit on a repo' do
       client = double('Octokit::Client')
-      client.stub(:commits).and_return([OpenStruct.new(sha: "some_sha")])
+      client.stub(:commit).and_return(OpenStruct.new(sha: "some_sha"))
 
-      commit = subject.last_commit(client, "ortuna/progit-bana")
+      commit = subject.commit(client, "ortuna/progit-bana", "some_sha")
       expect(commit.sha).to eq("some_sha")
     end
   end

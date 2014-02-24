@@ -12,8 +12,8 @@ class Github::Repo
     client.repo(target_name)
   end
 
-  def self.last_commit(client, target_name)
-    client.commits(target_name).first
+  def self.commit(client, target_name, sha)
+    client.commit(target_name, sha)
   end
 
   def self.fetch_from_github(client)

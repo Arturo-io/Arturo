@@ -10,14 +10,15 @@ describe HookController do
       Follower.create(repo: followed_repo, user: user)
     end
 
-    it 'creates a build' do
-      Build.should_receive(:queue_build).with("1")
-      get :github,  repository: { id: 1 }
+    it 'creates a build with the sha' do
+      Build.should_receive(:queue_build).with("1", "abc1234")
+      get :github,  repository: { id: 1}, head_commit: { id: 'abc1234'}
     end
+
 
     it 'only creates a build for a repo that is followed' do
       Build.should_not_receive(:queue_build)
-      get :github,  repository: { id: 99 }
+      get :github,  repository: { id: 99}, head_commit: { id: 'abc1234'}
     end
   end
 end

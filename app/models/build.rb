@@ -11,9 +11,9 @@ class Build < ActiveRecord::Base
     BuildStatus.new(self).update(status)
   end
 
-  def self.queue_build(repo_id)
+  def self.queue_build(repo_id, sha = nil)
     repo   = Repo.find(repo_id) 
-    build  = from_github(client(repo.user), repo_id)
+    build  = from_github(client(repo.user), repo_id, sha)
     build.save
     
     repo.cancel_builds
@@ -25,17 +25,18 @@ class Build < ActiveRecord::Base
     Pusher.trigger(status.pusher_channel, 'new', status.render_string)
   end
 
-  def self.from_github(client, repo_id)
-    repo          = Repo.find(repo_id) 
-    latest_commit = Github::Repo.last_commit(client, repo[:full_name])
-    Build.new(branch: repo[:default_branch],
-              repo:   repo,
+  def self.from_github(client, repo_id, sha)
+    repo   = Repo.find(repo_id) 
+    commit = Github::Repo.commit(client, repo[:full_name], sha)
+
+    Build.new(branch:     repo[:default_branch],
+              repo:       repo,
               started_at: Time.now,
-              commit: latest_commit.sha,
-              author: latest_commit.author.login,
-              message: latest_commit.commit.message,
-              commit_url: latest_commit.rels[:html].href,
-              status: :queued)
+              commit:     commit.sha,
+              author:     commit.author.login,
+              message:    commit.commit.message,
+              commit_url: commit.rels[:html].href,
+              status:     :queued)
 
   end
 
