@@ -75,6 +75,16 @@ describe Build do
         Build.queue_build(99)
       end
 
+      it 'tracks the job_id' do 
+        Build.queue_build(99)
+        expect(Build.find(100)[:job_id]).not_to be_nil
+      end
+
+      it 'stops other builds that are already running' do
+        Repo.any_instance.should_receive(:cancel_builds).once
+        Build.queue_build(99)
+      end
+
       it 'triggers a pusher update' do
         Pusher.should_receive(:trigger) do |channel, trigger, rendered_string|
           expect(channel).to eq("#{User.find(42).digest}-builds")

@@ -46,8 +46,11 @@ class Build < ActiveRecord::Base
     repo   = Repo.find(repo_id) 
     build  = from_github(client(repo.user), repo_id)
     build.save
+    
+    repo.cancel_builds
 
-    BuildWorker.perform_async(build[:id])
+    job_id = BuildWorker.perform_async(build[:id])
+    build.update(job_id: job_id)
 
     Pusher.trigger(build.pusher_channel, 'new', build.render_string)
   end
