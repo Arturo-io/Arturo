@@ -8,40 +8,8 @@ class Build < ActiveRecord::Base
   has_many   :assets
   
   def update_status(status)
-    update(status: status) 
-    data = { id: id, css_class: status, status: status_html(status) }
-    Pusher.trigger(pusher_channel, 'status_update', data)
+    BuildStatus.new(self).update(status)
   end
-
-  def pusher_channel
-    user.digest << "-builds"
-  end
-
-  def render_string
-    view = ActionView::Base.new(Rails.configuration.paths["app/views"])
-    view.extend BuildHelper
-    view.extend FontAwesome::Rails::IconHelper
-    view.extend ActionView::Helpers
-    view.extend Rails.application.routes.url_helpers
-    view.extend ActionDispatch::Routing::UrlFor
-    view.class_eval do
-      def default_url_options; {} end
-    end
-
-    view.render(:partial => 'build/build_list_single', locals: { build: self })
-  end
-  
-  def status_html(status)
-    view = ActionView::Base.new(Rails.configuration.paths["app/views"])
-    view.extend BuildHelper
-    view.extend FontAwesome::Rails::IconHelper
-    view.extend ActionView::Helpers
-    view.extend Rails.application.routes.url_helpers
-    view.extend ActionDispatch::Routing::UrlFor
-
-    view.build_status(status)
-  end
-
 
   def self.queue_build(repo_id)
     repo   = Repo.find(repo_id) 
@@ -52,8 +20,9 @@ class Build < ActiveRecord::Base
 
     job_id = BuildWorker.perform_async(build[:id])
     build.update(job_id: job_id)
-
-    Pusher.trigger(build.pusher_channel, 'new', build.render_string)
+    
+    status = BuildStatus.new(build)
+    Pusher.trigger(status.pusher_channel, 'new', status.render_string)
   end
 
   def self.from_github(client, repo_id)
@@ -70,7 +39,6 @@ class Build < ActiveRecord::Base
 
   end
 
-  private
   def self.client(user)
     Octokit::Client.new(access_token: user[:auth_token])
   end

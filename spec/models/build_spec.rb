@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe Build do
   before do 
-    Pusher.stub(:trigger)
     Build.any_instance.stub(:render_string)
+    Pusher.stub(:trigger)
+    BuildStatus.any_instance.stub(:update_github)
+    BuildStatus.any_instance.stub(:update_pusher)
   end
 
   it 'has the correct sort order' do
@@ -115,29 +117,4 @@ describe Build do
     end
   end
 
-  context '#update_status' do
-    before do
-      user   = create_user(id: 42, login: "ortuna")
-      repo   = Repo.new(full_name: "test_repo")
-      @build = Build.new(id: 99, user: user, repo: repo)
-    end
-
-    it 'updates the builds status' do
-      Pusher.stub(:trigger)
-      @build.update_status(:completed)
-      expect(Build.find(99)).not_to be_nil
-    end
-
-    it 'sends pusher updates' do
-      Pusher.should_receive(:trigger) do |channel, trigger, data|
-        expect(channel).to eq("#{User.find(42).digest}-builds") 
-        expect(trigger).to eq("status_update") 
-        expect(data[:id]).to eq(99) 
-        expect(data[:status]).to match(/completed/) 
-        expect(data[:css_class]).to match(/completed/) 
-      end
-      @build.update_status(:completed)
-    end
-
-  end
 end

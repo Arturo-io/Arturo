@@ -6,7 +6,10 @@ describe Generate::Build do
     repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
     @build = Generate::Build.new(99, [:pdf])
-    Pusher.stub(:trigger) 
+
+    Pusher.stub(:trigger)
+    BuildStatus.any_instance.stub(:update_github)
+    BuildStatus.any_instance.stub(:update_pusher)
   end
 
   it 'creates the right client' do

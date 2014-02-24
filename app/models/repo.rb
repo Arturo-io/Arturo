@@ -12,7 +12,7 @@ class Repo < ActiveRecord::Base
   def cancel_builds
     builds = Build
      .where(repo_id: id)
-     .where.not(status: :completed)
+     .where.not(status: [:canceled, :failure, :completed, :success])
 
     update_builds_status(builds, :canceled)
     cancel_jobs(job_ids(builds))

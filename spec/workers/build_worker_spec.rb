@@ -43,7 +43,7 @@ describe BuildWorker do
 
     it 'calls #update_status on the build' do
       @double.should_receive(:update_status).with(:building)
-      @double.should_receive(:update_status).with(:completed)
+      @double.should_receive(:update_status).with(:success)
       BuildWorker.new.perform(9)
     end
 

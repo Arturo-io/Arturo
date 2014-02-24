@@ -1,7 +1,10 @@
 require 'spec_helper'
 
 describe Repo do
-  before { Pusher.stub(:trigger) }
+  before do
+    Build.any_instance.stub(:update_status_github)
+    Pusher.stub(:trigger)
+  end
 
   it 'requires a user relationship' do
     repo = Repo.new(id: 1)
