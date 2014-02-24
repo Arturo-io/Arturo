@@ -36,9 +36,12 @@
 
         channel.bind('status_update', function(data) {
           var $el       = $(".build#" + data.id + " .status"),
+              cssClass  = data.css_class,
               newStatus = data.status;
-
-          $el.html(newStatus);
+          $el.removeClass()
+           .addClass("status")
+           .addClass(cssClass)
+           .html(newStatus);
         });
       });
     </script>
