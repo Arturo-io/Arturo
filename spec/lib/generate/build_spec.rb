@@ -14,20 +14,19 @@ describe Generate::Build do
     expect(client.access_token).to eq('abc1234')
   end
 
-  it 'can convert content to a format' do
-    Generate::Convert.stub(:run).and_return("<h1>some content</h1>")
-    content = @build.convert("#some content", :html)
-    expect(content).to match("<h1>some content</h1>")
+  it 'has default options' do
+    expect(@build.options[:table_of_contents]).to eq(true)
   end
 
-  it 'can get the content for a repo' do
-    Generate::Manifest
-      .any_instance
-      .stub(:book_content)
-      .and_return("some repos content")
-    content = @build.content("ortuna/some_repo", "some_sha")
-    expect(content).to eq("some repos content")
+  it 'sends the options to the converter' do
+    Generate::Convert.should_receive(:run) do |_, _, options| 
+      expect(options[:table_of_contents]).to eq(true)
+    end
+
+    @build.stub(:config).and_return({})
+    @build.convert("#some content", :html)
   end
+
 
   it 'can save to S3' do
     Generate::S3.should_receive(:save) do |path, content|
@@ -60,12 +59,66 @@ describe Generate::Build do
     expect(build.execute).to eq(["some_asset.pdf"]) 
   end
 
+  context '#convert' do
+    it 'can convert content to a format' do
+      Generate::Convert.stub(:run).and_return("<h1>some content</h1>")
+      @build.stub(:config).and_return({})
+      content = @build.convert("#some content", :html)
+      expect(content).to match("<h1>some content</h1>")
+    end
+    
+    it 'sends the options from the manifest' do
+      @build.stub(:config).and_return(table_of_contents: false, another_option: true)
+      Generate::Convert.should_receive(:run) do |_, _, options|
+        expect(options[:table_of_contents]).to eq(false)
+        expect(options[:another_option]).to eq(true)
+      end
+      
+      @build.convert("#some content", :html)
+    end
+
+    it 'removes the pages key/value from config hash' do
+      @build.stub(:config).and_return(pages: [1,2,3], 
+                                      table_of_contents: false, 
+                                      another_option: true)
+
+      Generate::Convert.should_receive(:run) do |_, _, options|
+        expect(options[:pages]).to eq(nil)
+      end
+      
+      @build.convert("#some content", :html)
+ 
+    end
+
+  end
+  context '#content' do
+    it 'can get the content for a repo' do
+      Generate::Manifest
+        .any_instance
+        .stub(:book_content)
+        .and_return("some repos content")
+      content = @build.content("ortuna/some_repo", "some_sha")
+      expect(content).to eq("some repos content")
+    end
+
+   it 'caches the content for the sha' do
+      Generate::Manifest
+        .should_receive(:new)
+        .once
+        .and_return(double().as_null_object)
+
+      @build.content("ortuna/some_repo", "some_sha")
+      @build.content("ortuna/some_repo", "some_sha")
+    end
+  end
+
   context '#notifications' do
 
     it 'updates build status on convert' do
       Generate::Convert.stub(:run) 
 
       Build.any_instance.should_receive(:update_status).with("building pdf")
+      @build.stub(:config).and_return({})
       @build.convert("#title", :pdf)
     end
 
@@ -76,7 +129,29 @@ describe Generate::Build do
       @build.upload("my_repo", "some_file.txt", "title", :pdf)
     end
 
+  end
 
+  context '#options' do
+    it 'can get options for a repo' do
+      Generate::Manifest
+        .any_instance
+        .stub(:config)
+        .and_return({option1: true, option2: false})
+
+      options = @build.config("ortuna/some_repo", "some_sha")
+      expect(options[:option1]).to eq(true)
+      expect(options[:option2]).to eq(false)
+    end
+
+    it 'caches the options for the sha' do
+      Generate::Manifest
+        .should_receive(:new)
+        .once
+        .and_return(double().as_null_object)
+
+      @build.config("ortuna/some_repo", "some_sha")
+      @build.config("ortuna/some_repo", "some_sha")
+    end
   end
 
 end

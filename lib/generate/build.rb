@@ -1,15 +1,15 @@
 class Generate::Build 
-  attr_reader :repo, :full_name, 
-              :auth_token, :formats,
-              :client, :build
+  attr_reader :repo, :full_name, :auth_token, :formats,
+              :client, :build, :options
 
-  def initialize(build_id, formats = [:pdf, :epub, :mobi])
+  def initialize(build_id, formats = [:pdf, :epub, :mobi], options = {})
     @build      = ::Build.find(build_id)
     @repo       = Repo.joins(:user).find(@build[:repo_id])
     @full_name  = repo[:full_name]
     @auth_token = repo.user[:auth_token]
     @formats    = formats
     @client     = github_client(auth_token)
+    @options    = options.merge(default_options)
   end
 
   def execute
@@ -31,14 +31,34 @@ class Generate::Build
 
   def convert(content, format) 
     @build.update_status("building #{format.to_s}")
-    Generate::Convert.run(content, format)
+    Generate::Convert.run(content, format, parsed_options)
+  end
+
+  def config(full_name, sha)
+    cached_manifests(full_name, sha).config
   end
 
   def content(full_name, sha)
-    Generate::Manifest.new(full_name, client, sha).book_content
+    cached_manifests(full_name, sha).book_content
   end
 
   def github_client(auth_token)
     Octokit::Client.new(access_token: auth_token)
+  end
+
+  private
+  def parsed_options
+    options.merge(config(full_name, sha)).tap do |opts|
+      opts.delete(:pages)
+    end
+  end
+
+  def cached_manifests(full_name, sha)
+    @manifests      ||= {}
+    @manifests[sha] ||= Generate::Manifest.new(full_name, client, sha)
+  end
+
+  def default_options
+    { table_of_contents: true,}
   end
 end
