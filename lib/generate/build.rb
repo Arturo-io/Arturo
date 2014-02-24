@@ -48,8 +48,10 @@ class Generate::Build
 
   private
   def parsed_options
-    options.merge(config(full_name, sha)).tap do |opts|
-      opts.delete(:pages)
+    options.merge(config(full_name, sha))
+     .with_indifferent_access
+     .tap do |opts|
+        opts.delete(:pages)
     end
   end
 

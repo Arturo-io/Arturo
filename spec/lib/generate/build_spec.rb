@@ -78,12 +78,13 @@ describe Generate::Build do
     end
 
     it 'removes the pages key/value from config hash' do
-      @build.stub(:config).and_return(pages: [1,2,3], 
+      @build.stub(:config).and_return("pages" => [1,2,3], 
                                       table_of_contents: false, 
                                       another_option: true)
 
       Generate::Convert.should_receive(:run) do |_, _, options|
         expect(options[:pages]).to eq(nil)
+        expect(options["pages"]).to eq(nil)
       end
       
       @build.convert("#some content", :html)
