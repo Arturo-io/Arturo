@@ -79,6 +79,9 @@
             <%= @build.message %>
           </div>
         </div>
+
+        <%= render('failure_message', message: @build.error) if @build.error %>
+
         <hr>
 
         <div class="row">
