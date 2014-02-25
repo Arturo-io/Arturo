@@ -33,7 +33,7 @@ class RepositoryController < ApplicationController
     @repo           = Repo.includes(:builds).find(params[:id])
     @builds         = @repo.builds.page(params[:page]).per(5)
     @badge_markdown = badge_markdown(@repo[:id])
-    @last_build     = Build.where(repo: @repo, status: :completed).first
+    @last_build     = Build.where(repo: @repo, status: :success).first
     @last_assets    = @last_build && @last_build.assets
 
     authorize_action_for @repo
