@@ -6,27 +6,34 @@ class BuildStatus
     @client = github_client(build.user)
   end
 
-  def update_github(status)
+  def update_github(status, description = nil)
     full_name = @build.repo[:full_name]
     commit    = @build.commit
     status    = translate_for_github(status)
-    options   = { target_url: action_view.build_url(@build, host: 'arturo.io')}
+    options   = { target_url: action_view.build_url(@build, host: 'arturo.io') }
+
+    options[:description] = description if description
 
     Github::Status.create(@client, full_name, commit, status, options)
   end
 
-  def update_pusher(status)
+  def update_pusher(status, description = nil)
     data = { id: @build.id, 
              css_class: @build.status, 
-             status: status_html(status) }
+             status: status_html(status),
+             description: description }
     Pusher.trigger(pusher_channel, 'status_update', data)
   end
 
-  def update(status)
+  def update(status, description = nil)
     status = status.to_s
-    @build.update(status: status) 
-    update_github(status) if @build[:commit]
-    update_pusher(status)
+
+    attributes = { status: status }
+    attributes[:error] = description if description
+    @build.update(attributes) 
+
+    update_github(status, description) if @build[:commit]
+    update_pusher(status, description)
   end
 
   def translate_for_github(status)

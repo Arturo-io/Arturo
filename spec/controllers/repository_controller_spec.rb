@@ -75,7 +75,7 @@ describe RepositoryController do
     end
 
     it 'assigns the last 5 builds for that repo' do
-      10.times { Build.create(repo_id: 1, status: :completed) }
+      10.times { Build.create(repo_id: 1, status: :success) }
 
       get :show, id: 1
       expect(assigns(:builds)).not_to be_nil
@@ -91,7 +91,7 @@ describe RepositoryController do
     
     context 'last build and assets' do
       before do
-        Build.create(id: 1, repo_id: 1, status: :completed)
+        Build.create(id: 1, repo_id: 1, status: :success)
         Build.create(id: 2, repo_id: 1, status: :failed)
         Asset.create(build_id: 1, url: 'http://www.google.com')
       end
