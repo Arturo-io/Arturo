@@ -7,9 +7,6 @@ class Build < ActiveRecord::Base
   has_one    :user, through: :repo
   has_many   :assets
   
-  def update_status(status)
-    BuildStatus.new(self).update(status)
-  end
 
   def self.queue_build(repo_id, sha = nil)
     repo   = Repo.find(repo_id) 
@@ -44,4 +41,12 @@ class Build < ActiveRecord::Base
     Octokit::Client.new(access_token: user[:auth_token])
   end
 
+  def update_status(status, message = nil)
+    build_status.update(status, message)
+  end
+
+  private
+  def build_status
+    BuildStatus.new(self) 
+  end
 end

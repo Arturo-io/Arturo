@@ -1,6 +1,6 @@
 class BuildWorker
   include Sidekiq::Worker
-  sidekiq_options retry: false
+  sidekiq_options retry: 1
 
   sidekiq_retries_exhausted do |msg|
     build_id = (msg['args'] && msg['args'].first)

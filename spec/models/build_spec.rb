@@ -1,12 +1,6 @@
 require 'spec_helper'
 
 describe Build do
-  before do 
-    Build.any_instance.stub(:render_string)
-    Pusher.stub(:trigger)
-    BuildStatus.any_instance.stub(:update_github)
-    BuildStatus.any_instance.stub(:update_pusher)
-  end
 
   it 'has the correct sort order' do
     user   = create_user(login: "ortuna")
@@ -23,11 +17,32 @@ describe Build do
     expect(build.errors[:repo_id]).not_to be_nil
   end
 
+  context '#update_status' do
+    before do 
+      user   = create_user(login: "ortuna")
+      @build = Build.new(user: user)
+    end
+
+    it 'creates and calls update on BuildStatus' do
+      double = double("BuildStatus")
+      @build.stub(:build_status).and_return(double)
+
+      double.should_receive(:update).with(:created, nil)
+      @build.update_status(:created)
+
+      double.should_receive(:update).with(:created, "message")
+      @build.update_status(:created, "message")
+    end
+  end
+
   context 'queue' do
     before do
       user = create_user(id: 42, login: "ortuna")
-      Repo.create(user: user, 
-                  id: 99, 
+
+      Build.any_instance.stub(:render_string)
+      Build.any_instance.stub(:update_status)
+      Pusher.stub(:trigger)
+      Repo.create(user: user, id: 99, 
                   full_name: "test_repo",
                   default_branch: "master")
     end
