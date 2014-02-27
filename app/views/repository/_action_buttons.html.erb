@@ -1,0 +1,15 @@
+<div class="actions columns small-4 right">
+  <%= button "#{fa_icon('github')} Github", @repo.html_url, "secondary" %>
+  <%= button "Badges", '#', "secondary badges" %>
+  <%= button "Build", repositories_build_path(@repo.id) %>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".actions a.badges").click(function() {
+      console.log("here");
+      $(".row.badges").toggle();
+      return false;
+    });
+  });
+</script>
