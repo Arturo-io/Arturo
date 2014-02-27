@@ -3,7 +3,7 @@ Arturo::Application.routes.draw do
 
   get '/auth/github/callback', to: 'omniauth_github#callback'
 
-  get '/dashboard',    to: 'dashboard#index'
+  get '/documentation',    to: 'documentation#index'
   get '/builds',       to: 'build#index'
   get '/builds/:id',   to: 'build#show', as: :build
   get '/badge/:repo_id', to: 'badge#show', as: :badge
