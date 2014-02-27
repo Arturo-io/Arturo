@@ -12,9 +12,9 @@
     <%= csrf_meta_tags %>
   </head>
 
-  <body>
+  <body class="application">
     <div class="container">
-      <header class="navigation contain-to-grid">
+      <header class="user navigation contain-to-grid">
         <div class="row">
           <div class="small-4 left columns">
             <h1 id="title">Arturo</h1>
@@ -26,21 +26,7 @@
               </ul>
 
               <section class="top-bar-section">
-                <ul class="right">
-                  <li class="has-form">
-                    <a href="/builds">Builds</a>
-                  </li>
-                  <li class="has-form">
-                    <a href="/repositories">Repositories</a>
-                  </li>
-                  <li class="has-form">
-                    <a href="/documentation">Documentation</a>
-                  </li>
-                  <li class="has-form">
-                    <a href="/user/logout">Logout</a>
-                  </li>
-                </ul>
-
+                <%= render_menu(@user) %>
               </section>
             </nav>
 

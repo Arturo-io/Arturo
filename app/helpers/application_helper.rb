@@ -24,4 +24,9 @@ module ApplicationHelper
   def following_icon(is_following)
     is_following ? fa_icon('check-square') : fa_icon('minus-square') 
   end
+
+  def render_menu(user)
+    partial = user ? 'user_links' : 'anon_links'
+    render "shared/#{partial}"
+  end
 end

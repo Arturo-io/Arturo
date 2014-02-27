@@ -1,4 +1,4 @@
-<header class="navigation contain-to-grid">
+<header class="anon navigation contain-to-grid">
   <div class="row">
     <div class="small-6 left columns">
       <h1 id="title">Arturo</h1>
@@ -10,15 +10,7 @@
         </ul>
 
         <section class="top-bar-section">
-          <ul class="right">
-            <li class="has-form">
-              <a href="/auth/github" id="auth" class="button radius alert">Authorize With Github</a>
-            </li>
-            <li class="has-form">
-              <a href="#" id="signin" class="button radius">Sign In</a>
-            </li>
-          </ul>
-
+          <%= render('shared/anon_links') %>
         </section>
       </nav>
 

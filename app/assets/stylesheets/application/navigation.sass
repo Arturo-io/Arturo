@@ -1,10 +1,25 @@
 body
   header.navigation
-    a, a:hover
-      top: 50%
-      color: #007dce
-      padding: 0 .3em
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2)
+    h1#title
+      font-weight: bold
+    a.button
+      font-weight: bold !important
+      text-transform: uppercase
       position: relative
-      font-size: 1em
-    a:hover
-      border-bottom: 3px solid #007dce
+      top: 50%
+      color: #fff
+    a#signin
+      background-color: #b3b2a4
+      color: #636365
+
+  header.user.navigation
+    ul.user
+      a, a:hover
+        top: 50%
+        color: #007dce
+        padding: 0 .3em
+        position: relative
+        font-size: 1em
+      a:hover
+        border-bottom: 3px solid #007dce

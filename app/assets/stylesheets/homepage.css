@@ -13,4 +13,5 @@
 
  *= require_tree ./homepage
  *= require ./application/application
+ *= require ./application/navigation
  */
