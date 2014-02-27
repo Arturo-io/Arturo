@@ -84,22 +84,27 @@ describe Build do
       end
 
       it 'creates a build' do
-        expect { Build.queue_build(99, 'sha123') }.to change { Build.count }.by(1)
+        expect { Build.queue_build(99, sha: 'sha123') }.to change { Build.count }.by(1)
       end
 
       it 'queues a build' do
         BuildWorker.should_receive(:perform_async)
-        Build.queue_build(99, 'sha123')
+        Build.queue_build(99, sha: 'sha123')
       end
 
       it 'tracks the job_id' do 
-        Build.queue_build(99, 'sha123')
+        Build.queue_build(99, sha: 'sha123')
         expect(Build.find(100)[:job_id]).not_to be_nil
       end
 
       it 'stops other builds that are already running' do
         Repo.any_instance.should_receive(:cancel_builds).once
-        Build.queue_build(99, 'sha123')
+        Build.queue_build(99, sha: 'sha123')
+      end
+
+      it 'can set default attributes for the build' do
+        build = Build.queue_build(99, sha: 'sha123', branch: "nacho")
+        expect(build[:branch]).to eq("nacho")
       end
 
       it 'triggers a pusher update' do
@@ -110,7 +115,7 @@ describe Build do
           expect(trigger).to eq("new")
         end
 
-        Build.queue_build(99, 'sha123')
+        Build.queue_build(99, sha: 'sha123')
       end
     end
 

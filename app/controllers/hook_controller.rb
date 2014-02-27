@@ -1,10 +1,19 @@
 class HookController < ApplicationController
   def github
-    repo_id     = params[:repository][:id]
-    head_commit = params[:head_commit][:id]
+    repo_id = params[:repository][:id]
+    sha     = params[:head_commit][:id]
+    branch  = params[:ref] && params[:ref].split('/').last
+
     following = Follower.where(repo_id: repo_id).present?
 
-    following ? Build.queue_build(repo_id, head_commit) : nil
+    following ? queue(repo_id, sha: sha, branch: branch): nil
     render nothing: true
+  end
+
+
+  private
+  def queue(repo_id, options = {})
+    options =  options.delete_if { |k, v| v.nil? }
+    Build.queue_build(repo_id, options)
   end
 end
