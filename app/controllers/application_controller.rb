@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_filter :current_user
+
   def check_login
     head :forbidden unless current_user && current_user[:id]
   end
