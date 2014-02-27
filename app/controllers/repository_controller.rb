@@ -5,6 +5,7 @@ class RepositoryController < ApplicationController
   authorize_actions_for RepoAuthorizer
   authority_actions follow:   'update', 
                     unfollow: 'update', 
+                    build:    'update',
                     sync:     'read'
 
   def sync
@@ -18,14 +19,11 @@ class RepositoryController < ApplicationController
   end
 
   def index
-    @repositories = Repo.where(user: current_user)
-                        .page(params[:page]).per(25)
-    @last_updated = current_user[:last_sync_at]
-
-    @partial      = @repositories.empty? ? 'no_repos' : 'repo_list'
-    @sync_icon    = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'
-
-    @following    = Follower.where(user: current_user).map(&:repo_id)
+    @last_updated   = current_user[:last_sync_at]
+    @repositories   = user_repositories(current_user[:id]) 
+    @partial        = @repositories.empty? ? 'no_repos' : 'repo_list'
+    @sync_icon      = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'
+    @following      = Follower.where(user: current_user).map(&:repo_id)
     @pusher_channel = "#{current_user.digest}-repositories"
   end
 
@@ -57,7 +55,19 @@ class RepositoryController < ApplicationController
     redirect_to repositories_path, notice: "You are no longer following #{repo.name}"
   end
 
+  def build
+    repo = Repo.find(params[:id])
+    authorize_action_for repo
+
+    Build.queue_build(repo[:id])
+    redirect_to repositories_show_path(repo[:id]), notice: "A build has been queued for #{repo.name}"
+  end
+
   private
+  def user_repositories(user_id)
+    Repo.where(user_id: user_id).page(params[:page]).per(25)
+  end
+
   def badge_markdown(repo_id)
     badge_url = badge_url(repo_id: repo_id, only_path: false)
     repo_url  = repositories_show_url(id: repo_id)

@@ -32,3 +32,5 @@ end
 Authority.configure do |config|
   config.logger = Logger.new('/dev/null')
 end
+
+Sidekiq::Logging.logger = nil

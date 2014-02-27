@@ -17,6 +17,33 @@ describe RepositoryController do
     end
   end
 
+  context '#build' do
+    before do
+      Repo.create(id: 99, user_id: 42, name: 'test')
+      Build.stub(:queue_build)
+    end
+
+    it 'calls queue_build for the repo' do
+      Build.should_receive(:queue_build).with(99)
+      get :build, id: 99 
+    end
+
+    it 'does not queue_build if the user does not own the repo' do
+      create_user(id: 41, uid: "secondary_user")
+      session[:user_id] = 41
+
+      Build.should_not_receive(:queue_build)
+
+      get :build, id: 99 
+      assert_response :forbidden
+    end
+
+    it 'redirects you to the repository path' do
+      get :build, id: 99 
+      assert_redirected_to repositories_show_path(99)
+    end
+  end
+
   context '#sync' do
     it 'sets the users loading_repos to true' do
       get :sync

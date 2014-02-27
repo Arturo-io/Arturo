@@ -69,6 +69,18 @@ describe Build do
       end
     end
 
+    context '.github_commit' do
+      it 'calls Github::Repo.commit when a sha is given' do
+        Github::Repo.should_receive(:commit)
+        Build.send(:github_commit, nil, nil, 'abc123')
+      end
+
+      it 'calls Github::Repo.last_commit when a sha is not given' do
+        Github::Repo.should_receive(:last_commit)
+        Build.send(:github_commit, nil, nil)
+      end
+    end
+
     context '.queue_build' do
       before do
         build = Build.new(repo_id: 99, 

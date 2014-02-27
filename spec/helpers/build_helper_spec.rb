@@ -6,7 +6,7 @@ describe BuildHelper do
       long_message = "a"*55
 
       output = message(long_message)
-      expect(output.length).to eq(50)
+      expect(output.length).to eq(53)
     end
 
     it 'works with a nil or empty message' do

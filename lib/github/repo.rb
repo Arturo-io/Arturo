@@ -16,6 +16,13 @@ class Github::Repo
     client.commit(target_name, sha)
   end
 
+  def self.last_commit(client, target_name)
+    Octokit.auto_paginate = false
+    client.commits(target_name).first.tap do |commit|
+      Octokit.auto_paginate = true 
+    end
+  end
+
   def self.fetch_from_github(client)
     client.repos
   end
@@ -30,7 +37,8 @@ class Github::Repo
   private
   def self.update_attributes(user_id, repo_hash, model)
     model.tap do |new_repo|
-      new_repo.user_id = user_id
+      new_repo.user_id  = user_id
+      new_repo.html_url = repo_hash.rels && repo_hash.rels[:html].href
       repo_hash.attrs.each do |key, value|
         next unless new_repo.respond_to? "#{key.to_s}="
         new_repo.send("#{key}=", value)

@@ -39,7 +39,7 @@ class Build < ActiveRecord::Base
 
     def from_github(client, repo_id, sha)
       repo   = Repo.find(repo_id) 
-      commit = Github::Repo.commit(client, repo[:full_name], sha)
+      commit = github_commit(client, repo[:full_name], sha)
 
       Build.new(branch:     repo[:default_branch],
                 repo:       repo,
@@ -49,10 +49,17 @@ class Build < ActiveRecord::Base
                 message:    commit.commit.message,
                 commit_url: commit.rels[:html].href,
                 status:     :queued)
-
     end
 
     private
+    def github_commit(client, repo, sha = nil)
+      if sha
+        Github::Repo.commit(client, repo, sha)
+      else
+        Github::Repo.last_commit(client, repo)
+      end
+    end
+
     def update_status(build)
       status = BuildStatus.new(build)
       Pusher.trigger(status.pusher_channel, 'new', status.render_string)

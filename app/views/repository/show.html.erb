@@ -1,9 +1,18 @@
 <div class="row repositories">
-  <%= render('repo_badge', image: badge_url(repo_id: @repo.id),
-                           markdown: @badge_markdown) %> 
-  <%= render('last_build',  build: @last_build) if @last_build %>
-  <div class="row builds">
-    <h3>Builds History</h3>
-    <%= render('build/build_list') %>
+  <div class="row">
+    <div class="columns small-6 left">
+      <h2> <%= link_to @repo.name, @repo.html_url, target: "_blank"%> </h2>
+    </div>
   </div>
+
+  <%= last_build(@last_build) %>
+
+  <div class="row builds">
+    <div class="columns small-12">
+      <h3>Builds History</h3>
+      <%= render('build/build_list') %>
+    </div>
+  </div>
+
+  <%= repo_badge(@repo.id, @badge_markdown) %>
 </div>

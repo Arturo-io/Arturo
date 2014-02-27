@@ -17,10 +17,11 @@ Arturo::Application.routes.draw do
 
   scope '/repositories', as: :repositories do
     get    '/',           to: 'repository#index'
-    get    '/:id',        to: 'repository#show',     as: :show
     get    '/sync',       to: 'repository#sync',     as: :sync
+    get    '/:id',        to: 'repository#show',     as: :show
     put    '/:id/follow', to: 'repository#follow',   as: :follow
     delete '/:id/follow', to: 'repository#unfollow', as: :unfollow 
+    get    '/:id/build',  to: 'repository#build',    as: :build
   end
 
 
