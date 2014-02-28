@@ -12,7 +12,7 @@ module BuildHelper
   end
 
   def branch_name(branch)
-    limit_string(branch, 8)
+    limit_string(branch, 10)
   end
 
   def message(message)
@@ -34,7 +34,7 @@ module BuildHelper
   private
   def limit_string(string, max)
     return "" unless string
-    return string if string.length < max
+    return string if string.length <= max
     string[0..max]  << "..."
   end
 end
