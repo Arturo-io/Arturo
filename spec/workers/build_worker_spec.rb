@@ -25,7 +25,7 @@ describe BuildWorker do
 
     it 'creates and calls execute on a new Generate::Build' do
       Generate::Build.should_receive(:new) do |build_id, formats|
-        expect(formats).to eq([:pdf, :epub, :mobi])
+        expect(formats).to eq([:pdf, :html, :epub, :mobi])
         expect(build_id).to eq(9)
         @double
       end
