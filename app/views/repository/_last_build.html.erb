@@ -1,16 +1,6 @@
-<div class="row">
-  <div class="columns small-8 left">
-    <div class="information">
-      <em>The last successful build for this repo was <%= link_to "##{build.id}", build_path(build) %>.</em>
-    </div>
-  </div>
-  <%= render 'action_buttons' %>
-</div>
-
-<%= repo_badge(@repo.id, @badge_markdown) %>
-
-<div class="row">
-  <div class="columns small-12">
-    <%= render('build/assets', assets: @last_assets) if @last_assets%>
+<div class="columns small-8 left">
+  <div class="information">
+    <em>The last successful build for this repo was <%= link_to "##{@last_build.id}", build_path(@last_build) %>.</em>
   </div>
 </div>
+

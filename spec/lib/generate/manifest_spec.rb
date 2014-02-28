@@ -15,9 +15,21 @@ describe Generate::Manifest do
     end
   end
 
+  context '#has_manifest?' do
+    it 'fetches the existance of a manifest' do
+      manifest = Generate::Manifest.new("owner/repo")
+      manifest.stub(:read_config).and_return("some_value")
+
+      expect(manifest.has_manifest?).to eq(true)
+
+      manifest.stub(:read_config) { raise Octokit::NotFound }
+      expect(manifest.has_manifest?).to eq(false)
+    end
+  end
+
   context '#read_remote_file' do
     it 'calls Github::File with the correct params' do
-      Github::File.should_receive(:fetch) do |repo, path, _, sha|
+      Github::File.should_receive(:fetch) do |repo, path, sha, _client|
         expect(repo).to eq("owner/repo")
         expect(path).to eq("some_file.xyz")
         expect(sha).to  eq(nil)
@@ -28,7 +40,7 @@ describe Generate::Manifest do
     end
 
     it 'passes the correct sha to Github::File' do
-      Github::File.should_receive(:fetch) do |_, _, _, sha|
+      Github::File.should_receive(:fetch) do |_, _, sha, _|
         expect(sha).to  eq("some_sha")
       end
 

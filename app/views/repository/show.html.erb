@@ -5,7 +5,19 @@
     </div>
   </div>
 
-  <%= last_build(@last_build) %>
+  <div class="row">
+    <%= render 'last_build', last_build: @last_build if @last_build %>
+    <%= render 'action_buttons' %>
+  </div>
+
+  <%= repo_badge(@repo.id, @badge_markdown) %>
+
+  <div class="row">
+    <div class="columns small-12">
+      <%= render('build/assets', assets: @last_assets) if @last_assets %>
+    </div>
+  </div>
+
 
   <div class="row builds">
     <div class="columns small-12">

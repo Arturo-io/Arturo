@@ -19,12 +19,12 @@ describe BuildWorker do
       @double = double("Generate::Build").as_null_object
       @double.stub(:execute).and_return([])
 
-      Generate::Build.stub_chain(:new, :execute).and_return([])
+      Generate::Book.stub_chain(:new, :execute).and_return([])
       Build.stub(:find).and_return(@double)
     end
 
     it 'creates and calls execute on a new Generate::Build' do
-      Generate::Build.should_receive(:new) do |build_id, formats|
+      Generate::Book.should_receive(:new) do |build_id, formats|
         expect(formats).to eq([:pdf, :html, :epub, :mobi])
         expect(build_id).to eq(9)
         @double
@@ -35,7 +35,7 @@ describe BuildWorker do
 
     it 'creates an asset for the URLs' do
       assets = [ 'http://reddit.com' , 'http://google.com']
-      Generate::Build.stub_chain(:new, :execute).and_return(assets)
+      Generate::Book.stub_chain(:new, :execute).and_return(assets)
 
       Asset.should_receive(:create).twice.and_return(nil)
       BuildWorker.new.perform(9)

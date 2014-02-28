@@ -1,11 +1,14 @@
 require 'spec_helper'
+class ExampleBuilder < Generate::Build::Generic
 
-describe Generate::Build do
+end
+
+describe Generate::Build:: Generic do
   before do
     user  = create_user(auth_token: 'abc1234')
     repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
-    @build = Generate::Build.new(99, [:pdf])
+    @build = ExampleBuilder.new(99, [:pdf])
 
     Pusher.stub(:trigger)
     BuildStatus.any_instance.stub(:update_github)
@@ -26,7 +29,6 @@ describe Generate::Build do
       expect(options[:table_of_contents]).to eq(true)
     end
 
-    @build.stub(:config).and_return({})
     @build.convert("#some content", :html)
   end
 
@@ -62,16 +64,50 @@ describe Generate::Build do
     expect(build.execute).to eq(["some_asset.pdf"]) 
   end
 
+  context '#tree' do
+    before do
+      @directory1 = { "path" => "some_dir",  "type" => "tree" }
+      @directory2 = { "path" => "some_dir1", "type" => "tree" }
+      @file1      = { "path" => "file.txt",  "type" => "blob" }
+      @file2      = { "path" => "file2.txt", "type" => "blob" }
+      @file3      = { "path" => "file2.pdf", "type" => "blob" }
+      @tree       = OpenStruct.new(tree:[@directory1, @file1, @file2, @directory2, @file3])
+    end
+
+    it 'can get the file tree from a git repo' do
+      Github::Tree
+        .should_receive(:fetch)
+        .with(anything, "progit-bana", "shaaaabbcc")
+        .and_return(@tree)
+
+      expect(@build.tree("progit-bana", "shaaaabbcc")).to eq(["file.txt", "file2.txt"])
+    end
+
+    it 'returns only txt/md files and not directories' do
+      Github::Tree.stub(:fetch).and_return(@tree)
+      expect(@build.tree("some_repo", "some_sha")).to eq(["file.txt", "file2.txt"])
+    end
+
+  end
+
+  context '#content' do
+    it 'can get content from the repo tree' do
+      Github::File.stub(:fetch) { |_, path, _, _| path }
+      @build.stub(:tree).and_return ['02-chap2/chap2.txt', '01-chap1/chap1.txt']
+      content = @build.content("some_repo", "some_sha")
+      expect(content).to eq("01-chap1/chap1.txt\n02-chap2/chap2.txt\n")
+    end
+  end
+
   context '#convert' do
     it 'can convert content to a format' do
       Generate::Convert.stub(:run).and_return("<h1>some content</h1>")
-      @build.stub(:config).and_return({})
       content = @build.convert("#some content", :html)
       expect(content).to match("<h1>some content</h1>")
     end
     
     it 'sends the options from the manifest' do
-      @build.stub(:config).and_return(table_of_contents: false, another_option: true)
+      @build.stub(:options).and_return(table_of_contents: false, another_option: true)
       Generate::Convert.should_receive(:run) do |_, _, options|
         expect(options[:table_of_contents]).to eq(false)
         expect(options[:another_option]).to eq(true)
@@ -80,40 +116,6 @@ describe Generate::Build do
       @build.convert("#some content", :html)
     end
 
-    it 'removes the pages key/value from config hash' do
-      @build.stub(:config).and_return("pages" => [1,2,3], 
-                                      table_of_contents: false, 
-                                      another_option: true)
-
-      Generate::Convert.should_receive(:run) do |_, _, options|
-        expect(options[:pages]).to eq(nil)
-        expect(options["pages"]).to eq(nil)
-      end
-      
-      @build.convert("#some content", :html)
- 
-    end
-
-  end
-  context '#content' do
-    it 'can get the content for a repo' do
-      Generate::Manifest
-        .any_instance
-        .stub(:book_content)
-        .and_return("some repos content")
-      content = @build.content("ortuna/some_repo", "some_sha")
-      expect(content).to eq("some repos content")
-    end
-
-   it 'caches the content for the sha' do
-      Generate::Manifest
-        .should_receive(:new)
-        .once
-        .and_return(double().as_null_object)
-
-      @build.content("ortuna/some_repo", "some_sha")
-      @build.content("ortuna/some_repo", "some_sha")
-    end
   end
 
   context '#notifications' do
@@ -122,7 +124,6 @@ describe Generate::Build do
       Generate::Convert.stub(:run) 
 
       Build.any_instance.should_receive(:update_status).with("building pdf")
-      @build.stub(:config).and_return({})
       @build.convert("#title", :pdf)
     end
 
@@ -135,27 +136,5 @@ describe Generate::Build do
 
   end
 
-  context '#options' do
-    it 'can get options for a repo' do
-      Generate::Manifest
-        .any_instance
-        .stub(:config)
-        .and_return({option1: true, option2: false})
-
-      options = @build.config("ortuna/some_repo", "some_sha")
-      expect(options[:option1]).to eq(true)
-      expect(options[:option2]).to eq(false)
-    end
-
-    it 'caches the options for the sha' do
-      Generate::Manifest
-        .should_receive(:new)
-        .once
-        .and_return(double().as_null_object)
-
-      @build.config("ortuna/some_repo", "some_sha")
-      @build.config("ortuna/some_repo", "some_sha")
-    end
-  end
 
 end

@@ -12,7 +12,9 @@ class BuildWorker
     build = Build.find(build_id)
     build.update_status(:building)
 
-    assets = Generate::Build.new(build_id, [:pdf, :html, :epub, :mobi]).execute
+    formats = [:pdf, :html, :epub, :mobi]
+    assets  = Generate::Book.new(build_id, formats).execute
+
     assets.each do |asset|
       Asset.create(url: asset, build: build)
     end

@@ -18,7 +18,13 @@ class Generate::Manifest
   end
 
   def read_remote_file(path)
-    Github::File.fetch(repo, path, client, sha)
+    Github::File.fetch(repo, path, sha, client)
+  end
+
+  def has_manifest?
+    return true if read_config 
+  rescue Octokit::NotFound
+    false
   end
 
   private
