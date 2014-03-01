@@ -42,5 +42,4 @@ module BuildHelper
     link_to("#{image} #{author}".html_safe, url, target: "_blank")
   end
 
-
 end

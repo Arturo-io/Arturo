@@ -1,7 +1,7 @@
         <tr class="build" id="<%= build.id %>">
           <td class="name"><%= link_to_build(build) %></td>
           <td class="branch"><%= branch_name(build.branch) %></td>
-          <td class="commit"><%= link_to_commit(build) %></td>
+          <td class="commit"><%= link_to_commit(build) if build.commit%></td>
           <td class="message"><%= message(build.message) %></td>
           <td class="author">
             <%= link_to_author(build.author, build.author_url, build.author_avatar) %>

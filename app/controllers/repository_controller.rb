@@ -59,7 +59,7 @@ class RepositoryController < ApplicationController
     repo = Repo.find(params[:id])
     authorize_action_for repo
 
-    Build.queue_build(repo[:id])
+    QueueBuild.queue_build(repo[:id])
     redirect_to repositories_show_path(repo[:id]), notice: "A build has been queued for #{repo.name}"
   end
 

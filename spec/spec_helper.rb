@@ -15,7 +15,7 @@ RSpec.configure do |config|
 end
 
 def create_user(options = {})
-  options = {
+  options = { 
     uid: 1,
     id:  1,
     provider: 'github',
@@ -23,6 +23,22 @@ def create_user(options = {})
     auth_token: 'token',
   }.merge(options)
   User.create(options)
+end
+
+def create_repo(options = {})
+  Repo.create(options)
+end
+
+def create_build(options = {})
+  options = { 
+    author: "some_author",
+    author_url: "some_url",
+    author_avatar: "some_avatar",
+    commit: "some_commit",
+    commit_url: "some_commit",
+    status: :queued
+  }.merge(options)
+  Build.create(options)
 end
 
 def read_fixture_file(path)

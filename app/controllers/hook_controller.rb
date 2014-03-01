@@ -14,6 +14,6 @@ class HookController < ApplicationController
   private
   def queue(repo_id, options = {})
     options =  options.delete_if { |k, v| v.nil? }
-    Build.queue_build(repo_id, options)
+    QueueBuild.queue_build(repo_id, options)
   end
 end
