@@ -15,6 +15,17 @@ describe BuildHelper do
     end
   end
 
+  context 'icon' do
+    def fa_icon(icon); icon end
+
+    it 'gives a spinner' do
+      expect(icon("building")).to match(/spinner/)
+      expect(icon("failure")).to match(/times/)
+      expect(icon("success")).to match(/check/)
+    end
+
+  end
+
   context 'status_has_spinner?' do
     it 'is true for any /build/ status' do
       ['building pdf', 'Building Stuff', 'Uploading pdf'].each do |status|
