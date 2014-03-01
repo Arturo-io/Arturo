@@ -1,9 +1,11 @@
         <tr class="build" id="<%= build.id %>">
-          <td class="name"><%= link_to_repo(build) %></td>
+          <td class="name"><%= link_to_build(build) %></td>
           <td class="branch"><%= branch_name(build.branch) %></td>
           <td class="commit"><%= link_to_commit(build) %></td>
           <td class="message"><%= message(build.message) %></td>
-          <td class="author"><%= build.author %></td>
+          <td class="author">
+            <%= link_to_author(build.author, build.author_url, build.author_avatar) %>
+          </td>
           <td class="status <%= build.status.downcase %>">
             <%= build_status(build.status) %>
           </td>

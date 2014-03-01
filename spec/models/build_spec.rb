@@ -51,7 +51,11 @@ describe Build do
       it 'instantiates a build from latest github commit' do
         Github::Repo.should_receive(:commit) do |client, repo_name|
           expect(repo_name).to eq("test_repo")
-          author = OpenStruct.new(login: "ortuna")
+
+          rels   = { html:   OpenStruct.new(href: 'some_url'),
+                     avatar: OpenStruct.new(href: 'some_avatar')}
+          author = OpenStruct.new(login: "ortuna", rels: rels)
+
           commit = OpenStruct.new(message: "a commit message")
           rels   = { html: OpenStruct.new(href: 'http://example.com') }
 
@@ -62,6 +66,8 @@ describe Build do
 
         expect(build.commit).to  eq("abc123")
         expect(build.author).to  eq("ortuna")
+        expect(build.author_url).to  eq("some_url")
+        expect(build.author_avatar).to  eq("some_avatar")
         expect(build.branch).to  eq("master")
         expect(build.message).to eq("a commit message")
         expect(build.commit_url).to eq("http://example.com")

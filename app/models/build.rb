@@ -41,14 +41,16 @@ class Build < ActiveRecord::Base
       repo   = Repo.find(repo_id) 
       commit = github_commit(client, repo[:full_name], sha)
 
-      Build.new(branch:     repo[:default_branch],
-                repo:       repo,
-                started_at: Time.now,
-                commit:     commit.sha,
-                author:     commit.author.login,
-                message:    commit.commit.message,
-                commit_url: commit.rels[:html].href,
-                status:     :queued)
+      Build.new(branch:        repo[:default_branch],
+                repo:          repo,
+                started_at:    Time.now,
+                commit:        commit.sha,
+                author:        commit.author.login,
+                author_url:    commit.author.rels[:html].href,
+                author_avatar: commit.author.rels[:avatar].href,
+                message:       commit.commit.message,
+                commit_url:    commit.rels[:html].href,
+                status:        :queued)
     end
 
     private

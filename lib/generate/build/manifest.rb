@@ -23,7 +23,7 @@ module Generate
         @manifests      ||= {}
         @manifests[sha] ||= Generate::Manifest.new(full_name, sha, client)
       end
-    
+
     end
   end
 end

@@ -64,6 +64,7 @@ class BuildStatus
     view.extend BuildHelper
     view.extend FontAwesome::Rails::IconHelper
     view.extend ActionView::Helpers
+    view.extend ApplicationHelper
     view.extend Rails.application.routes.url_helpers
     view.extend ActionDispatch::Routing::UrlFor
     view.class_eval do

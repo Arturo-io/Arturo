@@ -29,4 +29,11 @@ module ApplicationHelper
     partial = user ? 'user_links' : 'anon_links'
     render "shared/#{partial}"
   end
+
+  def limit_string(string, max)
+    return "" unless string
+    return string if string.length <= max
+    string[0..max]  << "..."
+  end
+
 end

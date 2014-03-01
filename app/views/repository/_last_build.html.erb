@@ -1,6 +1,9 @@
 <div class="columns small-8 left">
   <div class="information">
-    <em>The last successful build for this repo was <%= link_to "##{@last_build.id}", build_path(@last_build) %>.</em>
+    <em>
+      The last successful build for this repo was 
+      <%= link_to "#{@last_build.repo.name} [#{limit_string(@last_build.commit, 4)}]", build_path(@last_build) %>.
+    </em>
   </div>
 </div>
 

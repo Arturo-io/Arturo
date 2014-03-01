@@ -1,6 +1,6 @@
 module BuildHelper
-  def link_to_repo(build)
-    link_to "#{build.repo.name} ##{build.id}", 
+  def link_to_build(build)
+    link_to "#{build.repo.name} [#{limit_string(build.commit, 4)}]", 
       url_for(controller: 'build', action: 'show', 
               id: build[:id], only_path: true)
   end
@@ -31,10 +31,16 @@ module BuildHelper
     output << " #{status}"
   end
 
-  private
   def limit_string(string, max)
     return "" unless string
     return string if string.length <= max
     string[0..max]  << "..."
   end
+
+  def link_to_author(author, url, avatar)
+    image = (avatar && image_tag(avatar, width: "24", class: "author-avatar")) || ""
+    link_to("#{image} #{author}".html_safe, url, target: "_blank")
+  end
+
+
 end
