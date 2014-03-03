@@ -15,6 +15,10 @@ class Build < ActiveRecord::Base
     attributes.each { |key, value| send("#{key}=", value) }
   end
 
+  def self.last_successful_build(repo_id, branch = :master)
+    where(repo_id: repo_id, branch: branch, status: :success).first
+  end
+
   private
   def build_status
     BuildStatus.new(self) 

@@ -52,4 +52,27 @@ describe Build do
     end
   end
 
+  context 'scope' do
+    before do
+      user   = create_user(login: "ortuna")
+      repo   = Repo.create(id: 5, full_name: "test_repo", user: user)
+      Build.create(id: 41, repo: repo, status: :success, branch: :other) 
+      Build.create(id: 42, repo: repo, status: :success, branch: :master) 
+      Build.create(id: 43, repo: repo, status: :completed) 
+      5.times { Build.create(repo: repo, status: :failure) } 
+    end
+
+    context '#last_successful_build' do
+      it 'can find the last successful build' do
+        build = Build.last_successful_build(5, :other)
+        expect(build.id).to eq(41)
+      end
+
+      it 'defaults to the master branch' do
+        build = Build.last_successful_build 5
+        expect(build.id).to eq(42)
+      end
+    end
+  end
+
 end
