@@ -1,5 +1,6 @@
 class BadgeController < ApplicationController
   def show
-    redirect_to RepoBadge.new(params).url 
+    build = Build.last_successful_build(params[:repo_id], params[:branch])  
+    redirect_to RepoBadge.new(build).url 
   end
 end

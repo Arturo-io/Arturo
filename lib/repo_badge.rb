@@ -1,11 +1,8 @@
 class RepoBadge
-  attr_reader :repo_id, :branch, :build, :ext
+  attr_reader :build
 
-  def initialize(params)
-    @repo_id = params[:repo_id]
-    @branch  = params[:branch] || default_branch
-    @ext     = params[:ext]    || default_ext
-    @build   = Build.last_successful_build(repo_id, branch)
+  def initialize(build)
+    @build = build
   end
 
   def url
@@ -13,11 +10,7 @@ class RepoBadge
   end
 
   private
-  def default_branch
-    'master'
-  end
-
-  def default_ext
+  def ext
     'png'
   end
 
@@ -28,10 +21,6 @@ class RepoBadge
   def build_date
     build.ended_at.strftime("%Y/%m/%d")
   end 
-
-  def prefix
-    'build'
-  end
 
   def color
     'brightgreen'

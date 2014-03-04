@@ -4,14 +4,13 @@ describe BadgeController do
   context '#show' do
     before do
       user  = create_user()
-      repo  = Repo.create(id: 1, user: user)
-      Build.create(repo: repo, branch: :master)
+      repo  = create_repo(id: 1, user: user)
+      create_build(repo: repo, branch: :master, status: :success, ended_at: Time.now)
     end
 
     it 'redirects you to the badge url' do
-      RepoBadge.any_instance.stub(:url).and_return "http://www.example.com"
       get :show, repo_id: 1, branch: :master
-      assert_redirected_to "http://www.example.com"
+      assert_response :redirect
     end
 
   end
