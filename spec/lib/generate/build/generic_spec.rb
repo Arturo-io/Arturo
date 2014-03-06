@@ -25,8 +25,12 @@ describe Generate::Build:: Generic do
   end
 
   it 'sends the options to the converter' do
-    Generate::Convert.should_receive(:run) do |_, _, options| 
+    Generate::Convert.should_receive(:new) do |_, _, options| 
       expect(options[:table_of_contents]).to eq(true)
+      expect(options[:file_list_download]).not_to be_nil
+      double().as_null_object.tap do |d|
+        d.should_receive(:run)
+      end
     end
 
     @build.convert("#some content", :html)
@@ -101,16 +105,20 @@ describe Generate::Build:: Generic do
 
   context '#convert' do
     it 'can convert content to a format' do
-      Generate::Convert.stub(:run).and_return("<h1>some content</h1>")
+      Generate::Convert.stub_chain(:new, :run).and_return("<h1>some content</h1>")
       content = @build.convert("#some content", :html)
       expect(content).to match("<h1>some content</h1>")
     end
     
     it 'sends the options from the manifest' do
       @build.stub(:options).and_return(table_of_contents: false, another_option: true)
-      Generate::Convert.should_receive(:run) do |_, _, options|
+      Generate::Convert.should_receive(:new) do |_, _, options|
         expect(options[:table_of_contents]).to eq(false)
         expect(options[:another_option]).to eq(true)
+
+        double().as_null_object.tap do |d|
+          d.should_receive(:run)
+        end
       end
       
       @build.convert("#some content", :html)
@@ -121,7 +129,7 @@ describe Generate::Build:: Generic do
   context '#notifications' do
 
     it 'updates build status on convert' do
-      Generate::Convert.stub(:run) 
+      Generate::Convert.stub(:new).and_return(double().as_null_object) 
 
       Build.any_instance.should_receive(:update_status).with("building pdf")
       @build.convert("#title", :pdf)

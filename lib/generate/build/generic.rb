@@ -33,7 +33,10 @@ module Generate
 
       def convert(content, format) 
         @build.update_status("building #{format.to_s}")
-        Generate::Convert.run(content, format, options)
+        opts = { file_list_download: file_list_download}
+          .merge(parsed_options).with_indifferent_access
+
+        Generate::Convert.new(content, format, opts).run
       end
 
       def content(full_name, sha)
@@ -57,12 +60,20 @@ module Generate
       end
 
       private
+      def file_list_download
+        Github::FileListDownload.new(files: [], client: client, sha: sha, repo: full_name)
+      end
+
       def allowed_extensions
         [".txt", ".text", ".md", ".markdown"]
       end
 
       def sort_paths(paths)
         paths.sort
+      end
+
+      def parsed_options
+        options
       end
 
       def default_options
