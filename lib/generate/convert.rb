@@ -26,6 +26,9 @@ class Generate::Convert
   def add_other_files
     add(:css)
     add(:template)
+    add(:include_in_header)
+    add(:include_before_body)
+    add(:include_after_body)
   end
 
   def download_and_attach
