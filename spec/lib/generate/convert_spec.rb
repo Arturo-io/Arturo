@@ -48,25 +48,31 @@ describe Generate::Convert do
       @converter = double("Docverter::Conversion").as_null_object
     end
 
-    context 'single' do
-      it 'should assign the other file to the converter' do
-        @converter.should_receive(:template=).with('template.html')
-        run_fake_converter(@converter, template: "some/template.html")
+    it 'should assign the other file to the converter' do
+      @converter.should_receive(:template=).with('template.html')
+      run_fake_converter(@converter, template: "some/template.html")
+    end
+
+    it 'should assign the multiple files to the converter' do
+      @converter.should_receive(:template=).with(["template.html", "other.html"])
+      run_fake_converter(@converter, template: ["one/template.html", "two/other.html"])
+    end
+
+    it 'adds the file via :add_other_file' do
+      @fd.stub(:download).and_return(['/tmp/xyz/template.html'])
+      @converter.should_receive(:add_other_file) do |path|
+        expect(path).to eq('/tmp/xyz/template.html')
       end
 
-      it 'should assign the multiple files to the converter' do
-        @converter.should_receive(:template=).with(["template.html", "other.html"])
-        run_fake_converter(@converter, template: ["one/template.html", "two/other.html"])
-      end
+      run_fake_converter(@converter, template: "assets/template.html")
+    end
 
-      it 'adds the file via :add_other_file' do
-        @fd.stub(:download).and_return(['/tmp/xyz/template.html'])
-        @converter.should_receive(:add_other_file) do |path|
-          expect(path).to eq('/tmp/xyz/template.html')
-        end
+    it 'can add generic files form :files' do
+      @converter.should_not_receive(:files=)
+      @fd.stub(:download).and_return(['/tmp/xyz/template.html'])
+      @converter.should_receive(:add_other_file).with("/tmp/xyz/template.html")
 
-        run_fake_converter(@converter, template: "assets/template.html")
-      end
+      run_fake_converter(@converter, files: ["assets/template.html"])
     end
 
   end

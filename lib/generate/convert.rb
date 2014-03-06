@@ -29,6 +29,8 @@ class Generate::Convert
     add(:include_in_header)
     add(:include_before_body)
     add(:include_after_body)
+
+    add_generic_files(:files)
   end
 
   def download_and_attach
@@ -41,6 +43,16 @@ class Generate::Convert
     return unless options[key]
     options[key].respond_to?(:each) ? add_multiple(key) : add_single(key)
   end
+
+  def add_generic_files(key)
+    return unless options[key]
+    options[key].each do |item|
+      fd.add_file(item)
+    end
+
+    options.delete(key)
+  end
+
 
   def add_multiple(key)
     options[key] = options[key].map do |item|
