@@ -48,18 +48,25 @@ describe Generate::Convert do
       @converter = double("Docverter::Conversion").as_null_object
     end
 
-    it 'should assign the other file to the converter' do
-      @converter.should_receive(:css=).with('stylesheet.css')
-      run_fake_converter(@converter, css: "assets/stylesheet.css", template: "template.html")
-    end
-
-    it 'adds the file via :add_other_file' do
-      @fd.stub(:download).and_return(['/tmp/xyz/stylesheet.css'])
-      @converter.should_receive(:add_other_file) do |path|
-        expect(path).to eq('/tmp/xyz/stylesheet.css')
+    context 'single' do
+      it 'should assign the other file to the converter' do
+        @converter.should_receive(:template=).with('template.html')
+        run_fake_converter(@converter, template: "some/template.html")
       end
 
-      run_fake_converter(@converter, css: "assets/stylesheet.css")
+      it 'should assign the multiple files to the converter' do
+        @converter.should_receive(:template=).with(["template.html", "other.html"])
+        run_fake_converter(@converter, template: ["one/template.html", "two/other.html"])
+      end
+
+      it 'adds the file via :add_other_file' do
+        @fd.stub(:download).and_return(['/tmp/xyz/template.html'])
+        @converter.should_receive(:add_other_file) do |path|
+          expect(path).to eq('/tmp/xyz/template.html')
+        end
+
+        run_fake_converter(@converter, template: "assets/template.html")
+      end
     end
 
   end

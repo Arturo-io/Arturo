@@ -39,8 +39,20 @@ class Generate::Convert
 
   def add(key)
     return unless options[key]
+    options[key].respond_to?(:each) ? add_multiple(key) : add_single(key)
+  end
+
+  def add_multiple(key)
+    options[key] = options[key].map do |item|
+      fd.add_file(item)
+      File.basename(item)
+    end
+  end
+
+  def add_single(key)
     fd.add_file(options[key])
     options[key] = File.basename(options[key])
   end
+
 
 end
