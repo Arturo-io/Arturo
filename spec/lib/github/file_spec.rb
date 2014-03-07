@@ -27,4 +27,17 @@ describe Github::File do
     content = subject.fetch("ortuna/progit-bana", "readme.md", "some_sha", client) 
     expect(content).to eq("readme!")
   end
+
+  it 'forces the UTF-8' do
+    client = double("Github::Octkit")
+
+    client.stub(:contents) do |_, options|
+      expect(options[:ref]).to eq("some_sha")
+      OpenStruct.new(content: "cmVhZG1lIQ==")
+    end
+
+    content = subject.fetch("ortuna/progit-bana", "readme.md", "some_sha", client) 
+    expect(content.encoding).to eq(Encoding.find("UTF-8"))
+
+  end
 end
