@@ -29,7 +29,7 @@ module BuildHelper
   def icon(status)
     if status_has_spinner?(status)
       fa_icon("spinner spin") 
-    elsif status == "failure"
+    elsif status == "failure" || status == "canceled"
       fa_icon("times-circle") 
     elsif status == "success"
       fa_icon("check-circle") 
