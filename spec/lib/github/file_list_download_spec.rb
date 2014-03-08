@@ -33,15 +33,15 @@ describe Github::FileListDownload do
     file_list.stub(:fetch_content)
 
     local_files = file_list.download
-    expect(local_files.first).to match(/readme\.md$/)
+    expect(local_files['readme.md']).to match(/readme.*md$/)
   end
 
   it 'deletes all the tmp files' do
-    paths = ['file1.md', 'file2.md']
+    paths = {'file1.md' => '/tmp/file1.md', 'file2.md' => '/tmp/file2.md'}
     file_list = subject.new(files: ['readme.md'], repo: 'some_repo')
-    file_list.stub(:tmp_files).and_return(paths)
+    file_list.stub(:downloaded_paths).and_return(paths)
 
-    FileUtils.should_receive(:rm).with paths
+    FileUtils.should_receive(:rm).with ['/tmp/file1.md', '/tmp/file2.md']
     file_list.delete
   end
 
@@ -50,7 +50,7 @@ describe Github::FileListDownload do
     file_list.stub(:fetch_content)
 
     paths = file_list.download
-    expect(paths).to eq(file_list.downloaded_paths)
+    expect(paths['readme.md']).not_to be_nil
   end
 end
 

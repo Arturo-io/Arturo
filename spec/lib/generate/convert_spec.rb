@@ -8,7 +8,7 @@ describe Generate::Convert do
   end
 
   it 'can convert one format to another' do
-    double = double()
+    double = double().as_null_object
     double.should_receive(:convert)
 
     Docverter::Conversion.should_receive(:new) do |from, to, content|
@@ -22,7 +22,7 @@ describe Generate::Convert do
   end
 
   it 'should assign options to the convert' do
-    double = double()
+    double = double().as_null_object
     double.stub(:convert)
     double.should_receive(:some=).with(true)
     double.should_receive(:option=).with(false)
@@ -35,13 +35,13 @@ describe Generate::Convert do
   end
 
   context 'other files' do
-    def run_fake_converter(double, options)
+    def fake_converter(double = @converter, options)
       Docverter::Conversion
         .should_receive(:new)
         .and_return(double)
 
       options[:file_list_download] =  @fd
-      subject.new("#raw markdown", :html, options).run
+      subject.new("#raw markdown", :html, options)
     end
 
     before do
@@ -49,32 +49,67 @@ describe Generate::Convert do
     end
 
     it 'should assign the other file to the converter' do
-      @converter.should_receive(:template=).with('template.html')
-      run_fake_converter(@converter, template: "some/template.html")
+      @fd.stub(:download).and_return({'some/template.html' => '/tmp/xyz/templateXYZ.html'})
+      @converter.should_receive(:template=).with('templateXYZ.html')
+      fake_converter( template: "some/template.html").run 
     end
 
     it 'should assign the multiple files to the converter' do
       @converter.should_receive(:template=).with(["template.html", "other.html"])
-      run_fake_converter(@converter, template: ["one/template.html", "two/other.html"])
+      fake_converter( template: ["one/template.html", "two/other.html"]).run
     end
 
     it 'adds the file via :add_other_file' do
-      @fd.stub(:download).and_return(['/tmp/xyz/template.html'])
-      @converter.should_receive(:add_other_file) do |path|
-        expect(path).to eq('/tmp/xyz/template.html')
-      end
+      @fd.stub(:download).and_return({'template.html' => '/tmp/xyz/templateXYZ.html'})
+      @converter.should_receive(:add_other_file).with('/tmp/xyz/templateXYZ.html')
 
-      run_fake_converter(@converter, template: "assets/template.html")
+      fake_converter( template: "assets/template.html").run 
     end
 
     it 'can add generic files form :files' do
       @converter.should_not_receive(:files=)
-      @fd.stub(:download).and_return(['/tmp/xyz/template.html'])
-      @converter.should_receive(:add_other_file).with("/tmp/xyz/template.html")
+      @fd.stub(:download).and_return({'template.html' => '/tmp/xyz/templateXYZ.html'})
+      @converter.should_receive(:add_other_file).with("/tmp/xyz/templateXYZ.html")
 
-      run_fake_converter(@converter, files: ["assets/template.html"])
+      fake_converter( files: ["assets/template.html"]).run 
+    end
+
+    context ':include_in_header' do
+      it 'attaches a default :include_in_header file' do
+        @converter.should_receive(:include_in_header=).with(["header.html"])
+        @converter.should_receive(:add_other_file) do |path|
+          expect(path).to match(/header\.html$/)
+        end
+
+        @fd.stub(:download).and_return({})
+        fake_converter( files: []).run 
+      end
+
+      it 'doesnt break previous files in :include_in_header' do
+        @fd.stub(:download).and_return({})
+
+        @converter.should_receive(:include_in_header=).with(["other_file.html", "header.html"])
+        fake_converter( include_in_header: "other_file.html", files: []).run 
+
+        @converter.should_receive(:include_in_header=).with(["other.html", "file.html", "header.html"])
+        fake_converter( include_in_header: ["other.html", "file.html"], files: []).run 
+      end
+    end
+
+    context 'private' do
+      context '#find_path_key' do
+        it 'can find the key from a hash' do
+          hash ={ some_option: "szy", css: "stylesheet.css", other: "values"}
+          expect(fake_converter({}).send(:find_path_key, hash, "stylesheet.css")).to eq(:css)
+
+          hash ={ some_option: "szy", css: ["a.md", "stylesheet.css"], other: true}
+          expect(fake_converter({}).send(:find_path_key, hash, "stylesheet.css")).to eq(:css)
+          
+        end
+      end
     end
 
   end
+
 
 end

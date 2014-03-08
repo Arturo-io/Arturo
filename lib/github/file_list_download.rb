@@ -16,16 +16,20 @@ class Github::FileListDownload
   end
 
   def download
-    @downloaded_paths = files.map { |path| download_to_temp(path) }
+    @downloaded_paths = {}
+    files.each do |path| 
+      @downloaded_paths[path] = download_to_temp(path)
+    end
+    @downloaded_paths
   end
 
   def delete
-    FileUtils.rm tmp_files
+    FileUtils.rm downloaded_paths.values
   end
 
   private
   def download_to_temp(path)
-    file = File.new(tmp_file(path), "w+")
+    file = tmp_file(path)
     file.write fetch_content(path)
     file.path
   ensure
@@ -35,7 +39,7 @@ class Github::FileListDownload
   def tmp_file(path)
     extension = File.extname(path)
     base_name = File.basename(path, extension)
-    "#{Dir::Tmpname.tmpdir}/#{base_name}#{extension}"
+    Tempfile.new([base_name, extension])
   end
 
   def fetch_content(path)
