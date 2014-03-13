@@ -36,6 +36,9 @@ module Generate
         opts = { file_list_download: file_list_download}
           .merge(parsed_options).with_indifferent_access
 
+        #only standalone for HTML, PDF gen doesn't work
+        opts["self-contained"] = true if format == :html
+
         Generate::Convert.new(content, format, opts).run
       end
 
@@ -77,9 +80,7 @@ module Generate
       end
 
       def default_options
-        { :table_of_contents => true,
-          "self-contained"   => true
-        }
+        { :table_of_contents => true}
       end
     end
   end

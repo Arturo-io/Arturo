@@ -36,6 +36,26 @@ describe Generate::Build:: Generic do
     @build.convert("#some content", :html)
   end
 
+  it 'does not send self-contained: true to converter unless format is html' do
+    dbl = double().as_null_object.tap do |d|
+      d.should_receive(:run)
+    end
+
+    Generate::Convert.should_receive(:new) do |_, _, options| 
+      expect(options["self-contained"]).to eq(true)
+      dbl
+    end
+
+    @build.convert("#some content", :html)
+
+    Generate::Convert.should_receive(:new) do |_, _, options| 
+      expect(options["self-contained"]).to eq(nil)
+      dbl
+    end
+
+    @build.convert("#some content", :pdf)
+  end
+
 
   it 'can save to S3' do
     Generate::S3.should_receive(:save) do |path, content|
