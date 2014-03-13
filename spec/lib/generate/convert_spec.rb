@@ -88,10 +88,10 @@ describe Generate::Convert do
       it 'doesnt break user :css files' do
         @fd.stub(:download).and_return({})
 
-        @converter.should_receive(:css=).with(["other_file.html", "theme.css"])
+        @converter.should_receive(:css=).with(["theme.css", "other_file.html"])
         fake_converter( css: "other_file.html", files: []).run 
 
-        @converter.should_receive(:css=).with(["other.html", "file.html", "theme.css"])
+        @converter.should_receive(:css=).with(["theme.css", "other.html", "file.html"])
         fake_converter( css: ["other.html", "file.html"], files: []).run 
       end
     end

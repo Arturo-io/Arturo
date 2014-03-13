@@ -60,7 +60,7 @@ class Generate::Convert
   def attach_styles
     styles_path = Rails.root.join("lib", "generate","assets","theme.css").to_s
     options[:css] = [options[:css]].compact.flatten
-    options[:css] << "theme.css"
+    options[:css].unshift("theme.css")
     converter.add_other_file(styles_path)
   end
 
