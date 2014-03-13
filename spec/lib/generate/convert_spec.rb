@@ -74,25 +74,25 @@ describe Generate::Convert do
       fake_converter( files: ["assets/template.html"]).run 
     end
 
-    context ':include_in_header' do
-      it 'attaches a default :include_in_header file' do
-        @converter.should_receive(:include_in_header=).with(["header.html"])
+    context ':css' do
+      it 'attaches a default stylesheet' do
+        @converter.should_receive(:css=).with(["theme.css"])
         @converter.should_receive(:add_other_file) do |path|
-          expect(path).to match(/header\.html$/)
+          expect(path).to match(/theme\.css$/)
         end
 
         @fd.stub(:download).and_return({})
         fake_converter( files: []).run 
       end
 
-      it 'doesnt break previous files in :include_in_header' do
+      it 'doesnt break user :css files' do
         @fd.stub(:download).and_return({})
 
-        @converter.should_receive(:include_in_header=).with(["other_file.html", "header.html"])
-        fake_converter( include_in_header: "other_file.html", files: []).run 
+        @converter.should_receive(:css=).with(["other_file.html", "theme.css"])
+        fake_converter( css: "other_file.html", files: []).run 
 
-        @converter.should_receive(:include_in_header=).with(["other.html", "file.html", "header.html"])
-        fake_converter( include_in_header: ["other.html", "file.html"], files: []).run 
+        @converter.should_receive(:css=).with(["other.html", "file.html", "theme.css"])
+        fake_converter( css: ["other.html", "file.html"], files: []).run 
       end
     end
 

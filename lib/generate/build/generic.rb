@@ -77,7 +77,9 @@ module Generate
       end
 
       def default_options
-        { table_of_contents: true,}
+        { :table_of_contents => true,
+          "self-contained"   => true
+        }
       end
     end
   end
