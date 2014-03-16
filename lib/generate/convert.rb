@@ -34,7 +34,10 @@ class Generate::Convert
   end
 
   def attach_default_files
-    attach_pdf_styles if output_format == :pdf
+    if output_format == :pdf  
+      attach_fonts
+      attach_pdf_styles
+    end
     attach_styles
   end
 
@@ -59,24 +62,26 @@ class Generate::Convert
     options.delete(key)
   end
 
-  def attach_pdf_styles
-    path  = Rails.root.join("lib", "generate","assets","pdf.css").to_s
-    options[:css] = [options[:css]].compact.flatten
-    options[:css].unshift(["pdf.css"])
-    converter.add_other_file(path)
-
+  def attach_fonts
     Dir["#{Rails.root}/lib/generate/assets/fonts/**/*.ttf"].each do |font|
       converter.add_other_file(font)
     end
   end
 
+  def attach_pdf_styles
+    attach_css("pdf.css")
+  end
+
   def attach_styles
-    theme_path  = Rails.root.join("lib", "generate","assets","theme.css").to_s
-    custom_path = Rails.root.join("lib", "generate","assets","custom.css").to_s
-    options[:css] = [options[:css]].compact.flatten
-    options[:css].unshift(["theme.css", "custom.css"])
-    converter.add_other_file(theme_path)
-    converter.add_other_file(custom_path)
+    attach_css("custom.css")
+    attach_css("theme.css")
+  end
+
+  def attach_css(asset)
+    asset_path    = Rails.root.join("lib", "generate","assets", asset).to_s
+    options[:css] = [options[:css]].flatten.compact
+    options[:css].unshift(asset)
+    converter.add_other_file(asset_path)
   end
 
   def find_path_key(opts = options, path)

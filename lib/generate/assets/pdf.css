@@ -1,11 +1,3 @@
-
-body {  font-family: "Vollkorn", Palatino, Times; }
-
-pre.sourceCode, code, .sourceCode {
-  line-height: 1.0em !important;
-  font-family: "Consolas", "Menlo", "Monaco", monospace, serif;
-}
-
 @font-face {
   font-family: 'Consolas';
   font-style: normal;

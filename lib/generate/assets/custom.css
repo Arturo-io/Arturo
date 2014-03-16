@@ -20,3 +20,10 @@ pre.sourceCode {
 }
 
 
+pre.sourceCode, code, .sourceCode {
+  line-height: 1.0em !important;
+  font-family: "Consolas", "Menlo", "Monaco", monospace, serif;
+}
+
+body {  font-family: "Vollkorn", Palatino, Times; }
+
