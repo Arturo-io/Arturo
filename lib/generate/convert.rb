@@ -1,10 +1,11 @@
 class Generate::Convert
-  attr_reader :options, :fd, :converter, :file_keys
+  attr_reader :options, :fd, :converter, :file_keys, :output_format
 
   def initialize(content, output_format, opts = {})
     @options       = opts.dup
     @fd            = options.delete(:file_list_download)
     @options       = options
+    @output_format = output_format
     @converter     = Docverter::Conversion.new("markdown", output_format.to_s, content) 
     @file_keys     = [:css, 
                       :epub_cover_image, 
@@ -33,6 +34,7 @@ class Generate::Convert
   end
 
   def attach_default_files
+    attach_pdf_styles if output_format == :pdf
     attach_styles
   end
 
@@ -57,11 +59,24 @@ class Generate::Convert
     options.delete(key)
   end
 
-  def attach_styles
-    styles_path = Rails.root.join("lib", "generate","assets","theme.css").to_s
+  def attach_pdf_styles
+    path  = Rails.root.join("lib", "generate","assets","pdf.css").to_s
     options[:css] = [options[:css]].compact.flatten
-    options[:css].unshift("theme.css")
-    converter.add_other_file(styles_path)
+    options[:css].unshift(["pdf.css"])
+    converter.add_other_file(path)
+
+    Dir["#{Rails.root}/lib/generate/assets/fonts/**/*.ttf"].each do |font|
+      converter.add_other_file(font)
+    end
+  end
+
+  def attach_styles
+    theme_path  = Rails.root.join("lib", "generate","assets","theme.css").to_s
+    custom_path = Rails.root.join("lib", "generate","assets","custom.css").to_s
+    options[:css] = [options[:css]].compact.flatten
+    options[:css].unshift(["theme.css", "custom.css"])
+    converter.add_other_file(theme_path)
+    converter.add_other_file(custom_path)
   end
 
   def find_path_key(opts = options, path)

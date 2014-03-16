@@ -1,0 +1,22 @@
+#TOC li {
+  list-style: none;
+}
+
+a { text-decoration: none; }
+
+h1 {
+  page-break-before: always;
+}
+
+code {
+  page-break-inside: avoid;
+  orphans: 0;
+  widows: 0;
+  font-size: .7em;
+}
+
+pre.sourceCode {
+  border-left: .3em solid #CCC;
+}
+
+
