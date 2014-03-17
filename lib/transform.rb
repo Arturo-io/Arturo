@@ -1,7 +1,7 @@
 module Transform
   mattr_accessor :plugins
 
-  self.plugins = [NewLine, GithubImage]
+  self.plugins = [NewLine]
 
   def self.execute(content, from = nil)
     plugins.inject(content) do |memo, plugin|

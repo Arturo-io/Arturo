@@ -17,6 +17,7 @@ class Generate::Convert
   end
 
   def run
+    attach_images
     attach_other_files
     attach_repo_assets
     attach_generic_files
@@ -27,6 +28,10 @@ class Generate::Convert
   end
 
   private
+  def attach_images
+
+  end
+
   def assign_options
     options.each do |option, value| 
       converter.send("#{option}=", value)
