@@ -45,7 +45,7 @@ module Generate
       def content(full_name, sha)
         tree = sort_paths(tree(full_name, sha))
         tree.inject("") do |memo, path|
-          memo << Github::File.fetch(full_name, path, sha, client) << "\n"
+          memo << Transform.execute(Github::File.fetch(full_name, path, sha, client))
         end
       end
 

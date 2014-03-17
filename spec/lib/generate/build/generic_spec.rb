@@ -116,6 +116,7 @@ describe Generate::Build:: Generic do
 
   context '#content' do
     it 'can get content from the repo tree' do
+      Transform.plugins = [Transform::NewLine]
       Github::File.stub(:fetch) { |_, path, _, _| path }
       @build.stub(:tree).and_return ['02-chap2/chap2.txt', '01-chap1/chap1.txt']
       content = @build.content("some_repo", "some_sha")
