@@ -16,6 +16,7 @@ class Build < ActiveRecord::Base
   end
 
   def self.last_successful_build(repo_id, branch = :master)
+    branch ||= :master
     where(repo_id: repo_id, branch: branch, status: :success).first
   end
 
