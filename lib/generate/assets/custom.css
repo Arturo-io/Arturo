@@ -26,3 +26,6 @@ pre.sourceCode, code, .sourceCode {
 
 body {  font-family: "Vollkorn", Palatino, Times; }
 
+body img {
+  width: 100%;
+}
