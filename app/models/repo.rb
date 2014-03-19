@@ -18,6 +18,13 @@ class Repo < ActiveRecord::Base
     cancel_jobs(job_ids(builds))
   end
 
+  def self.user_repositories(user_id)
+    Repo
+     .joins("LEFT JOIN followers on followers.repo_id = repos.id")
+     .where(user_id: user_id)
+     .reorder("followers.following ASC, pushed_at DESC")
+  end
+
   private
   def cancel_jobs(job_ids)
     %w(schedule retry).each { |s| cancel_jobs_in_set(job_ids, s) }

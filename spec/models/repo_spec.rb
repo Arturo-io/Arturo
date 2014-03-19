@@ -27,6 +27,29 @@ describe Repo do
     expect(Repo.new.builds.count).to eq(0)
   end
 
+  context '.user_repositories' do
+    it 'retrieves all the users repos' do
+      expect { 
+        10.times { Repo.create(user_id: 42, name: "some_repo") }
+        10.times { Repo.create(user_id: 41, name: "some_repo") }
+      }.to change { Repo.user_repositories(42).count }.from(0).to(10)
+    end
+
+    it 'sorts the followed repos at the top' do
+      followed = [5, 9, 1]
+      10.times do |n| 
+        Repo.create(id: n, user_id: 42, name: "repo #{n}", pushed_at: Time.now + n.minutes)
+      end
+
+      followed.each { |i| Follower.create(repo_id: i, user_id: 42) }
+      repos = Repo.user_repositories(42)
+
+      (0..2).each do |i|
+        expect(followed.include?(repos[i].id)).to eq(true)
+      end
+    end
+  end
+
   context '#cancel_builds' do
     before do
       user = create_user(id: 42)

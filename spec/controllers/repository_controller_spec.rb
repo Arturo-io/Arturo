@@ -185,7 +185,7 @@ describe RepositoryController do
       repos = assigns(:repositories) 
       expect(repos.count).to eq(25)
     end
-    
+
     context 'followers' do
       it 'assigns a list of repo ids that are being followed' do
         Repo.create(id: 99, user_id: 42, name: 'test')

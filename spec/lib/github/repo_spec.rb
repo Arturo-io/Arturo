@@ -116,4 +116,5 @@ describe Github::Repo do
     end
 
   end
+
 end
