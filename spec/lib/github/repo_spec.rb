@@ -11,39 +11,46 @@ describe Github::Repo do
     ]
   end
 
+  let(:orgs) do
+    [{ "login" => "railsrumble" },
+     { "login" => "arturo-io"}] 
+  end
+
+  before do
+    @client = double("Octokit::Client")
+    allow(@client).to receive(:orgs).and_return(orgs)
+  end
+
   context '#fetch_repo' do
     it 'can get a single repo from github' do
-      client = double('Octokit::Client')
-      client.stub(:repo).and_return({hash: "value"})
+      expect(@client).to receive(:repo).and_return({hash: "value"})
 
-      repo_hash = subject.fetch_repo(client, "ortuna/progit-bana")
+      repo_hash = subject.fetch_repo(@client, "ortuna/progit-bana")
       expect(repo_hash).to eq({hash: "value"})
     end
   end
 
   context '#commit' do
     it 'can get the commit on a repo' do
-      client = double('Octokit::Client')
-      client.stub(:commit).and_return(OpenStruct.new(sha: "some_sha"))
+      expect(@client).to receive(:commit).and_return(OpenStruct.new(sha: "some_sha"))
 
-      commit = subject.commit(client, "ortuna/progit-bana", "some_sha")
+      commit = subject.commit(@client, "ortuna/progit-bana", "some_sha")
       expect(commit.sha).to eq("some_sha")
     end
   end
 
   context '#last_commit' do
     it 'gets the latest commit form github' do
-      client = double("Octokit::Client")
-      client.stub_chain(:commits, :first).and_return("expected")
+      @client.stub_chain(:commits, :first).and_return("expected")
 
-      commit = subject.last_commit(client, "ortuna/progit-bana")
+      commit = subject.last_commit(@client, "ortuna/progit-bana")
       expect(commit).to eq("expected")
     end
 
     it 'should turn off auto_pagination for github' do
-      client = double("Octokit::Client").as_null_object
+      @client = double("Octokit::Client").as_null_object
       Octokit.should_receive(:auto_paginate=).twice
-      subject.last_commit(client, "ortuna/progit-bana")
+      subject.last_commit(@client, "ortuna/progit-bana")
     end
 
  end
@@ -52,9 +59,10 @@ describe Github::Repo do
     before {  create_user(id: 42, login: "ortuna") }
 
     it 'can sync from github' do
-      double = double('Octokit::Client')
-      double.stub(:repos).and_return(example_repo_list)
-      subject.stub(:client).and_return(double)
+      expect(@client).to receive(:orgs).and_return(orgs)
+      expect(@client).to receive(:repos).and_return(example_repo_list).exactly(3).times
+
+      expect(subject).to receive(:client).and_return(@client)
 
       subject.sync(42)
       expect(Repo.count).to eq(4)
@@ -87,11 +95,20 @@ describe Github::Repo do
 
   context '#fetch_from_github' do
     it 'fetches a list of repos from client' do
-      client =  double() 
-      client.stub(:repos).and_return(example_repo_list)
+      @client.stub(:repos).and_return(example_repo_list)
 
-      repos = subject.fetch_from_github(client) 
+      repos = subject.fetch_from_github(@client) 
       expect(repos.first.attrs[:name]).to eq("expected_name0")
+    end
+
+    it 'fetches a list of repos from every org' do
+      expect(@client).to receive(:orgs).and_return(orgs)
+      expect(@client).to receive(:repos).with("railsrumble").and_return(example_repo_list)
+      expect(@client).to receive(:repos).with("arturo-io").and_return(example_repo_list)
+      expect(@client).to receive(:repos).and_return(example_repo_list)
+
+      repos = subject.fetch_from_github(@client) 
+      expect(repos.count).to eq(12)
     end
   end
 
@@ -113,6 +130,13 @@ describe Github::Repo do
 
       subject.update_attributes(42, @hash, @model)
       expect(@model.html_url).to eq("http://example.com")
+    end
+
+    it 'sets the github org/author' do
+      @hash.stub_chain(:owner, :login).and_return("Arturo-io")
+      subject.update_attributes(42, @hash, @model)
+
+      expect(@model.org).to eq("arturo-io")
     end
 
   end

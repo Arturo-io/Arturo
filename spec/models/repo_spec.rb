@@ -28,25 +28,45 @@ describe Repo do
   end
 
   context '.user_repositories' do
+    before do
+      create_user(id: 42, login: "ortuna")
+      10.times do |n|
+        Repo.create(id: n, user_id: 42, name: "repo #{n}", pushed_at: Time.now + n.minutes, org: "ortuna")
+        Repo.create(id: n+10, user_id: 42, name: "repo #{n}", org: "some_org")
+        Repo.create(id: n+20, user_id: 41, name: "repo #{n}")
+      end
+    end
+
     it 'retrieves all the users repos' do
-      expect { 
-        10.times { Repo.create(user_id: 42, name: "some_repo") }
-        10.times { Repo.create(user_id: 41, name: "some_repo") }
-      }.to change { Repo.user_repositories(42).count }.from(0).to(10)
+      expect(Repo.user_repositories(42).count).to eq(10)
     end
 
     it 'sorts the followed repos at the top' do
       followed = [5, 9, 1]
-      10.times do |n| 
-        Repo.create(id: n, user_id: 42, name: "repo #{n}", pushed_at: Time.now + n.minutes)
-      end
-
       followed.each { |i| Follower.create(repo_id: i, user_id: 42) }
       repos = Repo.user_repositories(42)
 
       (0..2).each do |i|
         expect(followed.include?(repos[i].id)).to eq(true)
       end
+    end
+
+    it 'only gets the current users orgs' do
+      repos = Repo.user_repositories(42, "sOme_org")
+      expect(repos.first.org).to eq("some_org")
+    end
+  end
+
+  context '.user_orgs' do
+    it 'fetches the distinct users orgs from repos' do
+      create_user(id: 42, login: "User")
+
+      Repo.create(id: 1, user_id: 42, name: "repo 1", org: "org1")
+      Repo.create(id: 2, user_id: 42, name: "repo 2", org: "org2")
+      Repo.create(id: 3, user_id: 42, name: "repo 3", org: "org3")
+      Repo.create(id: 4, user_id: 42, name: "repo 1", org: "user")
+
+      expect(Repo.user_orgs(42)).to eq(["org1", "org2", "org3"]) 
     end
   end
 

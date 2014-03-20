@@ -24,7 +24,10 @@ class Github::Repo
   end
 
   def self.fetch_from_github(client)
-    client.repos
+    user_orgs  = Github::Org.fetch_login_list(client)
+    user_repos = client.repos
+    orgs_repos = user_orgs.map { |org| client.repos(org) }
+    (user_repos + orgs_repos).flatten.compact
   end
 
   def self.create_from_array(user_id, repos_hash)
@@ -38,7 +41,8 @@ class Github::Repo
   def self.update_attributes(user_id, repo_hash, model)
     model.tap do |new_repo|
       new_repo.user_id  = user_id
-      new_repo.html_url = repo_hash.rels && repo_hash.rels[:html].href
+      new_repo.html_url = repo_hash.rels  && repo_hash.rels[:html].href
+      new_repo.org      = repo_hash.owner && repo_hash.owner.login.downcase
       repo_hash.attrs.each do |key, value|
         next unless new_repo.respond_to? "#{key.to_s}="
         new_repo.send("#{key}=", value)

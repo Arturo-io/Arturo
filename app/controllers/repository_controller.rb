@@ -21,11 +21,11 @@ class RepositoryController < ApplicationController
   def index
     @last_updated   = current_user[:last_sync_at]
     @following      = Follower.where(user: current_user).map(&:repo_id)
-    @repositories   = user_repositories(current_user[:id])
+    @repositories   = user_repositories(current_user[:id], params[:org] || current_user[:login])
+    @orgs           = Repo.user_orgs(current_user[:id])
     @partial        = @repositories.empty? ? 'no_repos' : 'repo_list'
     @sync_icon      = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'
     @pusher_channel = "#{current_user.digest}-repositories"
-
   end
 
   def show
@@ -65,8 +65,8 @@ class RepositoryController < ApplicationController
   end
 
   private
-  def user_repositories(user_id)
-     Repo.user_repositories(user_id).page(params[:page]).per(25)
+  def user_repositories(user_id, org = nil)
+     Repo.user_repositories(user_id, org).page(params[:page]).per(25)
   end
 
   def badge_markdown(repo_id)

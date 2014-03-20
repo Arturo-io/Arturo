@@ -22,7 +22,7 @@ def create_user(options = {})
     name: 'test user',
     auth_token: 'token',
   }.merge(options)
-  User.create(options)
+  User.create!(options)
 end
 
 def create_repo(options = {})

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe RepositoryController do
   before do 
-    create_user(id: 42)
+    create_user(id: 42, login: "ortuna")
     session[:user_id] = 42
   end
 
@@ -148,7 +148,7 @@ describe RepositoryController do
     end
 
     it 'renders a list of repos' do
-      Repo.create(user_id: 42, name: 'test')
+      Repo.create(user_id: 42, name: 'test', org: "ortuna")
 
       get :index
       expect(response).to render_template('_repo_list')
@@ -164,11 +164,16 @@ describe RepositoryController do
       assert_not_nil assigns(:pusher_channel)
     end
 
-    it 'only gets the current signed in users repositories' do
-      create_user(id: 43)
+    it 'assigns the users orgs' do
+      get :index
+      assert_not_nil assigns(:orgs)
+    end
 
-      Repo.create(user_id: 42, name: 'test')
-      Repo.create(user_id: 43, name: 'test_other')
+    it 'only gets the current signed in users repositories' do
+      create_user(id: 43, uid: 43)
+
+      Repo.create(user_id: 42, name: 'test', org: "ortuna")
+      Repo.create(user_id: 43, name: 'test_other', org: "ortuna")
 
       get :index
       repos = assigns(:repositories) 
@@ -178,8 +183,8 @@ describe RepositoryController do
     end
 
     it 'paginates the repos' do
-      Repo.create(user_id: 412, name: 'test') 
-      50.times { Repo.create(user_id: 42, name: 'test') }
+      Repo.create(user_id: 412, name: 'test', org: "ortuna") 
+      50.times { Repo.create(user_id: 42, name: 'test', org: "ortuna") }
 
       get :index
       repos = assigns(:repositories) 
@@ -209,7 +214,7 @@ describe RepositoryController do
 
   context 'follow/unfollow'  do
     before do
-      create_user(id: 41)
+      create_user(id: 41, uid: "other")
       Repo.create(id: 99, user_id: 42, name: 'test')
       Repo.create(id: 11, user_id: 41, name: 'test')
     end

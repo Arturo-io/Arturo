@@ -18,11 +18,21 @@ class Repo < ActiveRecord::Base
     cancel_jobs(job_ids(builds))
   end
 
-  def self.user_repositories(user_id)
+  def self.user_repositories(user_id, org = nil)
+    org ||= User.find(user_id).login
+    org.downcase!
+
     Repo
      .joins("LEFT JOIN followers on followers.repo_id = repos.id")
-     .where(user_id: user_id)
+     .where(user_id: user_id, org: org)
      .reorder("followers.following ASC, pushed_at DESC")
+  end
+
+  def self.user_orgs(user_id)
+    login = User.find(user_id).login.downcase
+    Repo.unscoped.uniq.pluck(:org).tap do |repos|
+      repos.delete(login)
+    end.compact
   end
 
   private

@@ -17,6 +17,7 @@ Arturo::Application.routes.draw do
 
   scope '/repositories', as: :repositories do
     get    '/',           to: 'repository#index'
+    get    '/org/:org',   to: 'repository#index',    as: :org
     get    '/sync',       to: 'repository#sync',     as: :sync
     get    '/:id',        to: 'repository#show',     as: :show
     put    '/:id/follow', to: 'repository#follow',   as: :follow
