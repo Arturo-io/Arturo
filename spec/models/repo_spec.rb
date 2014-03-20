@@ -38,13 +38,13 @@ describe Repo do
     end
 
     it 'retrieves all the users repos' do
-      expect(Repo.user_repositories(42).count).to eq(10)
+      expect(Repo.user_repositories(42, "ortuna").count).to eq(10)
     end
 
     it 'sorts the followed repos at the top' do
       followed = [5, 9, 1]
       followed.each { |i| Follower.create(repo_id: i, user_id: 42) }
-      repos = Repo.user_repositories(42)
+      repos = Repo.user_repositories(42, "ortuna")
 
       (0..2).each do |i|
         expect(followed.include?(repos[i].id)).to eq(true)

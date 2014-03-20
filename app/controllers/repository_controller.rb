@@ -65,7 +65,7 @@ class RepositoryController < ApplicationController
   end
 
   private
-  def user_repositories(user_id, org = nil)
+  def user_repositories(user_id, org)
      Repo.user_repositories(user_id, org).page(params[:page]).per(25)
   end
 
