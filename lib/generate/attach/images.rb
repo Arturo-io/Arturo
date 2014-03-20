@@ -10,7 +10,7 @@ module Generate
       end
 
       def execute!
-        content.gsub(/\!\[.*\]\((.*)\)/i) do |_url|
+        content.gsub(/\!\[.*\]\((?!http)(.*)\)/i) do |_url|
           downloader.add_file $1
         end
         download_and_replace

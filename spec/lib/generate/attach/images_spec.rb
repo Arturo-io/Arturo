@@ -13,6 +13,7 @@ describe Generate::Attach::Images do
     @markdown = <<-markdown
       ![cover](image/cover.jpg)
       ![figure](image/figure.jpg)
+      ![remote](http://www.example.com/image/cover.jpg)
     markdown
   end
 
@@ -44,6 +45,15 @@ describe Generate::Attach::Images do
     expect(@converter).to receive(:add_other_file).with("/tmp/TMPfigure.jpg")
 
     execute_subject(@markdown)
+  end
+
+  it 'does not modify/download remote image urls' do
+    expect(@fd).not_to receive(:add_file)
+
+    markdown = "![remote](http://www.example.com/image/cover.jpg)"
+
+    execute_subject(markdown)
+    expect(markdown).to match('http://www.example.com/image/cover.jpg')
   end
 
 end
