@@ -21,7 +21,8 @@ class RepositoryController < ApplicationController
   def index
     @last_updated   = current_user[:last_sync_at]
     @following      = Follower.where(user: current_user).map(&:repo_id)
-    @repositories   = user_repositories(current_user[:id], params[:org] || current_user[:login])
+    @org            = params[:org] || current_user[:login]
+    @repositories   = user_repositories(current_user[:id], @org)
     @orgs           = Repo.user_orgs(current_user[:id])
     @partial        = @repositories.empty? ? 'no_repos' : 'repo_list'
     @sync_icon      = current_user[:loading_repos] ?  'spinner spin' : 'github-alt'

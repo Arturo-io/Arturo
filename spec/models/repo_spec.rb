@@ -66,7 +66,7 @@ describe Repo do
       Repo.create(id: 3, user_id: 42, name: "repo 3", org: "org3")
       Repo.create(id: 4, user_id: 42, name: "repo 1", org: "user")
 
-      expect(Repo.user_orgs(42)).to eq(["org1", "org2", "org3"]) 
+      expect(Repo.user_orgs(42)).to eq(["user", "org1", "org2", "org3"]) 
     end
   end
 

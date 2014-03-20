@@ -32,7 +32,7 @@ class Repo < ActiveRecord::Base
     login = User.find(user_id).login.downcase
     Repo.unscoped.uniq.pluck(:org).tap do |repos|
       repos.delete(login)
-    end.compact
+    end.compact.unshift(login)
   end
 
   private
