@@ -4,14 +4,14 @@ module Generate
       attr_reader :repo, :full_name, :auth_token, :formats,
         :client, :build, :options
 
-      def initialize(build_id, formats = [:pdf, :epub, :mobi], options = {})
+      def initialize(build_id, options = {})
         @build      = ::Build.find(build_id)
         @repo       = Repo.joins(:user).find(@build[:repo_id])
         @full_name  = repo[:full_name]
         @auth_token = repo.user[:auth_token]
-        @formats    = formats
         @client     = github_client(auth_token)
-        @options    = options.merge(default_options)
+        @options    = options.merge(default_options).with_indifferent_access
+        @formats    = options[:formats] 
       end
 
       def execute
@@ -80,7 +80,9 @@ module Generate
       end
 
       def default_options
-        { :table_of_contents => true}
+        { :table_of_contents => true,
+          formats: [:pdf, :epub, :mobi]
+        }
       end
     end
   end

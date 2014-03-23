@@ -21,7 +21,7 @@ module Generate
     end
 
     def valid_options
-      %w(author title pages files css stylesheet table_of_contents 
+      %w(author title pages formats files css stylesheet table_of_contents 
          epub_cover_image template include_in_header include_before_body include_after_body)
     end
   end

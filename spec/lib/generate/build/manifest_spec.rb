@@ -5,7 +5,7 @@ describe Generate::Build::Manifest do
     user  = create_user(auth_token: 'abc1234')
     repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
-    @build = Generate::Build::Manifest.new(99, [:pdf])
+    @build = Generate::Build::Manifest.new(99, formats: [:pdf])
 
     Pusher.stub(:trigger)
     BuildStatus.any_instance.stub(:update_github)
