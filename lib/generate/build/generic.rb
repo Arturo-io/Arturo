@@ -11,6 +11,7 @@ module Generate
         @auth_token = repo.user[:auth_token]
         @client     = github_client(auth_token)
         @options    = default_options.merge(opts)
+        @options    = options.merge(parsed_options)
         @formats    = options.delete(:formats).map(&:to_sym)
       end
 

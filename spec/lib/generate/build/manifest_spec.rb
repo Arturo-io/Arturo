@@ -4,12 +4,20 @@ describe Generate::Build::Manifest do
    before do
     user  = create_user(auth_token: 'abc1234')
     repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
+
+    Generate::Manifest
+      .any_instance
+      .stub(:config)
+      .and_return({title: "title", author: "author", formats: ["epub", "mobi"]})
+
+
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
     @build = Generate::Build::Manifest.new(99, formats: [:pdf])
 
     Pusher.stub(:trigger)
     BuildStatus.any_instance.stub(:update_github)
     BuildStatus.any_instance.stub(:update_pusher)
+
   end
 
   context '#content' do
@@ -55,6 +63,10 @@ describe Generate::Build::Manifest do
 
       @build.config("ortuna/some_repo", "some_sha")
       @build.config("ortuna/some_repo", "some_sha")
+    end
+
+    it 'prefers manifest formats to passed in ones' do
+      expect(@build.formats).to eq([:epub, :mobi]) 
     end
 
     it ' raises on invalid options' do
