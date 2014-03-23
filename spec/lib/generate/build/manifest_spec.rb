@@ -34,15 +34,17 @@ describe Generate::Build::Manifest do
   end
 
   context '#options' do
-    it 'can get options for a repo' do
+    before do
       Generate::Manifest
         .any_instance
         .stub(:config)
-        .and_return({option1: true, option2: false})
+        .and_return({title: "title", author: "author"})
+    end
 
+    it 'can get options for a repo' do
       options = @build.config("ortuna/some_repo", "some_sha")
-      expect(options[:option1]).to eq(true)
-      expect(options[:option2]).to eq(false)
+      expect(options[:title]).to eq("title")
+      expect(options[:author]).to eq("author")
     end
 
     it 'caches the options for the sha' do
@@ -53,6 +55,16 @@ describe Generate::Build::Manifest do
 
       @build.config("ortuna/some_repo", "some_sha")
       @build.config("ortuna/some_repo", "some_sha")
+    end
+
+    it ' raises on invalid options' do
+      Generate::ManifestOptions.stub_chain(:new, :validate!) do
+        raise "Invalid options"
+      end
+      
+      expect { 
+        @build.config("ortuna/some_repo", "some_sha")
+      }.to raise_error
     end
   end
 

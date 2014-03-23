@@ -7,7 +7,9 @@ module Generate
       end
 
       def config(full_name, sha)
-        cached_manifests(full_name, sha).config
+        cached_manifests(full_name, sha).config.tap do |config|
+          Generate::ManifestOptions.new(config).validate!
+        end
       end
 
       private
