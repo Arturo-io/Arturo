@@ -35,7 +35,7 @@ module Generate
       def convert(content, format) 
         @build.update_status("building #{format.to_s}")
         opts = { file_list_download: file_list_download}
-          .merge(parsed_options)
+          .merge(options)
           .with_indifferent_access
 
         #only standalone for HTML, PDF gen doesn't work

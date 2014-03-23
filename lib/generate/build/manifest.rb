@@ -15,8 +15,8 @@ module Generate
       private
       def parsed_options
         options.merge(config(full_name, sha))
-          .with_indifferent_access
-          .tap do |opts|
+         .with_indifferent_access
+         .tap do |opts|
           opts.delete(:pages)
         end
       end

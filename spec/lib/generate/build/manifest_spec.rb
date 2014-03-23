@@ -10,7 +10,6 @@ describe Generate::Build::Manifest do
       .stub(:config)
       .and_return({title: "title", author: "author", formats: ["epub", "mobi"]})
 
-
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
     @build = Generate::Build::Manifest.new(99, formats: [:pdf])
 
@@ -41,14 +40,22 @@ describe Generate::Build::Manifest do
     end
   end
 
-  context '#options' do
-    before do
-      Generate::Manifest
-        .any_instance
-        .stub(:config)
-        .and_return({title: "title", author: "author"})
+  context '#formats' do
+    it 'prefers manifest formats to passed in ones' do
+      expect(@build.formats).to eq([:epub, :mobi]) 
     end
 
+    it 'removes dont send format to docverter' do
+      expect(Generate::Convert).to receive(:new) do |_, _, opts|
+        expect(opts[:formats]).to be_nil
+        double().as_null_object
+      end
+
+      @build.convert("content", :html)
+    end
+  end
+
+  context '#options' do
     it 'can get options for a repo' do
       options = @build.config("ortuna/some_repo", "some_sha")
       expect(options[:title]).to eq("title")
@@ -63,10 +70,6 @@ describe Generate::Build::Manifest do
 
       @build.config("ortuna/some_repo", "some_sha")
       @build.config("ortuna/some_repo", "some_sha")
-    end
-
-    it 'prefers manifest formats to passed in ones' do
-      expect(@build.formats).to eq([:epub, :mobi]) 
     end
 
     it ' raises on invalid options' do
