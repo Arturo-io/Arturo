@@ -17,11 +17,11 @@ module Generate
 
     private
     def valid?(option)
-      valid_options.include? option
+      valid_options.include? option.to_s
     end
 
     def valid_options
-      %i(author title pages files css stylesheet table_of_contents 
+      %w(author title pages files css stylesheet table_of_contents 
          epub_cover_image template include_in_header include_before_body include_after_body)
     end
   end
