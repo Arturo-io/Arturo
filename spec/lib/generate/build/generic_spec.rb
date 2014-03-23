@@ -67,11 +67,19 @@ describe Generate::Build:: Generic do
   end
 
   it 'has the right options' do
-    build = @build
-    expect(build.repo.id).to eq(1)
-    expect(build.full_name).to eq("progit-bana")
-    expect(build.auth_token).to eq('abc1234')
-    expect(build.formats).to eq([:pdf])
+    expect(@build.repo.id).to eq(1)
+    expect(@build.full_name).to eq("progit-bana")
+    expect(@build.auth_token).to eq('abc1234')
+    expect(@build.formats).to eq([:pdf])
+  end
+
+  it 'removes :formats from being sent to the server' do
+    expect(@build.options[:formats]).to be_nil
+  end
+
+  it 'converts formats to symbols' do
+    build = ExampleBuilder.new(99, formats: ["pdf", "html", "mobi"])
+    expect(build.formats).to eq([:pdf, :html, :mobi])
   end
 
   it 'find the correct sha to build from' do
@@ -84,8 +92,7 @@ describe Generate::Build:: Generic do
     @build.should_receive(:convert).and_return("")
     @build.should_receive(:upload).and_return(OpenStruct.new(url: "some_asset.pdf"))
 
-    build = @build
-    expect(build.execute).to eq(["some_asset.pdf"]) 
+    expect(@build.execute).to eq(["some_asset.pdf"]) 
   end
 
   context '#tree' do

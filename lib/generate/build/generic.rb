@@ -4,14 +4,14 @@ module Generate
       attr_reader :repo, :full_name, :auth_token, :formats,
         :client, :build, :options
 
-      def initialize(build_id, options = {})
+      def initialize(build_id, opts = {})
         @build      = ::Build.find(build_id)
         @repo       = Repo.joins(:user).find(@build[:repo_id])
         @full_name  = repo[:full_name]
         @auth_token = repo.user[:auth_token]
         @client     = github_client(auth_token)
-        @options    = options.merge(default_options).with_indifferent_access
-        @formats    = options[:formats] 
+        @options    = default_options.merge(opts)
+        @formats    = options.delete(:formats).map(&:to_sym)
       end
 
       def execute
@@ -34,7 +34,8 @@ module Generate
       def convert(content, format) 
         @build.update_status("building #{format.to_s}")
         opts = { file_list_download: file_list_download}
-          .merge(parsed_options).with_indifferent_access
+          .merge(parsed_options)
+          .with_indifferent_access
 
         #only standalone for HTML, PDF gen doesn't work
         opts["self-contained"] = true if format == :html
@@ -80,9 +81,8 @@ module Generate
       end
 
       def default_options
-        { :table_of_contents => true,
-          formats: [:pdf, :epub, :mobi]
-        }
+        { :table_of_contents => true
+        }.with_indifferent_access
       end
     end
   end
