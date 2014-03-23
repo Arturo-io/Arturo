@@ -5,7 +5,7 @@ class Generate::Book
   end
 
   def execute
-    builder.new(@build_id, @formats).execute
+    builder.new(@build_id, formats: @formats).execute
   end
 
   def builder
