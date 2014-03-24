@@ -79,6 +79,12 @@ describe BuildStatus do
     @status.update_pusher(:success, 'success build')
   end
 
+  it 'sends pusher updates to repo specific channel' do
+    expect(Pusher).to receive(:trigger)
+                       .with("#{User.find(42).digest}-builds-55", anything, anything)
+    @status.update_pusher(:success, 'success build')
+  end
+
   it 'calls update for pusher and github' do
     @status.should_receive(:update_github).with("success", nil)
     @status.should_receive(:update_pusher).with("success", nil)

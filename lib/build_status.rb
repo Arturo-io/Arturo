@@ -1,5 +1,5 @@
 class BuildStatus
-  attr_reader :client
+  attr_reader :client, :build
 
   def initialize(build)
     @build  = build
@@ -7,10 +7,10 @@ class BuildStatus
   end
 
   def update_github(status, description = nil)
-    full_name = @build.repo[:full_name]
-    commit    = @build.commit
+    full_name = build.repo[:full_name]
+    commit    = build.commit
     status    = translate_for_github(status)
-    options   = { target_url: action_view.build_url(@build, host: 'arturo.io') }
+    options   = { target_url: action_view.build_url(build, host: 'arturo.io') }
 
     options[:description] = description if description
 
@@ -18,12 +18,14 @@ class BuildStatus
   end
 
   def update_pusher(status, description = nil)
-    data = { id: @build.id, 
-             css_class: @build.status, 
+    data = { id: build.id, 
+             css_class: build.status, 
              status: status_html(status),
              description: description,
-             repo_id: @build[:repo_id] }
-    Pusher.trigger(pusher_channel, 'status_update', data)
+             repo_id: build[:repo_id] }
+    pusher_channels.each do |pusher_channel|
+      Pusher.trigger(pusher_channel, 'status_update', data)
+    end
   end
 
   def update(status, description = nil)
@@ -31,9 +33,9 @@ class BuildStatus
 
     attributes = { status: status }
     attributes[:error] = description if description
-    @build.update(attributes) 
+    build.update(attributes) 
 
-    update_github(status, description) if @build[:commit]
+    update_github(status, description) if build[:commit]
     update_pusher(status, description)
   end
 
@@ -47,15 +49,20 @@ class BuildStatus
     "error"
   end
 
-  def pusher_channel
-    @build.user.digest << "-builds"
+  def new_pusher_channel
+    build.user.digest << "-builds"
   end
 
   def render_string
-    action_view.render(:partial => 'build/build_list_single', locals: { build: @build })
+    action_view.render(:partial => 'build/build_list_single', locals: { build: build })
   end
 
   private
+  def pusher_channels
+    [new_pusher_channel,
+     build.user.digest << "-builds-#{build[:repo_id]}"]
+  end
+
   def status_html(status)
     action_view.build_status(status)
   end

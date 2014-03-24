@@ -59,7 +59,7 @@ class QueueBuild
 
   def self.update_status(build)
     status = BuildStatus.new(build)
-    Pusher.trigger(status.pusher_channel, 'new', status.render_string)
+    Pusher.trigger(status.new_pusher_channel, 'new', status.render_string)
   end
 
   def self.client(user)
