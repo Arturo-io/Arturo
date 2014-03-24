@@ -50,66 +50,11 @@
   </div>
 </section>
 
+<hr>
 
 <section class="moreinfo">
-  <div class="row">
-    <div class="small-12 small-centered columns">
-      <h3 class="subheading"> 
-        
-      </h3>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-4 columns feature">
-      <div class="row icon">
-        <%= fa_icon "check-circle" %>
-      </div>
-      <div class="row">
-        <div class="small-12 columns">
-          <h3>Automatic Builds</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns description">
-          Build in multiple formats with every commit and pull request. Review
-          your content and proposed changes easily.
-        </div>
-      </div>
-    </div>
-
-    <div class="small-4 columns feature">
-      <div class="row icon">
-        <%= fa_icon "code" %>
-      </div>
-      <div class="row">
-        <div class="small-12 columns">
-          <h3>Multiple Formats</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns description">
-          Each build outputs PDF, HTML, Epub, and Mobi format.  
-        </div>
-      </div>
-    </div>
-
-    <div class="small-4 columns feature">
-      <div class="row icon">
-      <%= fa_icon "code-fork" %>
-      </div>
-      <div class="row">
-        <div class="small-12 columns">
-          <h3>Private Repos</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns description">
-          Full support for private repos.  Build assets are hidden from public access.
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render 'features_first_row' %>
+  <%= render 'features_second_row' %>
 </section>
 
 <hr>
