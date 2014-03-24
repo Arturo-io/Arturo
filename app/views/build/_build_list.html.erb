@@ -28,7 +28,7 @@
 
     <script type="text/javascript"<>
       $(document).ready(function(){
-        var pusher  = new Pusher("<%= Rails.configuration.pusher_key %>");
+        var pusher  = new Pusher("<%= pusher_key %>");
         var channel = pusher.subscribe('<%= @pusher_channel %>');
         channel.bind('new', function(template) {
           var $el = $(".builds .body").prepend(template);

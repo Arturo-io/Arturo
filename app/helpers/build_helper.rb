@@ -54,4 +54,7 @@ module BuildHelper
     link_to("#{image} #{author}".html_safe, url, target: "_blank")
   end
 
+  def pusher_key
+    Rails.configuration.pusher_key
+  end
 end
