@@ -5,10 +5,9 @@ describe BuildStatus do
     Pusher.stub(:trigger)
 
     user    = create_user(id: 42, login: "ortuna")
-    repo    = Repo.new(full_name: "test_repo")
-    @build  = Build.new(id: 99, user: user, 
-                        repo: repo, commit: "1234abc", 
-                        status: :success)
+    repo    = create_repo(id: 55, user: user, full_name: "test_repo")
+    @build  = Build.new(id: 99, repo: repo, 
+                        commit: "1234abc", status: :success)
     @status = BuildStatus.new(@build)
     @status.stub(:update_github)
   end
@@ -74,7 +73,9 @@ describe BuildStatus do
       expect(data[:status]).to match(/success/) 
       expect(data[:css_class]).to match(/success/) 
       expect(data[:description]).to eq('success build')
+      expect(data[:repo_id]).to eq(55)
     end
+
     @status.update_pusher(:success, 'success build')
   end
 

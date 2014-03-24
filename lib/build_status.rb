@@ -21,7 +21,8 @@ class BuildStatus
     data = { id: @build.id, 
              css_class: @build.status, 
              status: status_html(status),
-             description: description }
+             description: description,
+             repo_id: @build[:repo_id] }
     Pusher.trigger(pusher_channel, 'status_update', data)
   end
 

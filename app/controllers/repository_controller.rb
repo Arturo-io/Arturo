@@ -35,6 +35,7 @@ class RepositoryController < ApplicationController
     @badge_markdown = badge_markdown(@repo[:id])
     @last_build     = Build.where(repo: @repo, status: :success).first
     @last_assets    = @last_build && @last_build.assets
+    @pusher_channel = "#{current_user.digest}-builds"
 
     authorize_action_for @repo
   end
