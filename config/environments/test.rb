@@ -43,4 +43,7 @@ Arturo::Application.configure do
   config.pusher_app_id = 'none'
   config.pusher_key    = 'none'
   config.pusher_secret = 'none'
+
+  config.sendgrid_user     = 'none'
+  config.sendgrid_password = 'none'
 end

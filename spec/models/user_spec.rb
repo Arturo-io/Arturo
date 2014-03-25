@@ -22,28 +22,44 @@ describe User do
   end
 
   context '#create_with_omniauth' do
-    it 'creates a user with a given auth hash' do
-      auth = {
+    before do
+      @auth = {
         provider: 'github',
         uid:      '12345',
         info: {
           image:     'image url',
           name:      'test user',
           nickname:  'nick_name',
+          email:     'user@something.com',
         },
         credentials: {
           token: 'xyz'
         }
       }.with_indifferent_access
-      expect(User.create_with_omniauth(auth)).to_not be_nil
+
+    end
+
+    it 'creates a user with a given auth hash' do
+      expect(User.create_with_omniauth(@auth)).to_not be_nil
       user = User.where(uid: '12345').first
 
       expect(user[:provider]).to eq('github')
       expect(user[:uid]).to eq('12345')
+      expect(user[:email]).to eq('user@something.com')
       expect(user[:login]).to eq('nick_name')
       expect(user[:name]).to eq('test user')
       expect(user[:auth_token]).to eq('xyz')
       expect(user[:image_url]).to eq('image url')
+    end
+
+    it 'returns the newly created user' do
+      user = User.create_with_omniauth(@auth)
+      expect(user[:login]).to eq('nick_name')
+    end
+
+    it 'triggers the UserSignupEmailWorker' do
+      expect(UserSignupEmailWorker).to receive(:perform_async)
+      User.create_with_omniauth(@auth)
     end
   end
 
