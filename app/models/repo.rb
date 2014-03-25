@@ -20,7 +20,7 @@ class Repo < ActiveRecord::Base
 
   def self.user_repositories(user_id, org)
     org ||= User.find(user_id).login
-    org.downcase!
+    org = org.downcase
 
     Repo
      .joins("LEFT JOIN followers on followers.repo_id = repos.id")
