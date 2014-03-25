@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @repo.full_name%> has failed!</h1>
+    <p>It seems that this build has failed.  Please check the docs on how to resolve this issue.</p>
+    <p>
+      <b>Error:</b>
+      <%= @build.error %>
+    </p>
+  </body>
+</html>
+

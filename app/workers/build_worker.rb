@@ -6,6 +6,7 @@ class BuildWorker
     build_id = (msg['args'] && msg['args'].first)
     build    = Build.find(build_id)
     build.update_status(:failure, msg['error_message'])
+    FailedBuildEmailWorker.perform_async(build_id) 
   end
 
   def perform(build_id)
