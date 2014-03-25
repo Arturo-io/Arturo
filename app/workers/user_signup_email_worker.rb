@@ -3,6 +3,6 @@ class UserSignupEmailWorker
   
   def perform(user_id)
     user = User.find(user_id)
-    Notifier.send_signup_email(user)
+    Notifier.send_signup_email(user).deliver
   end
 end
