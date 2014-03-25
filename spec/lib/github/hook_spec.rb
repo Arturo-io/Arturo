@@ -25,6 +25,17 @@ describe Github::Hook do
 
       subject.create_hook(99)
     end
+
+    it 'rescues Octokit::UnprocessableEntity' do
+      double = double('Octokit::Client')
+      expect(subject).to receive(:client).and_return(double)
+
+      double.should_receive(:create_hook) do
+        raise Octokit::UnprocessableEntity
+      end
+
+      subject.create_hook(99)
+    end
   end
     
   context '#remove_hook' do
@@ -35,5 +46,17 @@ describe Github::Hook do
       double.should_receive(:remove_hook).with('user/repo', 111)
       subject.remove_hook(99)
     end
+
+    it 'rescues Octokit::UnprocessableEntity' do
+      double = double('Octokit::Client')
+      expect(subject).to receive(:client).and_return(double)
+
+      double.should_receive(:remove_hook) do
+        raise Octokit::UnprocessableEntity
+      end
+
+      subject.remove_hook(99)
+    end
+
   end
 end
