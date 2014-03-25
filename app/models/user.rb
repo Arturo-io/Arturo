@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   include Authority::UserAbilities
 
-  has_many :repos
-  has_many :followers
+  has_many :repos, dependent: :destroy
+  has_many :followers, dependent: :destroy
 
   validates_presence_of   :uid, :provider, :name, :auth_token
   validates_uniqueness_of :uid
