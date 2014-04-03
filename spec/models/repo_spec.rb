@@ -80,7 +80,11 @@ describe Repo do
     end
 
     it 'updates the status on all builds to canceled' do
-      Repo.find(1).cancel_builds
+      repo = Repo.find(1)
+      expect(repo).to receive(:cancel_jobs)
+
+      repo.cancel_builds
+
       expect(Build.find(1).status).to eq("canceled")
       expect(Build.find(2).status).to eq("canceled")
       expect(Build.find(3).status).to eq("completed")
