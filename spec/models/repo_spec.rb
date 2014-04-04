@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Repo do
   before do
-    Build.any_instance.stub(:update_status_github)
-    Pusher.stub(:trigger)
+    allow_any_instance_of(Build).to receive(:update_status_github)
+    allow(Pusher).to receive(:trigger)
   end
 
   it 'requires a user relationship' do
@@ -92,7 +92,7 @@ describe Repo do
 
     context '.cancel_jobs_in_set' do
       it 'cancels all builds on sidekiq' do
-        Repo.any_instance.should_receive(:cancel_jobs_in_set) do |ids, set|
+        expect_any_instance_of(Repo).to receive(:cancel_jobs_in_set) do |ids, set|
           expect(ids).to include('xyz')
           expect(ids).to include('abc')
           expect(['schedule', 'retry']).to include(set)
@@ -103,10 +103,10 @@ describe Repo do
 
       it 'calls delete on a job' do
         job_double = double('Sidekiq::Job')
-        job_double.stub(:jid).and_return('abc')
-        job_double.should_receive(:delete)
+        allow(job_double).to receive(:jid).and_return('abc')
+        expect(job_double).to receive(:delete)
 
-        Sidekiq::SortedSet.stub(:new).and_return([job_double])
+        expect(Sidekiq::SortedSet).to receive(:new).and_return([job_double])
 
         Repo.find(1).send(:cancel_jobs_in_set, ['abc'], 'retry')
       end

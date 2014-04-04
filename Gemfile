@@ -30,7 +30,8 @@ gem 'newrelic_rpm'
 group :development, :test do
   gem 'sinatra'
   gem 'dotenv-rails'
-  gem 'rspec-rails'
+  gem 'rspec',  '~> 3.0.0.beta2'
+  gem 'rspec-rails',  '~> 3.0.0.beta2'
   gem 'pry'
 end
 
