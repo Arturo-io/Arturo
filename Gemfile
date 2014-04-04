@@ -18,7 +18,7 @@ gem 'kaminari'
 gem 'omniauth'
 gem 'omniauth-github'
 gem 'octokit'
-gem 'sidekiq'
+gem 'sidekiq', '~> 2.0'
 gem 'docverter'
 gem 's3'
 
@@ -30,8 +30,8 @@ gem 'newrelic_rpm'
 group :development, :test do
   gem 'sinatra'
   gem 'dotenv-rails'
-  gem 'rspec',  '~> 3.0.0.beta2'
-  gem 'rspec-rails',  '~> 3.0.0.beta2'
+  gem 'rspec',  '~> 2.99.0.beta1'
+  gem 'rspec-rails',  '~> 2.99.0.beta1'
   gem 'pry'
 end
 
