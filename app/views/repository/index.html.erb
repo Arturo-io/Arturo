@@ -10,9 +10,7 @@
         <%= render 'org_list' %>
       </div>
       <div class="small-3 columns">
-        <a class="button secondary radius tiny sync right" href="repositories/sync">
-          <%= fa_icon(@sync_icon) %> Sync
-        </a>
+        <%= link_to "#{fa_icon(@sync_icon)} Sync".html_safe, repositories_sync_path, class: "button secondary radius tiny sync right" %>
       </div>
     </div>
     <div class="row">
