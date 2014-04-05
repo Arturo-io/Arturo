@@ -39,4 +39,7 @@ Arturo::Application.configure do
 
   config.sendgrid_user     = 'arturo-dev'
   config.sendgrid_password = 'arturod3v3r'
+
+  config.stripe_key     = ENV['STRIPE_KEY']     || 'sk_test_M52ZOC19WtH7P0ZCMpXTRPg4'
+  config.stripe_pub_key = ENV['STRIPE_PUB_KEY'] || 'pk_test_vo6p4bqMHJGvbbtDSZUX25du'
 end
