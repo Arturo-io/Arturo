@@ -1,15 +1,22 @@
                 <ul class="right user">
                   <li class="has-form">
-                    <a href="/builds">Builds</a>
+                    <%= link_to 'Builds', builds_path %>
                   </li>
                   <li class="has-form">
-                    <a href="/repositories">Repositories</a>
+                    <%= link_to 'Repositories', repositories_path %>
                   </li>
                   <li class="has-form">
-                    <a href="/documentation">Documentation</a>
+                    <%= link_to 'Documentation', documentation_path %>
                   </li>
                   <li class="has-form">
-                    <a href="/user/logout">Logout</a>
+                  <a href="#" data-dropdown="user-menu">
+                    <%= image_tag image, width: '12', class: "avatar" %> <%= name %>
+                    <%= fa_icon 'sort-down' %>
+                  </a>
+                  <ul id="user-menu" class="f-dropdown" data-dropdown-content>
+                    <li><%= link_to 'Change Plan', user_logout_path %></li>
+                    <li><%= link_to 'Logout', user_logout_path %></li>
+                  </ul>
                   </li>
                 </ul>
 

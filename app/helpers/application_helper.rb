@@ -27,7 +27,7 @@ module ApplicationHelper
 
   def render_menu(user)
     partial = user ? 'user_links' : 'anon_links'
-    render "shared/#{partial}"
+    render "shared/#{partial}", image: user[:image_url], name: user[:login]
   end
 
   def limit_string(string, max)
