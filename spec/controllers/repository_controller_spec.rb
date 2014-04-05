@@ -20,7 +20,7 @@ describe RepositoryController do
   context '#build' do
     before do
       Repo.create(id: 99, user_id: 42, name: 'test')
-      QueueBuild.stub(:queue_build)
+      allow(QueueBuild).to receive(:queue_build)
     end
 
     it 'calls queue_build for the repo' do

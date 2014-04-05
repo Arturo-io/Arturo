@@ -92,7 +92,7 @@ describe Repo do
 
     context '.cancel_jobs_in_set' do
       it 'cancels all builds on sidekiq' do
-        expect_any_instance_of(Repo).to receive(:cancel_jobs_in_set) do |ids, set|
+        expect_any_instance_of(Repo).to receive(:cancel_jobs_in_set) do |repo, ids, set|
           expect(ids).to include('xyz')
           expect(ids).to include('abc')
           expect(['schedule', 'retry']).to include(set)
