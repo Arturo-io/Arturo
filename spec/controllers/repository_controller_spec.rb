@@ -156,17 +156,17 @@ describe RepositoryController do
 
     it 'assigns the correct repositories' do
       get :index
-      assert_not_nil assigns(:repositories)
+      expect(assigns(:repositories)).not_to be_nil
     end
 
     it 'assigns a pusher channel' do
       get :index
-      assert_not_nil assigns(:pusher_channel)
+      expect(assigns(:pusher_channel)).not_to be_nil
     end
 
     it 'assigns the users orgs' do
       get :index
-      assert_not_nil assigns(:orgs)
+      expect(assigns(:orgs)).not_to be_nil
     end
 
     it 'only gets the current signed in users repositories' do

@@ -41,7 +41,7 @@ describe Github::FileListDownload do
     file_list = subject.new(files: ['readme.md'], repo: 'some_repo')
     file_list.stub(:downloaded_paths).and_return(paths)
 
-    FileUtils.should_receive(:rm).with ['/tmp/file1.md', '/tmp/file2.md']
+    expect(FileUtils).to receive(:rm).with(['/tmp/file1.md', '/tmp/file2.md'])
     file_list.delete
   end
 

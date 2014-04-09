@@ -5,9 +5,9 @@ end
 
 describe Generate::Build:: Generic do
   before do
-    user  = create_user(auth_token: 'abc1234')
-    repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
-    ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
+    @user  = create_user(auth_token: 'abc1234')
+    @repo  = Repo.create(user: @user, full_name: "progit-bana")
+    ::Build.create(id: 99, repo: @repo, commit: "shaaaabbcc")  
     @build = ExampleBuilder.new(99, formats: [:pdf])
 
     Pusher.stub(:trigger)
@@ -67,7 +67,7 @@ describe Generate::Build:: Generic do
   end
 
   it 'has the right options' do
-    expect(@build.repo.id).to eq(1)
+    expect(@build.repo.id).to eq(@repo.id)
     expect(@build.full_name).to eq("progit-bana")
     expect(@build.auth_token).to eq('abc1234')
     expect(@build.formats).to eq([:pdf])

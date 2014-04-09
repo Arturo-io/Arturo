@@ -30,10 +30,9 @@ describe Generate::Build::Manifest do
     end
 
    it 'caches the content for the sha' do
-      Generate::Manifest
-        .should_receive(:new)
-        .once
-        .and_return(double().as_null_object)
+     expect(Generate::Manifest).to receive(:new)
+                                    .once
+                                    .and_return(double().as_null_object)
 
       @build.content("ortuna/some_repo", "some_sha")
       @build.content("ortuna/some_repo", "some_sha")
