@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '2.1.0'
+ruby '2.1.1'
 
-gem 'rails', '~> 4.0.1'
+gem 'rails', '~> 4.1.0'
 gem 'sass-rails', '~> 4.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'therubyracer', platforms: :ruby
@@ -21,11 +21,17 @@ gem 'octokit'
 gem 'sidekiq', '~> 2.0'
 gem 'docverter'
 gem 's3'
+gem 'stripe'
 
 gem 'authority'
 gem 'pusher'
 gem 'intercom-rails', '~> 0.2.24'
 gem 'newrelic_rpm'
+
+group :development do
+  gem 'spring'
+  gem 'spring-commands-rspec'
+end
 
 group :development, :test do
   gem 'sinatra'
