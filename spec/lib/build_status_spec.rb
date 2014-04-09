@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe BuildStatus do
   before do
-    Pusher.stub(:trigger)
+    allow(Pusher).to receive(:trigger)
 
     user    = create_user(id: 42, login: "ortuna")
     repo    = create_repo(id: 55, user: user, full_name: "test_repo")
     @build  = Build.new(id: 99, repo: repo, 
                         commit: "1234abc", status: :success)
     @status = BuildStatus.new(@build)
-    @status.stub(:update_github)
+    allow(@status).to receive(:update_github)
   end
 
   context '#initialize' do
@@ -38,13 +38,13 @@ describe BuildStatus do
   end
 
   it '#update_github updates the github sha' do
-    Github::Status.should_receive(:create) do |_client, repo, sha, state, options|
+    expect(Github::Status).to receive(:create) do |_client, repo, sha, state, options|
       expect(repo).to eq("test_repo")
       expect(sha).to eq("1234abc")
       expect(state.to_s).to eq("pending")
       expect(options[:description]).to eq("pending build")
     end 
-    @status.unstub(:update_github)
+    allow(@status).to receive(:update_github).and_call_original
     @status.update_github(:pending, "pending build")
   end
 
@@ -59,14 +59,14 @@ describe BuildStatus do
   end
 
   it 'updates with a message' do
-    @status.should_receive(:update_github).with("failed", "Invalid Build")
-    @status.should_receive(:update_pusher).with("failed", "Invalid Build")
+    expect(@status).to receive(:update_github).with("failed", "Invalid Build")
+    expect(@status).to receive(:update_pusher).with("failed", "Invalid Build")
 
     @status.update(:failed, "Invalid Build") 
   end
 
   it 'sends pusher updates' do
-    Pusher.should_receive(:trigger) do |channel, trigger, data|
+    expect(Pusher).to receive(:trigger) do |channel, trigger, data|
       expect(channel).to eq("#{User.find(42).digest}-builds") 
       expect(trigger).to eq("status_update") 
       expect(data[:id]).to eq(99) 
@@ -86,15 +86,15 @@ describe BuildStatus do
   end
 
   it 'calls update for pusher and github' do
-    @status.should_receive(:update_github).with("success", nil)
-    @status.should_receive(:update_pusher).with("success", nil)
+    expect(@status).to receive(:update_github).with("success", nil)
+    expect(@status).to receive(:update_pusher).with("success", nil)
 
     @status.update(:success)
   end
 
   it 'should not call update_github if there is no commit sha' do
-    @status.should_not_receive(:update_github).with("success")
-    @status.should_receive(:update_pusher).with("success", nil)
+    expect(@status).not_to receive(:update_github).with("success")
+    expect(@status).to     receive(:update_pusher).with("success", nil)
     @build.update(commit: nil)
 
     @status.update(:success)

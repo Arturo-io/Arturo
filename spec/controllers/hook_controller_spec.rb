@@ -11,17 +11,17 @@ describe HookController do
     end
 
     it 'creates a build with the sha' do
-      QueueBuild.should_receive(:queue_build).with("1", {sha: "abc1234"})
+      expect(QueueBuild).to receive(:queue_build).with("1", {sha: "abc1234"})
       get :github,  repository: { id: 1}, head_commit: { id: 'abc1234'}
     end
 
     it 'sends the branch when ref is available' do
-      QueueBuild.should_receive(:queue_build).with("1", {sha: "abc1234", branch: "nacho"})
+      expect(QueueBuild).to receive(:queue_build).with("1", {sha: "abc1234", branch: "nacho"})
       get :github,  ref: "ref/heads/nacho", repository: { id: 1}, head_commit: { id: 'abc1234'}
     end
 
     it 'only creates a build for a repo that is followed' do
-      QueueBuild.should_not_receive(:queue_build)
+      expect(QueueBuild).not_to receive(:queue_build)
       get :github,  repository: { id: 99}, head_commit: { id: 'abc1234'}
     end
   end

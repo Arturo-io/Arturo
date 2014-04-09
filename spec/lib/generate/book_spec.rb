@@ -5,17 +5,17 @@ describe Generate::Book do
 
   it 'can find the right constant' do
     book = subject.new(1, [:xyz]) 
-    book.stub(:has_manifest?).and_return false
+    allow(book).to receive(:has_manifest?).and_return false
     expect(book.builder).to eq(Generate::Build::Generic)
 
-    book.stub(:has_manifest?).and_return true
+    allow(book).to receive(:has_manifest?).and_return true
     expect(book.builder).to eq(Generate::Build::Manifest)
   end
 
 
   it 'delegates execute to the constant' do
     book = subject.new(1, [:pdf])
-    book.stub_chain(:builder, :new, :execute).and_return :executed
+    allow(book).to receive_message_chain(:builder, :new, :execute).and_return :executed
 
     expect(book.execute).to eq(:executed)
   end
@@ -28,7 +28,7 @@ describe Generate::Book do
     end
 
     it 'sends the right arguments to Generate::Manifest' do
-      Generate::Manifest.should_receive(:new) do |full_name, sha, client|
+      expect(Generate::Manifest).to receive(:new) do |full_name, sha, client|
         expect(full_name).to eq("full_name")
         expect(sha).to eq("some_sha")
         expect(client.access_token).to eq("token")

@@ -11,7 +11,7 @@ describe QueueBuild do
 
   context 'utility methods' do
     it '.update_status' do
-      Pusher.should_receive(:trigger) 
+      allow(Pusher).to receive(:trigger) 
       subject.update_status(@build)
     end
 
@@ -22,7 +22,7 @@ describe QueueBuild do
     end
 
     it '.queue_build' do
-      subject.stub_chain(:new, :execute).and_return true
+      allow(subject).to receive_message_chain(:new, :execute).and_return true
       expect(subject.queue_build).to eq(true)
     end
 
@@ -37,16 +37,14 @@ describe QueueBuild do
 
     context '.perform_async' do
       it 'does a perform_async for BuildWorker' do
-        BuildWorker
-          .should_receive(:perform_async)
-          .with(1)
+        expect(BuildWorker).to receive(:perform_async).with(1)
         subject.perform_async(@build)
       end
 
       it 'updates the builds job_id' do
-        BuildWorker.stub(:perform_async).and_return 'j-123'
+        allow(BuildWorker).to receive(:perform_async).and_return 'j-123'
 
-        @build.should_receive(:update).with(job_id: 'j-123')
+        expect(@build).to receive(:update).with(job_id: 'j-123')
         subject.perform_async(@build)
       end
     end
@@ -61,20 +59,15 @@ describe QueueBuild do
 
     context '#commit' do
       it 'returns the commit for a sha' do
-        Github::Repo
-          .should_receive(:commit)
-          .with(anything, "some_repo", "sha")
-
-        @instance.stub(:sha).and_return "sha"
+        expect(Github::Repo).to receive(:commit)
+                                 .with(anything, "some_repo", "sha")
+        allow(@instance).to receive(:sha).and_return "sha"
         @instance.commit
       end
 
       it 'returns the last_commit on a repo' do
-        Github::Repo
-          .should_receive(:last_commit)
-          .with(anything, "some_repo")
-
-        @instance.stub(:sha).and_return nil
+        expect(Github::Repo).to receive(:last_commit).with(anything, "some_repo")
+        allow(@instance).to receive(:sha).and_return nil
         @instance.commit
       end
     end
@@ -82,8 +75,8 @@ describe QueueBuild do
     context '#cancel_previous_builds' do
       it 'cancels previous builds for this builds repo' do
         repo = double("repo")
-        repo.should_receive(:cancel_builds)
-        @instance.stub(:repo).and_return(repo)
+        expect(repo).to receive(:cancel_builds)
+        allow(@instance).to receive(:repo).and_return(repo)
         @instance.cancel_previous_builds
       end
     end
@@ -91,31 +84,31 @@ describe QueueBuild do
     context '#execute' do
       before do
         @double = double("build")
-        subject.stub(:assign_and_update)
-        subject.stub(:perform_async)
-        subject.stub(:update_status)
-        @instance.stub(:cancel_previous_builds)
-        @instance.stub(:create_build_from_github)
-         .and_return(@double)
+        allow(subject).to receive(:assign_and_update)
+        allow(subject).to receive(:perform_async)
+        allow(subject).to receive(:update_status)
+
+        allow(@instance).to receive(:cancel_previous_builds)
+        allow(@instance).to receive(:create_build_from_github).and_return(@double)
       end
 
       it 'calls assign_and_update' do
-        subject.should_receive(:assign_and_update).with(@double, {})
+        expect(subject).to receive(:assign_and_update).with(@double, {})
         @instance.execute
       end
 
       it 'calls cancel_previous_builds' do
-        @instance.should_receive(:cancel_previous_builds)
+        expect(@instance).to receive(:cancel_previous_builds)
         @instance.execute
       end
 
       it 'calls perform_async' do
-        subject.should_receive(:perform_async).with(@double)
+        expect(subject).to receive(:perform_async).with(@double)
         @instance.execute
       end
 
       it 'calls update_status' do
-        subject.should_receive(:update_status).with(@double)
+        expect(subject).to receive(:update_status).with(@double)
         @instance.execute
       end
 

@@ -5,14 +5,14 @@ describe Generate::Convert do
 
   before do
     @fd = double("Github::FileListDownload").as_null_object
-    @fd.stub(:download).and_return({})
+    allow(@fd).to receive(:download).and_return({})
   end
 
   it 'can convert one format to another' do
     double = double().as_null_object
-    double.should_receive(:convert)
+    expect(double).to receive(:convert)
 
-    Docverter::Conversion.should_receive(:new) do |from, to, content|
+    expect(Docverter::Conversion).to receive(:new) do |from, to, content|
       expect(from).to    eq("markdown")
       expect(to).to      eq("html")
       expect(content).to eq("#raw markdown")
@@ -24,7 +24,7 @@ describe Generate::Convert do
 
   it 'should assign options to the convert' do
     double = double().as_null_object
-    double.stub(:convert)
+    allow(double).to receive(:convert)
     expect(double).to receive(:some=).with(true)
     expect(double).to receive(:option=).with(false)
 
@@ -38,7 +38,8 @@ describe Generate::Convert do
 
   context 'asset assignment' do
     before do 
-      Docverter::Conversion.should_receive(:new).and_return(double().as_null_object)
+      expect(Docverter::Conversion).to receive(:new)  
+                                        .and_return(double().as_null_object)
     end
 
     def run_subject

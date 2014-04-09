@@ -5,25 +5,21 @@ describe Generate::Build::Manifest do
     user  = create_user(auth_token: 'abc1234')
     repo  = Repo.create(id: 1, user: user, full_name: "progit-bana")
 
-    Generate::Manifest
-      .any_instance
-      .stub(:config)
+    allow_any_instance_of(Generate::Manifest).to receive(:config)
       .and_return({title: "title", author: "author", formats: ["epub", "mobi"]})
 
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
     @build = Generate::Build::Manifest.new(99, formats: [:pdf])
 
-    Pusher.stub(:trigger)
-    BuildStatus.any_instance.stub(:update_github)
-    BuildStatus.any_instance.stub(:update_pusher)
+    allow(Pusher).to receive(:trigger)
+    allow_any_instance_of(BuildStatus).to receive(:update_github)
+    allow_any_instance_of(BuildStatus).to receive(:update_pusher)
 
   end
 
   context '#content' do
     it 'can get the content for a repo' do
-      Generate::Manifest
-        .any_instance
-        .stub(:book_content)
+      allow_any_instance_of(Generate::Manifest).to receive(:book_content)
         .and_return("some repos content")
       content = @build.content("ortuna/some_repo", "some_sha")
       expect(content).to eq("some repos content")
@@ -62,17 +58,16 @@ describe Generate::Build::Manifest do
     end
 
     it 'caches the options for the sha' do
-      Generate::Manifest
-        .should_receive(:new)
-        .once
-        .and_return(double().as_null_object)
+      expect(Generate::Manifest).to receive(:new)
+                                     .once
+                                     .and_return(double().as_null_object)
 
       @build.config("ortuna/some_repo", "some_sha")
       @build.config("ortuna/some_repo", "some_sha")
     end
 
     it ' raises on invalid options' do
-      Generate::ManifestOptions.stub_chain(:new, :validate!) do
+      allow(Generate::ManifestOptions).to receive_message_chain(:new, :validate!) do
         raise "Invalid options"
       end
       
@@ -85,13 +80,13 @@ describe Generate::Build::Manifest do
   context '#parsed_options' do
     it 'removes the pages key/value from config hash' do
       double = double("Generage::Convert")
-      double.should_receive(:run)
+      expect(double).to receive(:run)
 
-      @build.stub(:config).and_return("pages" => [1,2,3], 
-                                      table_of_contents: false, 
-                                      another_option: true)
+      allow(@build).to receive(:config).and_return("pages" => [1,2,3], 
+                                                   table_of_contents: false, 
+                                                   another_option: true)
 
-      Generate::Convert.should_receive(:new) do |_, _, options|
+      expect(Generate::Convert).to receive(:new) do |_, _, options|
         expect(options[:pages]).to eq(nil)
         expect(options["pages"]).to eq(nil)
         double

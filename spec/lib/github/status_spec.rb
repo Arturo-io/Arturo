@@ -6,7 +6,7 @@ describe Github::Status do
   end
 
   it 'can update a status for a ref' do
-    @client.should_receive(:create_status) do |repo, sha, state, options|
+    expect(@client).to receive(:create_status) do |repo, sha, state, options|
       expect(repo).to eq("ortuna/some_repo")
       expect(sha).to eq("some_sha")
       expect(state).to eq("pending")

@@ -25,12 +25,12 @@ describe Build do
 
     it 'creates and calls update on BuildStatus' do
       double = double("BuildStatus")
-      @build.stub(:build_status).and_return(double)
+      allow(@build).to receive(:build_status).and_return(double)
 
-      double.should_receive(:update).with(:created, nil)
+      expect(double).to receive(:update).with(:created, nil)
       @build.update_status(:created)
 
-      double.should_receive(:update).with(:created, "message")
+      expect(double).to receive(:update).with(:created, "message")
       @build.update_status(:created, "message")
     end
   end

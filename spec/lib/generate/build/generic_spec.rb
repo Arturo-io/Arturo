@@ -131,11 +131,11 @@ describe Generate::Build:: Generic do
 
   context '#convert' do
     it 'can convert content to a format' do
-      Generate::Convert.stub_chain(:new, :run).and_return("<h1>some content</h1>")
+      allow(Generate::Convert).to receive_message_chain(:new, :run).and_return("<h1>some content</h1>")
       content = @build.convert("#some content", :html)
       expect(content).to match("<h1>some content</h1>")
     end
-    
+  
     it 'sends the options from the manifest' do
       allow(@build).to receive(:options)
                         .and_return(table_of_contents: false, another_option: true)

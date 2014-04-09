@@ -18,18 +18,18 @@ describe Generate::Manifest do
   context '#has_manifest?' do
     it 'fetches the existance of a manifest' do
       manifest = Generate::Manifest.new("owner/repo")
-      manifest.stub(:read_config).and_return("some_value")
+      allow(manifest).to receive(:read_config).and_return("some_value")
 
       expect(manifest.has_manifest?).to eq(true)
 
-      manifest.stub(:read_config) { raise Octokit::NotFound }
+      allow(manifest).to receive(:read_config) { raise Octokit::NotFound }
       expect(manifest.has_manifest?).to eq(false)
     end
   end
 
   context '#read_remote_file' do
     it 'calls Github::File with the correct params' do
-      Github::File.should_receive(:fetch) do |repo, path, sha, _client|
+      expect(Github::File).to receive(:fetch) do |repo, path, sha, _client|
         expect(repo).to eq("owner/repo")
         expect(path).to eq("some_file.xyz")
         expect(sha).to  eq(nil)
@@ -40,7 +40,7 @@ describe Generate::Manifest do
     end
 
     it 'passes the correct sha to Github::File' do
-      Github::File.should_receive(:fetch) do |_, _, sha, _|
+      expect(Github::File).to receive(:fetch) do |_, _, sha, _|
         expect(sha).to  eq("some_sha")
       end
 
@@ -52,13 +52,13 @@ describe Generate::Manifest do
   context '#config' do
     it 'can retrieve and query the config of a manifest' do
       manifest = Generate::Manifest.new("owner/repo")
-      manifest.stub(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
+      allow(manifest).to receive(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
       expect(manifest.config[:title]).to eq("some title")
     end
 
     it 'can retrieve and query the config from a certain SHA' do
       manifest = Generate::Manifest.new("owner/repo", "some_sha")
-      manifest.stub(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
+      allow(manifest).to receive(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
       expect(manifest.config[:title]).to eq("some title")
     end
   end
@@ -66,8 +66,8 @@ describe Generate::Manifest do
   context '#book_content' do
     it 'can get the contents of the whole book as a string' do
       manifest = Generate::Manifest.new("owner/repo")
-      manifest.stub(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
-      manifest.stub(:read_remote_file) { |path| "#{path}" }
+      allow(manifest).to receive(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
+      allow(manifest).to receive(:read_remote_file) { |path| "#{path}" }
       expect(manifest.book_content).to eq("chapter1.md\nchapter2.md\nchapter3.md\n")
     end
   end

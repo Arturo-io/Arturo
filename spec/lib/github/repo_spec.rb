@@ -41,7 +41,7 @@ describe Github::Repo do
 
   context '#last_commit' do
     it 'gets the latest commit form github' do
-      @client.stub_chain(:commits, :first).and_return("expected")
+      allow(@client).to receive_message_chain(:commits, :first).and_return("expected")
 
       commit = subject.last_commit(@client, "ortuna/progit-bana")
       expect(commit).to eq("expected")
@@ -49,7 +49,7 @@ describe Github::Repo do
 
     it 'should turn off auto_pagination for github' do
       @client = double("Octokit::Client").as_null_object
-      Octokit.should_receive(:auto_paginate=).twice
+      expect(Octokit).to receive(:auto_paginate=).twice
       subject.last_commit(@client, "ortuna/progit-bana")
     end
 
@@ -95,7 +95,7 @@ describe Github::Repo do
 
   context '#fetch_from_github' do
     it 'fetches a list of repos from client' do
-      @client.stub(:repos).and_return(example_repo_list)
+      allow(@client).to receive(:repos).and_return(example_repo_list)
 
       repos = subject.fetch_from_github(@client) 
       expect(repos.first.attrs[:name]).to eq("expected_name0")
@@ -125,15 +125,15 @@ describe Github::Repo do
 
     it 'sets the html_url' do
       href_double = double()
-      href_double.stub(:href).and_return("http://example.com")
-      @hash.stub(:rels).and_return(html: href_double)
+      allow(href_double).to receive(:href).and_return("http://example.com")
+      allow(@hash).to receive(:rels).and_return(html: href_double)
 
       subject.update_attributes(42, @hash, @model)
       expect(@model.html_url).to eq("http://example.com")
     end
 
     it 'sets the github org/author' do
-      @hash.stub_chain(:owner, :login).and_return("Arturo-io")
+      allow(@hash).to receive_message_chain(:owner, :login).and_return("Arturo-io")
       subject.update_attributes(42, @hash, @model)
 
       expect(@model.org).to eq("arturo-io")
