@@ -10,9 +10,9 @@ describe Generate::Build:: Generic do
     ::Build.create(id: 99, repo: @repo, commit: "shaaaabbcc")  
     @build = ExampleBuilder.new(99, formats: [:pdf])
 
-    Pusher.stub(:trigger)
-    BuildStatus.any_instance.stub(:update_github)
-    BuildStatus.any_instance.stub(:update_pusher)
+    allow(Pusher).to receive(:trigger)
+    allow_any_instance_of(BuildStatus).to receive(:update_github)
+    allow_any_instance_of(BuildStatus).to receive(:update_pusher)
   end
 
   it 'creates the right client' do
@@ -25,11 +25,11 @@ describe Generate::Build:: Generic do
   end
 
   it 'sends the options to the converter' do
-    Generate::Convert.should_receive(:new) do |_, _, options| 
+    expect(Generate::Convert).to receive(:new) do |_, _, options| 
       expect(options[:table_of_contents]).to eq(true)
       expect(options[:file_list_download]).not_to be_nil
       double().as_null_object.tap do |d|
-        d.should_receive(:run)
+        expect(d).to receive(:run)
       end
     end
 
@@ -38,17 +38,17 @@ describe Generate::Build:: Generic do
 
   it 'does not send self-contained: true to converter unless format is html' do
     dbl = double().as_null_object.tap do |d|
-      d.should_receive(:run)
+      expect(d).to receive(:run)
     end
 
-    Generate::Convert.should_receive(:new) do |_, _, options| 
+    expect(Generate::Convert).to receive(:new) do |_, _, options| 
       expect(options["self-contained"]).to eq(true)
       dbl
     end
 
     @build.convert("#some content", :html)
 
-    Generate::Convert.should_receive(:new) do |_, _, options| 
+    expect(Generate::Convert).to receive(:new) do |_, _, options| 
       expect(options["self-contained"]).to eq(nil)
       dbl
     end
@@ -58,7 +58,7 @@ describe Generate::Build:: Generic do
 
 
   it 'can save to S3' do
-    Generate::S3.should_receive(:save) do |path, content|
+    expect(Generate::S3).to receive(:save) do |path, content|
       expect(path).to eq("some_repo/some_file.txt")
       expect(content).to eq("content")
     end
@@ -87,10 +87,10 @@ describe Generate::Build:: Generic do
   end
 
   it 'can create an asset' do
-    @build.should_receive(:sha).twice.and_return("aabbccdd")
-    @build.should_receive(:content).and_return("")
-    @build.should_receive(:convert).and_return("")
-    @build.should_receive(:upload).and_return(OpenStruct.new(url: "some_asset.pdf"))
+    expect(@build).to receive(:sha).twice.and_return("aabbccdd")
+    expect(@build).to receive(:content).and_return("")
+    expect(@build).to receive(:convert).and_return("")
+    expect(@build).to receive(:upload).and_return(OpenStruct.new(url: "some_asset.pdf"))
 
     expect(@build.execute).to eq(["some_asset.pdf"]) 
   end
@@ -106,16 +106,14 @@ describe Generate::Build:: Generic do
     end
 
     it 'can get the file tree from a git repo' do
-      Github::Tree
-        .should_receive(:fetch)
-        .with(anything, "progit-bana", "shaaaabbcc")
-        .and_return(@tree)
-
+      expect(Github::Tree).to receive(:fetch)
+                               .with(anything, "progit-bana", "shaaaabbcc")
+                               .and_return(@tree)
       expect(@build.tree("progit-bana", "shaaaabbcc")).to eq(["file.txt", "file2.txt"])
     end
 
     it 'returns only txt/md files and not directories' do
-      Github::Tree.stub(:fetch).and_return(@tree)
+      allow(Github::Tree).to receive(:fetch).and_return(@tree)
       expect(@build.tree("some_repo", "some_sha")).to eq(["file.txt", "file2.txt"])
     end
 
@@ -124,8 +122,8 @@ describe Generate::Build:: Generic do
   context '#content' do
     it 'can get content from the repo tree' do
       Transform.plugins = [Transform::NewLine]
-      Github::File.stub(:fetch) { |_, path, _, _| path }
-      @build.stub(:tree).and_return ['02-chap2/chap2.txt', '01-chap1/chap1.txt']
+      allow(Github::File).to receive(:fetch) { |_, path, _, _| path }
+      allow(@build).to receive(:tree).and_return ['02-chap2/chap2.txt', '01-chap1/chap1.txt']
       content = @build.content("some_repo", "some_sha")
       expect(content).to eq("01-chap1/chap1.txt\n02-chap2/chap2.txt\n")
     end
@@ -139,16 +137,18 @@ describe Generate::Build:: Generic do
     end
     
     it 'sends the options from the manifest' do
-      @build.stub(:options).and_return(table_of_contents: false, another_option: true)
-      Generate::Convert.should_receive(:new) do |_, _, options|
+      allow(@build).to receive(:options)
+                        .and_return(table_of_contents: false, another_option: true)
+
+      expect(Generate::Convert).to receive(:new) do |_, _, options|
         expect(options[:table_of_contents]).to eq(false)
         expect(options[:another_option]).to eq(true)
 
         double().as_null_object.tap do |d|
-          d.should_receive(:run)
+          expect(d).to receive(:run)
         end
       end
-      
+
       @build.convert("#some content", :html)
     end
 
@@ -157,16 +157,17 @@ describe Generate::Build:: Generic do
   context '#notifications' do
 
     it 'updates build status on convert' do
-      Generate::Convert.stub(:new).and_return(double().as_null_object) 
+      allow(Generate::Convert).to receive(:new)
+                                    .and_return(double().as_null_object) 
 
-      Build.any_instance.should_receive(:update_status).with("building pdf")
+      allow_any_instance_of(Build).to receive(:update_status).with("building pdf")
       @build.convert("#title", :pdf)
     end
 
     it 'updates build status on upload' do
-      Generate::S3.stub(:save) 
+      allow(Generate::S3).to receive(:save) 
 
-      Build.any_instance.should_receive(:update_status).with("uploading pdf")
+      allow_any_instance_of(Build).to receive(:update_status).with("uploading pdf")
       @build.upload("my_repo", "some_file.txt", "title", :pdf)
     end
 
