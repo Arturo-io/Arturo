@@ -25,6 +25,7 @@ Arturo::Application.routes.draw do
     get    '/:id/build',  to: 'repository#build',    as: :build
   end
 
+  get '/plan', to: 'plan#show'
 
   if(Rails.env.development?) 
     require 'sidekiq/web'

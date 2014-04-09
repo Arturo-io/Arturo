@@ -1,0 +1,69 @@
+<div class="row plan">
+  <div class="small-12 columns">
+   <div class="row">
+      <div class="small-12 columns">
+        <h2>Always free for Open Source</h2>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="small-4 columns pricing">
+        <ul class="pricing-table">
+          <li class="title">Open Source</li>
+          <li class="price">Free</li>
+          <li class="description">For public open source projects.</li>
+          <li class="bullet-item">Unlimited public repos</li>
+          <li class="cta-button">
+          <a class="button radius" href="#">Authorize</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="small-4 columns pricing">
+        <ul class="pricing-table">
+          <li class="title">Solo</li>
+          <li class="price">$4.99</li>
+          <li class="description">For solo writers</li>
+          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">1 private repo</li>
+          <li class="cta-button">
+          <a class="button radius" href="#">Buy Now</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="small-4 columns pricing">
+        <ul class="pricing-table">
+          <li class="title">Multi Pass</li>
+          <li class="price">$19.99</li>
+          <li class="description">For serial writers</li>
+          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">10 private repos</li>
+          <li class="bullet-item">Priority builds</li>
+          <li class="cta-button">
+          <a class="button radius" href="#">Buy Now</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+</div>
+
+<div class="row">
+  <div class="small-12 columns">
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="<%= @stripe_pub_key %>"
+      data-email="<%= @email%>"
+      data-image="/square-image.png"
+      data-name="Arturo.io Subscription"
+      data-description=""
+      data-amount=""
+      data-allow-remember-me="false"
+    >
+    </script>
+  </div>
+</div>
+
+<%= javascript_include_tag "plan" %>
