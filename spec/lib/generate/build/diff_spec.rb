@@ -35,10 +35,43 @@ describe Generate::Build::Diff do
 
   context '#execute' do
     it 'uploads a diff file' do
+      allow(@diff).to receive(:content).and_return ""
       expect(@diff).to receive(:upload)
-        .with('progit-bana', 'abc_diff.pdf', anything, :pdf)
+        .with('progit-bana', 'abc_diff.pdf', anything)
         .and_return(double().as_null_object)
+
       @diff.execute
+    end
+
+    it 'calls DiffContent to get content' do
+      expect(Generate::DiffContent).to receive(:new)
+        .with(repo: 'progit-bana', base: 'HEAD', head: 'abc')
+        .and_return(double().as_null_object) 
+
+      @diff.content
+    end
+  end
+
+  context '#base' do
+    it 'selects HEAD~2 when sha == last comit' do
+      allow(@diff).to receive(:last_commit).and_return('abc')
+      expect(@diff.base).to eq('HEAD~2')
+    end
+
+    it 'returns master if the sha != last commit' do
+      allow(@diff).to receive(:last_commit).and_return('xyz')
+      expect(@diff.base).to eq('master')
+    end
+  end
+
+  context '#last_commit' do
+    it 'gets the last commit on the repo' do
+      expect(Github::Repo).to receive(:last_commit) do |_client, repo|
+        expect(repo).to eq('progit-bana')
+        OpenStruct.new(sha: 'some_sha')
+      end
+
+      expect(@diff.send(:last_commit)).to eq('some_sha')
     end
   end
 end

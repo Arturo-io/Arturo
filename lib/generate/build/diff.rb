@@ -9,13 +9,24 @@ module Generate
       end
 
       def content
-        "Diff View!".force_encoding('UTF-8')
+        Generate::DiffContent
+          .new(repo: full_name, base: base, head: sha)
+          .execute
       end
 
       def upload(repo_name, file_name, content)
         Generate::S3.save("#{repo_name}/#{file_name}", content)
       end
 
+      def base
+        return 'HEAD~2' if last_commit == sha  
+        'master'
+      end
+
+      private
+      def last_commit
+        Github::Repo.last_commit(client, full_name)[:sha]  
+      end
     end
   end
 end
