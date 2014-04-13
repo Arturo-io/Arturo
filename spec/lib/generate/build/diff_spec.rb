@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Generate::BookDiff do 
-  let(:subject) {  Generate::BookDiff }
+describe Generate::Build::Diff do 
+  let(:subject) {  Generate::Build::Diff }
   
   context'#initialize' do
     it 'sets the build id' do
