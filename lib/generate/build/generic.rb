@@ -12,7 +12,7 @@ module Generate
         @client     = github_client(auth_token)
         @options    = default_options.merge(opts)
         @options    = options.merge(parsed_options)
-        @formats    = options.delete(:formats).map(&:to_sym)
+        @formats    = (options.delete(:formats) || [:pdf]).map(&:to_sym)
       end
 
       def execute
