@@ -2,7 +2,7 @@ module Generate
   module Build 
     class Generic
       attr_reader :repo, :full_name, :auth_token, :formats,
-        :client, :build, :options
+                  :client, :build, :options
 
       def initialize(build_id, opts = {})
         @build      = ::Build.find(build_id)
