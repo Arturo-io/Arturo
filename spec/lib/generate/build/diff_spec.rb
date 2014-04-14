@@ -44,8 +44,9 @@ describe Generate::Build::Diff do
     end
 
     it 'calls DiffContent to get content' do
+      allow(@diff).to receive(:last_commit).and_return('abc')
       expect(Generate::DiffContent).to receive(:new)
-        .with(repo: 'progit-bana', base: 'HEAD', head: 'abc')
+        .with(repo: 'progit-bana', base: 'HEAD~1', head: 'abc')
         .and_return(double().as_null_object) 
 
       @diff.content
@@ -53,9 +54,9 @@ describe Generate::Build::Diff do
   end
 
   context '#base' do
-    it 'selects HEAD~2 when sha == last comit' do
+    it 'selects HEAD~1 when sha == last comit' do
       allow(@diff).to receive(:last_commit).and_return('abc')
-      expect(@diff.base).to eq('HEAD~2')
+      expect(@diff.base).to eq('HEAD~1')
     end
 
     it 'returns master if the sha != last commit' do

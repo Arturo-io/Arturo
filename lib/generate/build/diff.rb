@@ -19,7 +19,7 @@ module Generate
       end
 
       def base
-        return 'HEAD~2' if last_commit == sha  
+        return 'HEAD~1' if last_commit == sha  
         'master'
       end
 

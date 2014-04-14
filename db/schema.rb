@@ -11,12 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140325145633) do
+ActiveRecord::Schema.define(version: 20140414005716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "assets", force: true do |t|
+    t.integer  "build_id"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "build_diffs", force: true do |t|
     t.integer  "build_id"
     t.string   "url"
     t.datetime "created_at"
@@ -98,6 +105,8 @@ ActiveRecord::Schema.define(version: 20140325145633) do
     t.datetime "last_sync_at"
     t.boolean  "loading_repos", default: false
     t.string   "email"
+    t.string   "stripe_token"
+    t.string   "plan"
   end
 
 end

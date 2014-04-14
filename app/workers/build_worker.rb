@@ -20,6 +20,9 @@ class BuildWorker
       Asset.create(url: asset, build: build)
     end
 
+    diff_url = Generate::Build::Diff.new(build_id).execute
+    BuildDiff.create(build_id: build_id, url: diff_url)
+
     build.reload
     build.update_status(:success)
     build.update(ended_at: Time.now)
