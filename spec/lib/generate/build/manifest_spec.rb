@@ -10,11 +10,9 @@ describe Generate::Build::Manifest do
 
     ::Build.create(id: 99, repo: repo, commit: "shaaaabbcc")  
     @build = Generate::Build::Manifest.new(99, formats: [:pdf])
-
-    allow(Pusher).to receive(:trigger)
-    allow_any_instance_of(BuildStatus).to receive(:update_github)
-    allow_any_instance_of(BuildStatus).to receive(:update_pusher)
-
+    
+    @double = double.as_null_object
+    allow_any_instance_of(Build).to receive(:update_status)
   end
 
   context '#content' do
@@ -43,7 +41,7 @@ describe Generate::Build::Manifest do
     it 'removes dont send format to docverter' do
       expect(Generate::Convert).to receive(:new) do |_, _, opts|
         expect(opts[:formats]).to be_nil
-        double().as_null_object
+        @double
       end
 
       @build.convert("content", :html)

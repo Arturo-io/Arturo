@@ -6,6 +6,7 @@ class Build < ActiveRecord::Base
   belongs_to :repo
   has_one    :user, through: :repo
   has_many   :assets
+  has_one    :build_diff
   
   def update_status(status, message = nil)
     build_status.update(status, message)

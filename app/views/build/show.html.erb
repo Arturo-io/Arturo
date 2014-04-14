@@ -80,6 +80,7 @@
           </div>
         </div>
 
+        <%= render('build_diff', diff: @diff) if @diff %>
         <%= render('failure_message', message: @build.error) if @build.error %>
 
         <hr>

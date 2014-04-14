@@ -29,3 +29,7 @@ body {  font-family: "Vollkorn", Palatino, Times; }
 body img {
   max-width: 100%;
 }
+
+.del,.ins{ display: inline-block; margin-left: 0.5ex; }
+.del { background-color: #fcc; }
+.ins { background-color: #cfc; }

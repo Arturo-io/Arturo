@@ -14,6 +14,7 @@ class BuildController < ApplicationController
     @build  = Build.includes(:assets, :user).find(params[:id])
     authorize_action_for @build
 
+    @diff   = @build.build_diff
     @repo   = @build.repo
     @assets = @build.assets
   end

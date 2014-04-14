@@ -24,5 +24,14 @@ describe HookController do
       expect(QueueBuild).not_to receive(:queue_build)
       get :github,  repository: { id: 99}, head_commit: { id: 'abc1234'}
     end
+
+    it 'sends the compare url for the commit' do
+      expect(QueueBuild).to receive(:queue_build) do |_repo, options|
+        expect(options[:before]).to eq('123')
+        expect(options[:after]).to eq('abc')
+      end
+
+      get :github,  repository: { id: 1}, head_commit: { id: 'abc1234'}, before: '123', after: 'abc'
+    end
   end
 end

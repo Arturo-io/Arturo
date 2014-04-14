@@ -53,6 +53,7 @@ describe BuildController do
 
       Repo.create(id: 99, user_id: 42, full_name: "repo")
       Repo.create(id: 100, user_id: 43, full_name: "repo private", private: true)
+      BuildDiff.create(url: 'http://www.example.com', build_id: 1)
 
       Build.create(id: 1, repo_id: 99, status: :new)
       Build.create(id: 2, repo_id: 100, status: :new)
@@ -74,6 +75,11 @@ describe BuildController do
     it 'assigns the assets' do
       get :show, id: 1
       expect(assigns(:assets).first[:url]).to eq("http://www.google.com")
+    end
+
+    it 'assigns the build diff' do
+      get :show, id: 1
+      expect(assigns(:diff)[:url]).to eq('http://www.example.com')
     end
 
     it 'allows for a public repo' do

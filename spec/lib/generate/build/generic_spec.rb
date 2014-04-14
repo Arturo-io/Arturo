@@ -36,6 +36,11 @@ describe Generate::Build:: Generic do
     @build.convert("#some content", :html)
   end
 
+  it 'defaults formats to :pdf' do
+    build = ExampleBuilder.new(99)
+    expect(build.formats).to eq([:pdf])
+  end
+
   it 'does not send self-contained: true to converter unless format is html' do
     dbl = double().as_null_object.tap do |d|
       expect(d).to receive(:run)

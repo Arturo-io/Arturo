@@ -6,7 +6,7 @@ describe BuildWorker do
     repo = Repo.create(user: user, full_name: "progit-bana")
     Build.create(id: 9, repo: repo)
 
-    Pusher.stub(:trigger)
+    allow(Pusher).to receive(:trigger)
   end
 
   it 'queues up a job' do
@@ -17,14 +17,17 @@ describe BuildWorker do
   context 'with fake double' do
     before do
       @double = double("Generate::Build").as_null_object
-      @double.stub(:execute).and_return([])
+      allow(@double).to receive(:execute).and_return([])
 
-      Generate::Book.stub_chain(:new, :execute).and_return([])
-      Build.stub(:find).and_return(@double)
+      allow(Generate::Book).to receive_message_chain(:new, :execute).and_return([])
+      allow(Build).to receive(:find).and_return(@double)
+
+      allow(Generate::Build::Diff).to receive_message_chain(:new, :execute)
+        .and_return('http://www.google.com')
     end
 
     it 'creates and calls execute on a new Generate::Build' do
-      Generate::Book.should_receive(:new) do |build_id, formats|
+      expect(Generate::Book).to receive(:new) do |build_id, formats|
         expect(formats).to eq([:pdf, :html, :epub, :mobi])
         expect(build_id).to eq(9)
         @double
@@ -35,15 +38,24 @@ describe BuildWorker do
 
     it 'creates an asset for the URLs' do
       assets = [ 'http://reddit.com' , 'http://google.com']
-      Generate::Book.stub_chain(:new, :execute).and_return(assets)
+      expect(Generate::Book).to receive_message_chain(:new, :execute)
+        .and_return(assets)
 
-      Asset.should_receive(:create).twice.and_return(nil)
+      expect(Asset).to receive(:create)
+        .twice
+        .and_return(nil)
       BuildWorker.new.perform(9)
     end
 
     it 'calls #update_status on the build' do
-      @double.should_receive(:update_status).with(:building)
-      @double.should_receive(:update_status).with(:success)
+      expect(@double).to receive(:update_status).with(:building)
+      expect(@double).to receive(:update_status).with(:success)
+      BuildWorker.new.perform(9)
+    end
+
+    it 'creates a diff' do
+      expect(::BuildDiff).to receive(:create).with(build_id: 9, url: 'http://www.google.com')
+
       BuildWorker.new.perform(9)
     end
 

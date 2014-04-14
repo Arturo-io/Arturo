@@ -54,7 +54,7 @@ describe QueueBuild do
 
   context 'instance' do
     before do
-      @instance = subject.new(2)
+      @instance = subject.new(2, before: '123', after: 'abc')
     end
 
     context '#commit' do
@@ -93,7 +93,8 @@ describe QueueBuild do
       end
 
       it 'calls assign_and_update' do
-        expect(subject).to receive(:assign_and_update).with(@double, {})
+        expect(subject).to receive(:assign_and_update)
+          .with(@double, before: '123', after: 'abc')
         @instance.execute
       end
 
@@ -111,7 +112,6 @@ describe QueueBuild do
         expect(subject).to receive(:update_status).with(@double)
         @instance.execute
       end
-
     end
 
   end

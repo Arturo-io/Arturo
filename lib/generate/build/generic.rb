@@ -2,7 +2,7 @@ module Generate
   module Build 
     class Generic
       attr_reader :repo, :full_name, :auth_token, :formats,
-        :client, :build, :options
+                  :client, :build, :options
 
       def initialize(build_id, opts = {})
         @build      = ::Build.find(build_id)
@@ -12,7 +12,7 @@ module Generate
         @client     = github_client(auth_token)
         @options    = default_options.merge(opts)
         @options    = options.merge(parsed_options)
-        @formats    = options.delete(:formats).map(&:to_sym)
+        @formats    = (options.delete(:formats) || [:pdf]).map(&:to_sym)
       end
 
       def execute
