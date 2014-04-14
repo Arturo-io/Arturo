@@ -2,13 +2,16 @@ module Generate
   class DiffContent
     attr_reader :repo, :base, 
                 :head, :auth_token, 
-                :client
+                :client, :deletes, :inserts
 
     def initialize(opts = {}) 
       @repo       = opts[:repo]
       @base       = opts[:base]
       @head       = opts[:head]
       @client     = opts[:client]
+
+      @deletes    = opts[:deletes] || ["<del class='del'>", "</del>"]
+      @inserts    = opts[:inserts] || ["<ins class='ins'>", "</ins>"]
     end
 
     def execute
@@ -20,8 +23,9 @@ module Generate
         base_file = fetch_file(file, base)
         head_file = fetch_file(file, head)
 
-        base_file.wdiff(head_file, :deletes => ["<del class='del'>", "</del>"],
-                                   :inserts => ["<ins class='ins'>", "</ins>"])
+        base_file.wdiff(head_file, deletes: deletes, 
+                                   inserts: inserts)
+                                 
       end 
     end
 

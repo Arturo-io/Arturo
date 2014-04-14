@@ -7,6 +7,8 @@ describe Generate::DiffContent do
     @content =  Generate::DiffContent.new(repo: "testrepo", 
                                           base: "base", 
                                           head: "head",
+                                          deletes: ["<del>", "</del>"],
+                                          inserts: ["<ins>", "</ins>"],
                                           client: @client)
     setup_compare
     setup_fetch
