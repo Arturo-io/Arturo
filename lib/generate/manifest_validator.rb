@@ -1,7 +1,7 @@
 module Generate
   class InvalidOption < Exception; end
 
-  class ManifestOptions
+  class ManifestValidator
     attr_reader :config
 
     def initialize(config)

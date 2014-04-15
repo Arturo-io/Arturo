@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Generate::ManifestOptions do
-  let(:subject) { Generate::ManifestOptions }
+describe Generate::ManifestValidator do
+  let(:subject) { Generate::ManifestValidator }
 
   it 'can take in a config as an option' do 
     subject.new({option: "value"}) 

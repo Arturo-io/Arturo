@@ -65,7 +65,7 @@ describe Generate::Build::Manifest do
     end
 
     it ' raises on invalid options' do
-      allow(Generate::ManifestOptions).to receive_message_chain(:new, :validate!) do
+      allow(Generate::ManifestValidator).to receive_message_chain(:new, :validate!) do
         raise "Invalid options"
       end
       
