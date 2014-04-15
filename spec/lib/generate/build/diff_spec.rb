@@ -44,7 +44,7 @@ describe Generate::Build::Diff do
     end
 
     it 'calls DiffContent to get content' do
-      expect(Generate::DiffContent).to receive(:new) do |options|
+      expect(Generate::Compare).to receive(:new) do |options|
         expect(options[:repo]).to eq('progit-bana')
         expect(options[:base]).to eq('123')
         expect(options[:head]).to eq('abc')

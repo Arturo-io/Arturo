@@ -9,11 +9,10 @@ module Generate
       end
 
       def content
-        Generate::DiffContent
-          .new(repo: full_name, 
-               base: build[:before], 
-               head: build[:after],
-               client: client)
+        Generate::Compare.new(repo: full_name, 
+                              base: build[:before], 
+                              head: build[:after],
+                              client: client)
           .execute
       end
 

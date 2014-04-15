@@ -1,5 +1,5 @@
 module Generate
-  class DiffContent
+  class Compare
     attr_reader :repo, :base, 
                 :head, :auth_token, 
                 :client, :deletes, :inserts

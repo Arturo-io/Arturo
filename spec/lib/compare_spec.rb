@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe Generate::DiffContent do
+describe Generate::Compare do
   let(:subject) { Generate::DiffContent }
   before do  
     @client  = double().as_null_object
-    @content =  Generate::DiffContent.new(repo: "testrepo", 
-                                          base: "base", 
-                                          head: "head",
-                                          deletes: ["<del>", "</del>"],
-                                          inserts: ["<ins>", "</ins>"],
-                                          client: @client)
+    @content =  Generate::Compare.new(repo: "testrepo", 
+                                      base: "base", 
+                                      head: "head",
+                                      deletes: ["<del>", "</del>"],
+                                      inserts: ["<ins>", "</ins>"],
+                                      client: @client)
     setup_compare
     setup_fetch
   end
