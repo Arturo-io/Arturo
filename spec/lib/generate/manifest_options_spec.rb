@@ -11,6 +11,7 @@ describe Generate::ManifestOptions do
     it 'valid options' do  
       subject.new({author: "ortuna", title: "Hamlet"}).validate! 
     end
+
     it 'invalid options' do
       expect {
         subject.new({another_option: true, author: "ortuna", title: "Hamlet"}).validate! 

@@ -82,8 +82,8 @@ module Generate
       end
 
       def default_options
-        { :table_of_contents => true
-        }.with_indifferent_access
+        { :table_of_contents => true }
+        .with_indifferent_access
       end
     end
   end

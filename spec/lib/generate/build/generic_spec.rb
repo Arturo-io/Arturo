@@ -3,7 +3,7 @@ class ExampleBuilder < Generate::Build::Generic
 
 end
 
-describe Generate::Build:: Generic do
+describe Generate::Build::Generic do
   before do
     @user  = create_user(auth_token: 'abc1234')
     @repo  = Repo.create(user: @user, full_name: "progit-bana")
