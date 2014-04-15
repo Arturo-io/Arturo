@@ -38,7 +38,7 @@ module Generate
     private
     def fetch_file(file_path, sha)
       Github::File.fetch(repo, file_path, sha, client)
-    rescue Octokit::NotFound => e
+    rescue Octokit::NotFound
       ""
     end
 
