@@ -17,7 +17,10 @@ module Generate
     end
 
     def execute
-      content.join("\n")
+      content.inject([]) do |memo, item|
+        memo << item unless item.empty? 
+        memo
+      end.join("\n")
     end
 
     def content

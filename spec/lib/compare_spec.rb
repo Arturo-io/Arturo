@@ -74,6 +74,11 @@ describe Generate::Compare do
     expect(@content.content).to eq(expected)
   end
 
+  it 'does not have empty pages' do
+    allow(@content).to receive(:content).and_return(['', 'two'])
+    expect(@content.execute).to eq("two")
+  end
+
   it 'returns concatd content' do
     expected = "This is the file some_file_0 on <del>base</del> <ins>head</ins>
 This is the file some_file_1 on <del>base</del> <ins>head</ins>"
