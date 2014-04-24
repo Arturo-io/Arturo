@@ -7,6 +7,7 @@ describe Generate::Compare do
     @content =  Generate::Compare.new(repo: "testrepo", 
                                       base: "base", 
                                       head: "head",
+                                      pages: ['some_file_0', 'some_file_1'],
                                       deletes: ["<del>", "</del>"],
                                       inserts: ["<ins>", "</ins>"],
                                       client: @client)
@@ -43,9 +44,17 @@ describe Generate::Compare do
     expect(@content.client).not_to be_nil
   end
 
-  it 'can get a list of diff_files' do
-    files = @content.diff_files
-    expect(files).to eq(['some_file_0', 'some_file_1'])
+  context '#diff_files' do
+    it 'can get a list of diff_files' do
+      files = @content.diff_files
+      expect(files).to eq(['some_file_0', 'some_file_1'])
+    end
+
+    it 'only returns files that are in #pages' do
+      allow(@content).to receive(:pages).and_return(['some_file_0'])
+      files = @content.diff_files
+      expect(files).to eq(['some_file_0'])
+    end
   end
 
   it 'can get a diff  of a file' do

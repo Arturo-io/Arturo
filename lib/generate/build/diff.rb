@@ -22,6 +22,7 @@ module Generate
           repo:   full_name,
           base:   build[:before], 
           head:   build[:after],
+          pages:  pages(full_name, build[:after]),
           client: client
         }
         Generate::Compare.new(options)

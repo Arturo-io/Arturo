@@ -51,7 +51,6 @@ module Generate
         end
       end
 
-
       def tree(full_name, sha)
         tree = Github::Tree.fetch(client, full_name, sha).tree
         tree
@@ -59,6 +58,7 @@ module Generate
          .map    { |i| i["path"]}
          .select { |i| allowed_extensions.include?(File.extname(i)) }
       end
+      alias_method :pages, :tree
 
       def github_client(auth_token)
         Octokit::Client.new(access_token: auth_token)

@@ -12,6 +12,10 @@ module Generate
         end
       end
 
+      def pages(full_name, sha)
+        cached_manifests(full_name, sha).pages
+      end
+
       private
       def parsed_options
         options.merge(config(full_name, sha))
