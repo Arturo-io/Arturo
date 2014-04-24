@@ -1,10 +1,13 @@
 development:
+  host: localhost
   adapter: postgresql
   database: arturo_dev
 test:
+  host: localhost
   adapter: postgresql
   database: arturo_test
 
 production:
+  host: localhost
   adapter: postgresql
   database: arturo
