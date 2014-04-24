@@ -54,8 +54,19 @@ describe BuildWorker do
     end
 
     it 'creates a diff' do
-      expect(::BuildDiff).to receive(:create).with(build_id: 9, url: 'http://www.google.com')
+      allow(@double).to receive(:before).and_return('abc')
+      allow(@double).to receive(:after).and_return('xyz')
+      
+      expect(::BuildDiff).to receive(:create)
+        .with(build_id: 9, url: 'http://www.google.com')
+      BuildWorker.new.perform(9)
+    end
 
+    it 'does not build a diff when it doesnt have a before/after' do
+      allow(@double).to receive(:before).and_return(nil)
+      allow(@double).to receive(:after).and_return(nil)
+
+      expect(::BuildDiff).not_to receive(:create)
       BuildWorker.new.perform(9)
     end
 
