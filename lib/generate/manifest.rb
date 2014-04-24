@@ -11,8 +11,12 @@ class Generate::Manifest
     @config ||= YAML.load(read_config).with_indifferent_access
   end
 
+  def pages
+    config[:pages]
+  end
+
   def book_content
-    config[:pages].inject("") do |memo, page|
+    pages.inject("") do |memo, page|
       memo << read_remote_file(page) << "\n"
     end
   end
