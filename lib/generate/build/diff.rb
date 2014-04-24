@@ -9,11 +9,7 @@ module Generate
       end
 
       def content
-        Generate::Compare.new(repo: full_name, 
-                              base: build[:before], 
-                              head: build[:after],
-                              client: client)
-          .execute
+         comparer.execute
       end
 
       def upload(repo_name, file_name, content)
@@ -21,6 +17,17 @@ module Generate
       end
       
       private
+      def comparer
+        options = {
+          repo:   full_name,
+          base:   build[:before], 
+          head:   build[:after],
+          pages:  pages(full_name, build[:after]),
+          client: client
+        }
+        Generate::Compare.new(options)
+      end
+
       def default_options
         {}.with_indifferent_access
       end

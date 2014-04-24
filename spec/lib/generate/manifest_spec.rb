@@ -27,6 +27,14 @@ describe Generate::Manifest do
     end
   end
 
+  context '#pages' do
+    it 'gives a list of pages from the config' do
+      manifest = Generate::Manifest.new("owner/repo")
+      allow(manifest).to receive(:read_config).and_return(read_fixture_file("manifests/simple.yml"))
+      expect(manifest.pages).to eq(['chapter1.md', 'chapter2.md', 'chapter3.md'])
+    end
+  end
+
   context '#read_remote_file' do
     it 'calls Github::File with the correct params' do
       expect(Github::File).to receive(:fetch) do |repo, path, sha, _client|

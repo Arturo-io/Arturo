@@ -2,13 +2,15 @@ module Generate
   class Compare
     attr_reader :repo, :base, 
                 :head, :auth_token, 
-                :client, :deletes, :inserts
+                :client, :deletes,
+                :inserts, :pages
 
     def initialize(opts = {}) 
       @repo       = opts[:repo]
       @base       = opts[:base]
       @head       = opts[:head]
       @client     = opts[:client]
+      @pages      = opts[:pages]
 
       @deletes    = opts[:deletes] || ["<del class='del'>", "</del>"]
       @inserts    = opts[:inserts] || ["<ins class='ins'>", "</ins>"]
@@ -32,13 +34,15 @@ module Generate
     def diff_files
       client.compare(@repo, @base, @head)
         .files
-        .map { |file| file.filename}
+        .map do |file| 
+          file.filename if pages.include?(file.filename)
+      end.compact
     end
 
     private
     def fetch_file(file_path, sha)
       Github::File.fetch(repo, file_path, sha, client)
-    rescue Octokit::NotFound => e
+    rescue Octokit::NotFound
       ""
     end
 

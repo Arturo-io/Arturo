@@ -3,7 +3,7 @@ class ExampleBuilder < Generate::Build::Generic
 
 end
 
-describe Generate::Build:: Generic do
+describe Generate::Build::Generic do
   before do
     @user  = create_user(auth_token: 'abc1234')
     @repo  = Repo.create(user: @user, full_name: "progit-bana")
@@ -122,6 +122,12 @@ describe Generate::Build:: Generic do
       expect(@build.tree("some_repo", "some_sha")).to eq(["file.txt", "file2.txt"])
     end
 
+    context '#pages' do
+      it 'can get a list of pages' do
+        allow(Github::Tree).to receive(:fetch).and_return(@tree)
+        expect(@build.pages("some_repo", "some_sha")).to eq(["file.txt", "file2.txt"])
+      end
+    end
   end
 
   context '#content' do

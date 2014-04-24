@@ -1,7 +1,7 @@
 module Generate
   class InvalidOption < Exception; end
 
-  class ManifestOptions
+  class ManifestValidator
     attr_reader :config
 
     def initialize(config)
@@ -11,7 +11,8 @@ module Generate
 
     def validate!
       config.each do |option, value|
-        raise InvalidOption, "#{option} is an invalid manifest option" unless valid? option
+        next if valid?(option)
+        raise InvalidOption, "#{option} is an invalid manifest option"
       end
     end
 

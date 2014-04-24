@@ -8,8 +8,12 @@ module Generate
 
       def config(full_name, sha)
         cached_manifests(full_name, sha).config.tap do |config|
-          Generate::ManifestOptions.new(config).validate!
+          Generate::ManifestValidator.new(config).validate!
         end
+      end
+
+      def pages(full_name, sha)
+        cached_manifests(full_name, sha).pages
       end
 
       private

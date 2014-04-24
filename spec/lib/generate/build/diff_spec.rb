@@ -44,11 +44,13 @@ describe Generate::Build::Diff do
     end
 
     it 'calls DiffContent to get content' do
+      allow(@diff).to receive(:pages).and_return(['file1.md', 'file2.md'])
       expect(Generate::Compare).to receive(:new) do |options|
         expect(options[:repo]).to eq('progit-bana')
         expect(options[:base]).to eq('123')
         expect(options[:head]).to eq('abc')
         expect(options[:client]).not_to be_nil
+        expect(options[:pages]).to eq(['file1.md', 'file2.md'])
       end.and_return(double().as_null_object) 
 
       @diff.content
