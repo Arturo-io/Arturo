@@ -7,19 +7,20 @@ describe GithubCreateHookWorker do
   end
 
   it 'queues the job' do
-    Github::Hook.stub(:create_hook).and_return({id: 000})
+    allow(Github::Hook).to receive(:create_hook).and_return({id: 000})
 
     GithubCreateHookWorker.perform_async(99)
     expect(GithubCreateHookWorker).to have(1).job
   end
 
   it 'calls .create_hook on Github::Hook' do
-    Github::Hook.stub(:create_hook).and_return({id: 000})
+    allow(Github::Hook).to receive(:create_hook).and_return({id: 000})
     GithubCreateHookWorker.new.perform(99) 
   end
 
   it 'sets the hook_id on a repo' do
-    Github::Hook.should_receive(:create_hook).and_return({id: 112233})
+    expect(Github::Hook).to receive(:create_hook)
+      .and_return({id: 112233})
 
     GithubCreateHookWorker.new.perform(99)
     expect(Repo.find(99)[:hook_id]).to eq(112233)

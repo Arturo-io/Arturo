@@ -11,9 +11,9 @@ describe Github::Hook do
   context '#add_hook' do
     it 'can add a hook to a github repo with correct options' do
       double = double('Octokit::Client')
-      subject.stub(:client).and_return(double)
+      allow(subject).to receive(:client).and_return(double)
 
-      double.should_receive(:create_hook) do |repo, name, config, options|
+      expect(double).to receive(:create_hook) do |repo, name, config, options|
         expect(repo).to eq('user/repo')
         expect(name).to eq('web')
         expect(config[:content_type]).to eq('json') 
@@ -30,7 +30,7 @@ describe Github::Hook do
       double = double('Octokit::Client')
       expect(subject).to receive(:client).and_return(double)
 
-      double.should_receive(:create_hook) do
+      expect(double).to receive(:create_hook) do
         raise Octokit::UnprocessableEntity
       end
 
@@ -41,9 +41,9 @@ describe Github::Hook do
   context '#remove_hook' do
     it 'can remove a hook from github' do
       double = double('Octokit::Client')
-      subject.stub(:client).and_return(double)
+      allow(subject).to receive(:client).and_return(double)
 
-      double.should_receive(:remove_hook).with('user/repo', 111)
+      expect(double).to receive(:remove_hook).with('user/repo', 111)
       subject.remove_hook(99)
     end
 
@@ -51,7 +51,7 @@ describe Github::Hook do
       double = double('Octokit::Client')
       expect(subject).to receive(:client).and_return(double)
 
-      double.should_receive(:remove_hook) do
+      expect(double).to receive(:remove_hook) do
         raise Octokit::UnprocessableEntity
       end
 

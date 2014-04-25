@@ -26,7 +26,7 @@ describe RepositoryController do
     end
 
     it 'calls queue_build for the repo' do
-      QueueBuild.should_receive(:queue_build).with(99)
+      expect(QueueBuild).to receive(:queue_build).with(99)
       get :build, id: 99 
     end
 
@@ -34,7 +34,7 @@ describe RepositoryController do
       create_user(id: 41, uid: "secondary_user")
       session[:user_id] = 41
 
-      QueueBuild.should_not_receive(:queue_build)
+      expect(QueueBuild).to_not receive(:queue_build)
 
       get :build, id: 99 
       assert_response :forbidden
@@ -61,7 +61,7 @@ describe RepositoryController do
     end
 
     it 'calls #perform_async with the correct user_id' do
-      RepoSyncWorker.should_receive(:perform_async).with(42)
+      expect(RepoSyncWorker).to receive(:perform_async).with(42)
       get :sync
     end
 

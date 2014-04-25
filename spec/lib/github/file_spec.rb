@@ -6,7 +6,7 @@ describe Github::File do
   it 'can retreive a file form github' do
     client = double("Github::Octkit")
 
-    client.stub(:contents) do |repo, options|
+    allow(client).to receive(:contents) do |repo, options|
       expect(repo).to eq("ortuna/progit-bana")
       expect(options[:path]).to eq("readme.md")
       OpenStruct.new(content: "cmVhZG1lIQ==")
@@ -19,7 +19,7 @@ describe Github::File do
   it 'can retreive a file from the right SHA' do
     client = double("Github::Octkit")
 
-    client.stub(:contents) do |_, options|
+    allow(client).to receive(:contents) do |_, options|
       expect(options[:ref]).to eq("some_sha")
       OpenStruct.new(content: "cmVhZG1lIQ==")
     end
@@ -31,7 +31,7 @@ describe Github::File do
   it 'forces the UTF-8' do
     client = double("Github::Octkit")
 
-    client.stub(:contents) do |_, options|
+    allow(client).to receive(:contents) do |_, options|
       expect(options[:ref]).to eq("some_sha")
       OpenStruct.new(content: "cmVhZG1lIQ==")
     end

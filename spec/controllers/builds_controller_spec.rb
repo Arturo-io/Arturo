@@ -35,14 +35,14 @@ describe BuildsController do
   context '#resolve_partial' do
     it 'returns no_builds when builds is empty' do
       double = double()
-      double.stub(:empty?).and_return false
+      allow(double).to receive(:empty?).and_return false
       partial = controller.send(:resolve_partial, double)
       expect(partial).to eq('build_list')
     end
 
     it 'returns no_builds when builds is empty' do
       double = double()
-      double.stub(:empty?).and_return true
+      allow(double).to receive(:empty?).and_return true
       partial = controller.send(:resolve_partial, double)
       expect(partial).to eq('no_builds')
     end 
@@ -119,13 +119,13 @@ describe BuildsController do
     end
 
     it 'assigns build_list when builds is not empty' do
-      controller.stub(:resolve_partial).and_return 'build_list'
+      allow(controller).to receive(:resolve_partial).and_return 'build_list'
       get :index 
       expect(assigns(:partial)).to eq('build_list')
     end
 
     it 'assings no_builds to partial when empty' do
-      controller.stub(:resolve_partial).and_return 'no_builds'
+      allow(controller).to receive(:resolve_partial).and_return 'no_builds'
       get :index 
       expect(assigns(:partial)).to eq('no_builds')
     end

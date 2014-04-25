@@ -4,7 +4,7 @@ describe Github::Tree do
   context 'fetch' do 
     it 'can fetch a tree from a repo' do
       client = double("Octokit::Client")
-      client.should_receive(:tree) do |repo, sha|
+      expect(client).to receive(:tree) do |repo, sha|
         expect(repo).to eq("ortuna/progit-bana")
         expect(sha).to  eq("sha1234")
         [{tree: true}]
