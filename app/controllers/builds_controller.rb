@@ -1,4 +1,4 @@
-class BuildController < ApplicationController
+class BuildsController < ApplicationController
   protect_from_forgery with: :exception
 
   before_filter :check_login, except: [:show]

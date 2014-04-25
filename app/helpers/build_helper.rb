@@ -1,7 +1,7 @@
 module BuildHelper
   def link_to_build(build)
     link_to "#{build.repo.name} [#{limit_string(build.commit, 4)}]", 
-      url_for(controller: 'build', action: 'show', 
+      url_for(controller: 'builds', action: 'show', 
               id: build[:id], only_path: true)
   end
 

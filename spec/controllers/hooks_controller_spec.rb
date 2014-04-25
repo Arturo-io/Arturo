@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HookController do
+describe HooksController do
   context '#github' do
     before do
       user             = create_user(login: "user")

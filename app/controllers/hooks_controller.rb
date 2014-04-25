@@ -1,4 +1,4 @@
-class HookController < ApplicationController
+class HooksController < ApplicationController
   def github
     repo_id = params[:repository][:id]
     sha     = params[:head_commit][:id]

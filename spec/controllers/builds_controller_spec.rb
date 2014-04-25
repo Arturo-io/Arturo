@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BuildController do
+describe BuildsController do
   context '#user_builds' do
     context 'gets the current users builds only' do
       before do

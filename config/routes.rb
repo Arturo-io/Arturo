@@ -3,19 +3,19 @@ Arturo::Application.routes.draw do
 
   get '/auth/github/callback', to: 'omniauth_github#callback'
 
-  get '/documentation',    to: 'documentation#index'
-  get '/builds',       to: 'build#index'
-  get '/builds/:id',   to: 'build#show', as: :build
+  get '/documentation',  to: 'documentation#index'
+  get '/builds',         to: 'builds#index'
+  get '/builds/:id',     to: 'builds#show', as: :build
   get '/badge/:repo_id', to: 'badge#show', as: :badge
 
-  post '/hooks/github', to: 'hook#github'
+  post '/hooks/github',  to: 'hooks#github'
 
   scope '/user', as: :user do
     get '/logout',          to: 'user#logout'
     get '/login/callback',  to: 'omniauth_github#callback'
   end
 
-  scope '/repositories', as: :repositories do
+  scope '/repositories',  as: :repositories do
     get    '/',           to: 'repository#index'
     get    '/org/:org',   to: 'repository#index',    as: :org
     get    '/sync',       to: 'repository#sync',     as: :sync
