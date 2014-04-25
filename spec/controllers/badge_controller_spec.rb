@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe BadgeController do
+  render_views
+
   context '#show' do
     before do
       user  = create_user()

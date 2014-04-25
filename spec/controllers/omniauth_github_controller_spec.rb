@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe OmniauthGithubController do
+  render_views
+
   context 'callback' do
     it 'updates the auth token with a new one' do
       hash = {

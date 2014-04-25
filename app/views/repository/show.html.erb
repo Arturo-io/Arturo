@@ -14,7 +14,7 @@
 
   <div class="row">
     <div class="columns small-12">
-      <%= render('build/assets', assets: @last_assets) if @last_assets %>
+      <%= render('builds/assets', assets: @last_assets) if @last_assets %>
     </div>
   </div>
 
@@ -22,7 +22,7 @@
   <div class="row builds">
     <div class="columns small-12">
       <h3>Builds History</h3>
-      <%= render('build/build_list') %>
+      <%= render('builds/build_list') %>
     </div>
   </div>
 

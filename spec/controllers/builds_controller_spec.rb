@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe BuildsController do
+  render_views
+
   context '#user_builds' do
     context 'gets the current users builds only' do
       before do
@@ -10,8 +12,8 @@ describe BuildsController do
         repo1 = Repo.create(id: 41, user: user1) 
         repo2 = Repo.create(id: 98, user: user2) 
 
-        3.times { Build.create(repo: repo1) }
-        2.times { Build.create(repo: repo2) }
+        3.times { Build.create(repo: repo1, status: :created) }
+        2.times { Build.create(repo: repo2, status: :created) }
       end
 
       it 'gets user 42s repos' do

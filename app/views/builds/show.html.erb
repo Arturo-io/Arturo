@@ -41,7 +41,7 @@
               Commit:
             </div>
             <div class="small-9 columns">
-              <%= link_to (@build.commit && @build.commit[0..16]) << "...", @build.commit_url, target: '_blank' %>
+              <%= link_to limit_string(@build.commit, 16) << "...", @build.commit_url, target: '_blank' %>
             </div>
           </div>
  
@@ -90,7 +90,7 @@
             <h3> Assets </h3>
           <div>
         </div>
-        <%= render('build/assets', assets: @assets) %> 
+        <%= render('builds/assets', assets: @assets) %> 
       </div>
     </div>
 
