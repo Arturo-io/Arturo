@@ -1,115 +1,117 @@
-<header class="anon navigation contain-to-grid">
-  <div class="row">
-    <div class="small-6 left columns">
-      <h1 id="title">Arturo</h1>
-    </div>
-    <div class="small-6 right columns">
-      <nav class="top-bar" data-topbar>
-        <ul class="title-area">
-          <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
-        </ul>
-
-        <section class="top-bar-section">
-          <%= render('shared/anon_links') %>
-        </section>
-      </nav>
-
-    </div>
-  </div>
-</header>
-
-<%= render "shared/flash" %>
-
-<section class="information">
-  <div class="row">
-    <div class="small-11 columns small-centered">
-      <h2 class="subheading">
-        Automate Your Publishing
-      </h2>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="medium-6 columns show-for-medium-up">
-      <%= image_tag('screen.png') %>
-    </div>
-    <div class="small-12 medium-6 columns">
-      <div class="row">
-        <div class="small-12 columns">
-          <h3>
-            No sed quodsi gubergren efficiendi, mel mucius facilisi id. Ferri fabellas dissentiet has ex. Vel ei omnis dolore verterem, sit expetendis moderatius inciderint ex
-            No sed quodsi gubergren efficiendi, mel mucius facilisi id. 
-          </h3>
-        </div>
+<% cache do %>
+  <header class="anon navigation contain-to-grid">
+    <div class="row">
+      <div class="small-6 left columns">
+        <h1 id="title">Arturo</h1>
       </div>
-   </div>
-  </div>
+      <div class="small-6 right columns">
+        <nav class="top-bar" data-topbar>
+          <ul class="title-area">
+            <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+          </ul>
 
-  <div class="row auth-button">
-    <div class="small-12">
-      <a href="/auth/github" id="auth" class="button radius alert">
-        Authorize With Github 
-      </a>
+          <section class="top-bar-section">
+            <%= render('shared/anon_links') %>
+          </section>
+        </nav>
+
+      </div>
     </div>
-  </div>
- 
-</section>
+  </header>
 
-<hr>
+  <%= render "shared/flash" %>
 
-<section class="moreinfo">
-  <%= render 'features_first_row' %>
-  <%= render 'features_second_row' %>
-</section>
-
-<hr>
-
-<section>
-  <div class="row">
-    <div class="small-4 columns pricing">
-      <ul class="pricing-table">
-        <li class="title">Open Source</li>
-        <li class="price">Free</li>
-        <li class="description">For public open source projects.</li>
-        <li class="bullet-item">Unlimited public repos</li>
-        <li class="cta-button">
-          <a class="button radius" href="#">Authorize</a>
-        </li>
-      </ul>
+  <section class="information">
+    <div class="row">
+      <div class="small-11 columns small-centered">
+        <h2 class="subheading">
+          Automate Your Publishing
+        </h2>
+      </div>
     </div>
 
-    <div class="small-4 columns pricing">
-      <ul class="pricing-table">
-        <li class="title">Solo</li>
-        <li class="price">$4.99</li>
-        <li class="description">For solo writers</li>
-        <li class="bullet-item">Unlimited public repos</li>
-        <li class="bullet-item">1 private repo</li>
-        <li class="cta-button">
-          <a class="button radius" href="#">Buy Now</a>
-        </li>
-      </ul>
+    <div class="row">
+      <div class="medium-6 columns show-for-medium-up">
+        <%= image_tag('screen.png') %>
+      </div>
+      <div class="small-12 medium-6 columns">
+        <div class="row">
+          <div class="small-12 columns">
+            <h3>
+              No sed quodsi gubergren efficiendi, mel mucius facilisi id. Ferri fabellas dissentiet has ex. Vel ei omnis dolore verterem, sit expetendis moderatius inciderint ex
+              No sed quodsi gubergren efficiendi, mel mucius facilisi id. 
+            </h3>
+          </div>
+        </div>
+    </div>
     </div>
 
-    <div class="small-4 columns pricing">
-      <ul class="pricing-table">
-        <li class="title">Multi Pass</li>
-        <li class="price">$19.99</li>
-        <li class="description">For serial writers</li>
-        <li class="bullet-item">Unlimited public repos</li>
-        <li class="bullet-item">10 private repos</li>
-        <li class="bullet-item">Priority builds</li>
-        <li class="cta-button">
-          <a class="button radius" href="#">Buy Now</a>
-        </li>
-      </ul>
+    <div class="row auth-button">
+      <div class="small-12">
+        <a href="/auth/github" id="auth" class="button radius alert">
+          Authorize With Github 
+        </a>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="small-6 medium-12 text-centered small-centered columns">
-      <%= link_to "Contact us", "mailto:hello@arturo.io" %> for custom price plans
-    </div>
-  </div>
-</section>
+  
+  </section>
 
-<hr>
+  <hr>
+
+  <section class="moreinfo">
+    <%= render 'features_first_row' %>
+    <%= render 'features_second_row' %>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="row">
+      <div class="small-4 columns pricing">
+        <ul class="pricing-table">
+          <li class="title">Open Source</li>
+          <li class="price">Free</li>
+          <li class="description">For public open source projects.</li>
+          <li class="bullet-item">Unlimited public repos</li>
+          <li class="cta-button">
+            <a class="button radius" href="#">Authorize</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="small-4 columns pricing">
+        <ul class="pricing-table">
+          <li class="title">Solo</li>
+          <li class="price">$4.99</li>
+          <li class="description">For solo writers</li>
+          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">1 private repo</li>
+          <li class="cta-button">
+            <a class="button radius" href="#">Buy Now</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="small-4 columns pricing">
+        <ul class="pricing-table">
+          <li class="title">Multi Pass</li>
+          <li class="price">$19.99</li>
+          <li class="description">For serial writers</li>
+          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">10 private repos</li>
+          <li class="bullet-item">Priority builds</li>
+          <li class="cta-button">
+            <a class="button radius" href="#">Buy Now</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 medium-12 text-center small-center columns">
+        <%= link_to "Contact us", "mailto:hello@arturo.io" %> for custom price plans
+      </div>
+    </div>
+  </section>
+
+  <hr>
+<% end %>
