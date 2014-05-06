@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RepositoryController do
+describe RepositoriesController do
   render_views
 
   before do 
@@ -120,8 +120,8 @@ describe RepositoryController do
     
     context 'last build and assets' do
       before do
-        Build.create(id: 1, repo_id: 1, status: :success)
-        Build.create(id: 2, repo_id: 1, status: :failed)
+        Build.create(id: 1, repo_id: 1, status: :success, branch: :master)
+        Build.create(id: 2, repo_id: 1, status: :failed,  branch: :mnaster)
         Asset.create(build_id: 1, url: 'http://www.google.com')
       end
 
@@ -138,8 +138,6 @@ describe RepositoryController do
         expect(last_build[:id]).to eq(1)
       end
     end
-    
-
   end
 
   context '#index' do
@@ -273,4 +271,41 @@ describe RepositoryController do
     end
   end
 
+  context '#latest' do
+    before do 
+      repo  = Repo.create(id: 99, user_id: 42, name: 'test')
+      build = Build.create(id: 41, repo: repo, status: :success, branch: :master) 
+      Asset.create(build: build, url: 'http://google.com/something.pdf')
+    end
+
+    it 'returns the latest asset of said type' do
+      get :last_build, id: 99, format: :pdf
+      asset = assigns(:asset)
+      expect(asset.url).to eq('http://google.com/something.pdf')
+    end
+
+    it 'redirects to the lastest asset' do
+      get :last_build, id: 99, format: :pdf
+      assert_redirected_to 'http://google.com/something.pdf'
+    end
+
+    it 'finds mangled format' do
+      get :last_build, id: 99, format: :PdF
+      assert_redirected_to 'http://google.com/something.pdf'
+    end
+
+    it 'gives 404 when asset is not found' do
+      get :last_build, id: 99, format: :elephant
+      assert_response :not_found
+    end
+
+    it 'authorizes a user' do
+      session[:user_id] = nil 
+      Repo.find(99).update(private: true)
+
+      get :last_build, id: 99, format: :pdf
+      assert_response :forbidden
+    end
+
+  end
 end

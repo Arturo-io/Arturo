@@ -1,12 +1,13 @@
-class RepositoryController < ApplicationController
+class RepositoriesController < ApplicationController
   protect_from_forgery with: :exception
   before_filter :check_login, except: [:show]
 
   authorize_actions_for RepoAuthorizer
-  authority_actions follow:   'update', 
-                    unfollow: 'update', 
-                    build:    'update',
-                    sync:     'read'
+  authority_actions follow:     'update', 
+                    unfollow:   'update', 
+                    build:      'update',
+                    sync:       'read',
+                    last_build: 'read'
 
   def sync
     if(current_user[:loading_repos])
@@ -31,18 +32,17 @@ class RepositoryController < ApplicationController
 
   def show
     @repo           = Repo.includes(:builds).find(params[:id])
-    @builds         = @repo.builds.page(params[:page]).per(5)
-    @badge_markdown = badge_markdown(@repo[:id])
-    @last_build     = Build.where(repo: @repo, status: :success).first
-    @last_assets    = @last_build && @last_build.assets
-    @pusher_channel = "#{current_user.digest}-builds-#{@repo[:id]}"
-
     authorize_action_for @repo
+
+    @builds         = @repo.builds.page(params[:page]).per(5)
+    @badge_markdown = badge_markdown(@repo.id)
+    @last_build     = Build.last_successful_build(@repo.id)
+    @last_assets    = @last_build && @last_build.assets
+    @pusher_channel = "#{current_user.digest}-builds-#{@repo.id}"
   end
 
   def follow
-    repo = Repo.find(params[:id])
-    authorize_action_for repo
+    repo = find_and_authorize(params[:id])
 
     Follower.create(user: current_user, repo: repo)
     GithubCreateHookWorker.perform_async(repo[:id])
@@ -50,23 +50,40 @@ class RepositoryController < ApplicationController
   end
 
   def unfollow
-    repo = Repo.find(params[:id])
-    authorize_action_for repo
+    repo = find_and_authorize(params[:id])
 
-    Follower.where(user: current_user, repo: repo).first.destroy
+    Follower.find_by(user: current_user, repo: repo).destroy
     GithubRemoveHookWorker.perform_async(repo[:id])
     redirect_to repositories_path, notice: "You are no longer following #{repo.name}"
   end
 
+  def last_build
+    repo   = find_and_authorize(params[:id])
+    format = params[:format].downcase
+
+    @asset = Build
+      .last_successful_build(repo.id)
+      .assets
+      .where("url LIKE ?", "%.#{format}")
+      .first
+
+    @asset.nil? ? render(nothing: true, status: 404) : redirect_to(@asset.url)
+  end
+
   def build
-    repo = Repo.find(params[:id])
-    authorize_action_for repo
+    repo = find_and_authorize(params[:id])
 
     QueueBuild.queue_build(repo[:id])
     redirect_to repositories_show_path(repo[:id]), notice: "A build has been queued for #{repo.name}"
   end
 
   private
+  def find_and_authorize(repo_id)
+    Repo.find(repo_id).tap do |repo|
+      authorize_action_for repo
+    end
+  end
+
   def user_repositories(user_id, org)
      Repo.user_repositories(user_id, org).page(params[:page]).per(25)
   end
