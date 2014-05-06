@@ -1,4 +1,4 @@
-class RepositoryController < ApplicationController
+class RepositoriesController < ApplicationController
   protect_from_forgery with: :exception
   before_filter :check_login, except: [:show]
 
@@ -32,10 +32,10 @@ class RepositoryController < ApplicationController
   def show
     @repo           = Repo.includes(:builds).find(params[:id])
     @builds         = @repo.builds.page(params[:page]).per(5)
-    @badge_markdown = badge_markdown(@repo[:id])
-    @last_build     = Build.where(repo: @repo, status: :success).first
+    @badge_markdown = badge_markdown(@repo.id)
+    @last_build     = Build.last_successful_build(@repo.id)
     @last_assets    = @last_build && @last_build.assets
-    @pusher_channel = "#{current_user.digest}-builds-#{@repo[:id]}"
+    @pusher_channel = "#{current_user.digest}-builds-#{@repo.id}"
 
     authorize_action_for @repo
   end
@@ -56,6 +56,10 @@ class RepositoryController < ApplicationController
     Follower.where(user: current_user, repo: repo).first.destroy
     GithubRemoveHookWorker.perform_async(repo[:id])
     redirect_to repositories_path, notice: "You are no longer following #{repo.name}"
+  end
+
+  def last_build
+
   end
 
   def build
