@@ -1,0 +1,49 @@
+<div class="settings">
+  <div class="row">
+    <div class="small-4 columns">
+      <div class="small-3 columns">
+      <%= image_tag(@user.image_url, class: 'avatar')%>
+    </div>
+      <div class="small-9 columns">
+
+      <%= @user.name  %>
+      <br/>
+      <%= @user.login %>
+      <br/>
+      <%= @user.email %>
+    </div>
+    <div class="small-8 columns">
+      <table>
+        <thead>
+          <tr>
+            <th>Current</th>
+            <th width="200">Plan</th>
+            <th width="150">Private Repos</th>
+            <th width="150">Priority Builds</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td></td>
+          <td>Free</td>
+          <td>0</td>
+          <td><%= fa_icon 'times' %></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Solo</td>
+          <td>1</td>
+          <td><%= fa_icon 'times' %></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Multi Pass</td>
+          <td>10</td>
+          <td><%= fa_icon 'check' %></td>
+        </tr>
+
+       </tbody>
+      </table>
+    </div>
+  </div>
+</div>

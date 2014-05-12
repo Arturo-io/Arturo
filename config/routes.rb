@@ -10,7 +10,8 @@ Arturo::Application.routes.draw do
 
   post '/hooks/github',  to: 'hooks#github'
 
-  scope '/user', as: :user do
+  scope '/user',            as: :user do
+    get '/settings',        to: 'user#settings'
     get '/logout',          to: 'user#logout'
     get '/login/callback',  to: 'omniauth_github#callback'
   end
