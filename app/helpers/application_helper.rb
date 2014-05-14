@@ -14,6 +14,10 @@ module ApplicationHelper
     create_link(repository, is_following, icon).html_safe
   end
 
+  def timeago_tag(time)
+    "<datetime>#{time}</datetime>".html_safe
+  end
+
   private
   def create_link(repo, is_following, icon)
     method = is_following ? :delete : :put 

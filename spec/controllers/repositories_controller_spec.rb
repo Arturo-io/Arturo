@@ -169,6 +169,17 @@ describe RepositoriesController do
       expect(assigns(:orgs)).not_to be_nil
     end
 
+    it 'assigns the users login to the org' do
+      get :index
+      expect(assigns(:org)).to eq('ortuna')
+    end
+
+    it 'assigns the org' do
+      get :index, org: 'some_org'
+      expect(assigns(:org)).to eq('some_org')
+    end
+    
+
     it 'only gets the current signed in users repositories' do
       create_user(id: 43, uid: 43)
 

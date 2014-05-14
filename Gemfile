@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 
 ruby '2.1.1'
 
@@ -13,7 +14,6 @@ gem 'wdiff'
 
 gem 'foundation-rails', '~> 5.0.0'
 gem 'font-awesome-rails'
-gem 'rails-timeago'
 gem 'kaminari'
 
 gem 'omniauth'
@@ -28,6 +28,8 @@ gem 'authority'
 gem 'pusher'
 gem 'intercom-rails', '~> 0.2.24'
 gem 'newrelic_rpm'
+
+gem 'rails-assets-momentjs'
 
 group :development do
   gem 'spring'

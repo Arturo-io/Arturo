@@ -5,20 +5,20 @@
         <h1>Repositories</h1>
       </div>
     </div>
+
     <div class="row">
       <div class="small-9 columns">
-        <%= render 'org_list' %>
+        <div class="information">
+          Repository list was last update from Github <em><%= timeago_tag @last_updated %></em>.
+        </div>
       </div>
       <div class="small-3 columns">
         <%= link_to "#{fa_icon(@sync_icon)} Sync".html_safe, repositories_sync_path, class: "button secondary radius tiny sync right" %>
       </div>
     </div>
-    <div class="row">
-      <div class="small-9 columns">
-        <div class="information">
-          Repository list was last update from github <em><%= timeago_tag @last_updated %></em>.
-        </div>
-      </div>
+
+    <div class="small-12 columns org-list">
+      <%= render 'org_list' %>
     </div>
     <%= render(@partial) %> 
   </div>

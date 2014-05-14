@@ -22,7 +22,7 @@ class RepositoriesController < ApplicationController
   def index
     @last_updated   = current_user[:last_sync_at]
     @following      = Follower.where(user: current_user).map(&:repo_id)
-    @org            = params[:org] || current_user[:login]
+    @org            = (params[:org] || current_user[:login]).downcase
     @repositories   = user_repositories(current_user[:id], @org)
     @orgs           = Repo.user_orgs(current_user[:id])
     @partial        = @repositories.empty? ? 'no_repos' : 'repo_list'
