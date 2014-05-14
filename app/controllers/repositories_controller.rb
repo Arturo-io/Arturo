@@ -1,6 +1,6 @@
 class RepositoriesController < ApplicationController
   protect_from_forgery with: :exception
-  before_filter :check_login, except: [:show]
+  before_filter :check_login, except: [:show, :last_build]
 
   authorize_actions_for RepoAuthorizer
   authority_actions follow:     'update', 

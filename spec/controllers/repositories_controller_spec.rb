@@ -299,6 +299,13 @@ describe RepositoriesController do
       assert_response :not_found
     end
 
+    it 'gives anon user access to public build' do
+      session[:user_id] = nil 
+
+      get :last_build, id: 99, format: :PdF
+      assert_redirected_to 'http://google.com/something.pdf'
+    end
+
     it 'authorizes a user' do
       session[:user_id] = nil 
       Repo.find(99).update(private: true)
