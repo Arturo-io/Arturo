@@ -1,6 +1,7 @@
 class Generate::S3
   def self.save(path, content) 
     new_object(path.downcase).tap do |object|
+      object.content_disposition = 'inline'
       object.content = content
       object.save
     end

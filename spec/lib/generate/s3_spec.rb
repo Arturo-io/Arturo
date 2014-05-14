@@ -5,6 +5,7 @@ describe Generate::S3 do
 
   it 'can save content to S3' do 
     bucket = double("bucket")
+    allow(bucket).to receive(:content_disposition=)
     allow(bucket).to receive(:content=)
     allow(bucket).to receive(:save)
 
