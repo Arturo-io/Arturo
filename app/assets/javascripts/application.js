@@ -16,6 +16,6 @@
 //= require pusher.min
 //
 //= require momentjs
-//= require times 
+//= require livestamp.min
 
 $(function(){ $(document).foundation(); });

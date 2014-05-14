@@ -15,7 +15,7 @@ module ApplicationHelper
   end
 
   def timeago_tag(time)
-    "<datetime>#{time}</datetime>".html_safe
+    "<span data-livestamp='#{time.to_i}'></span>".html_safe
   end
 
   private
