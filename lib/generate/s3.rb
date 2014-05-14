@@ -1,10 +1,16 @@
 class Generate::S3
-  def self.save(path, content) 
+  def self.save(path, content, format = nil)
     new_object(path.downcase).tap do |object|
-      object.content_disposition = 'inline'
+      force_html(object) if (format && format.to_s == "html")
+
       object.content = content
       object.save
     end
+  end
+
+  def self.force_html(object)
+    object.content_disposition = "inline"
+    object.content_type        = "text/html"
   end
 
   def self.new_object(path)

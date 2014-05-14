@@ -29,7 +29,7 @@ module Generate
 
       def upload(repo_name, file_name, content, format)
         @build.update_status("uploading #{format.to_s}")
-        Generate::S3.save("#{repo_name}/#{file_name}", content)
+        Generate::S3.save("#{repo_name}/#{file_name}", content, format)
       end
 
       def convert(content, format) 
