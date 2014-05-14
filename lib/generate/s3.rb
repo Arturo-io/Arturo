@@ -16,7 +16,9 @@ class Generate::S3
     key    = Rails.application.config.s3_key
     secret = Rails.application.config.s3_secret
 
-    service = S3::Service.new(access_key_id: key, secret_access_key: secret)
+    service = S3::Service.new(access_key_id: key, 
+      secret_access_key: secret,
+      use_ssl: true)
     service.buckets.find(bucket) 
   end
 end
