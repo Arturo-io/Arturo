@@ -6,10 +6,6 @@
       </div>
       <div class="small-6 right columns">
         <nav class="top-bar" data-topbar>
-          <ul class="title-area">
-            <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
-          </ul>
-
           <section class="top-bar-section">
             <%= render('shared/anon_links') %>
           </section>
@@ -23,28 +19,20 @@
 
   <section class="information">
     <div class="row">
-      <div class="small-11 columns small-centered">
-        <h2 class="subheading">
-          Automate Your Publishing
-        </h2>
+      <div class="small-7 columns">
+        <h3 calss="subheading">
+          Continuous Integration, for your book
+        </h3>
+        <h4 calss="subheading">
+
+        </h4>
+      </div>
+
+      <div class="small-5 columns">
+        <%= image_tag 'screen.png' %>
       </div>
     </div>
 
-    <div class="row">
-      <div class="medium-6 columns show-for-medium-up">
-        <%= image_tag('screen.png') %>
-      </div>
-      <div class="small-12 medium-6 columns">
-        <div class="row">
-          <div class="small-12 columns">
-            <h3>
-              No sed quodsi gubergren efficiendi, mel mucius facilisi id. Ferri fabellas dissentiet has ex. Vel ei omnis dolore verterem, sit expetendis moderatius inciderint ex
-              No sed quodsi gubergren efficiendi, mel mucius facilisi id. 
-            </h3>
-          </div>
-        </div>
-    </div>
-    </div>
 
     <div class="row auth-button">
       <div class="small-12">
@@ -53,10 +41,8 @@
         </a>
       </div>
     </div>
-  
-  </section>
 
-  <hr>
+  </section>
 
   <section class="moreinfo">
     <%= render 'features_first_row' %>
