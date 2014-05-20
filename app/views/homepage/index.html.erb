@@ -49,16 +49,17 @@
     <%= render 'features_second_row' %>
   </section>
 
-  <hr>
 
-  <section>
+  <section class="pricing">
     <div class="row">
       <div class="small-4 columns pricing">
         <ul class="pricing-table">
           <li class="title">Open Source</li>
           <li class="price">Free</li>
           <li class="description">For public open source projects.</li>
-          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">&infin; public repos</li>
+          <li class="bullet-item">0 private repo</li>
+          <li class="bullet-item">Public Builds</li>
           <li class="cta-button">
             <a class="button radius" href="#">Authorize</a>
           </li>
@@ -70,8 +71,9 @@
           <li class="title">Solo</li>
           <li class="price">$4.99</li>
           <li class="description">For solo writers</li>
-          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">&infin; public repos</li>
           <li class="bullet-item">1 private repo</li>
+          <li class="bullet-item">Private Builds</li>
           <li class="cta-button">
             <a class="button radius" href="#">Buy Now</a>
           </li>
@@ -83,9 +85,9 @@
           <li class="title">Multi Pass</li>
           <li class="price">$19.99</li>
           <li class="description">For serial writers</li>
-          <li class="bullet-item">Unlimited public repos</li>
+          <li class="bullet-item">&infin; public repos</li>
           <li class="bullet-item">10 private repos</li>
-          <li class="bullet-item">Priority builds</li>
+          <li class="bullet-item">Priority + Private builds</li>
           <li class="cta-button">
             <a class="button radius" href="#">Buy Now</a>
           </li>
@@ -98,6 +100,4 @@
       </div>
     </div>
   </section>
-
-  <hr>
 <% end %>
