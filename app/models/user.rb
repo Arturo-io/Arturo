@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   has_many :repos, dependent: :destroy
   has_many :followers, dependent: :destroy
 
+  belongs_to :plan
+
   validates_presence_of   :uid, :provider, :name, :auth_token
   validates_uniqueness_of :uid
 
