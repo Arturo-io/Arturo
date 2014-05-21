@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140521105629) do
+ActiveRecord::Schema.define(version: 20140521110559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,14 @@ ActiveRecord::Schema.define(version: 20140521105629) do
     t.boolean "following", default: true
   end
 
+  create_table "plans", force: true do |t|
+    t.string   "name"
+    t.integer  "repos"
+    t.boolean  "priority"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "repos", force: true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -75,15 +83,6 @@ ActiveRecord::Schema.define(version: 20140521105629) do
     t.string   "org"
   end
 
-  create_table "subscriptions", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "plan_id"
-    t.string   "card"
-    t.string   "stripe_customer_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", force: true do |t|
     t.string   "uid"
     t.string   "provider"
@@ -98,7 +97,7 @@ ActiveRecord::Schema.define(version: 20140521105629) do
     t.boolean  "loading_repos", default: false
     t.string   "email"
     t.string   "stripe_token"
-    t.string   "plan"
+    t.integer  "plan_id"
   end
 
 end
