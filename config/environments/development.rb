@@ -37,6 +37,9 @@ Arturo::Application.configure do
   config.pusher_key    = ENV['PUSHER_KEY']    || '3f0c6e069a53455c4c74'
   config.pusher_secret = ENV['PUSHER_SECRET'] || 'c22d241a491bdbc7e0b6'
 
+  config.stripe_key     = ENV['STRIPE_KEY']    || 'sk_test_M52ZOC19WtH7P0ZCMpXTRPg4'
+  config.stripe_pub_key = ENV['STRIPE_PUB_KEY'] || 'pk_test_vo6p4bqMHJGvbbtDSZUX25du'
+
   config.sendgrid_user     = 'arturo-dev'
   config.sendgrid_password = 'arturod3v3r'
 end
