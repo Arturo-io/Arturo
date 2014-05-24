@@ -20,6 +20,7 @@ class RepositoriesController < ApplicationController
   end
 
   def index
+    @user           = current_user
     @last_updated   = current_user[:last_sync_at]
     @following      = Follower.where(user: current_user).map(&:repo_id)
     @org            = (params[:org] || current_user[:login]).downcase
