@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UserController do
+describe UsersController do
   render_views
 
   context "#logout" do
