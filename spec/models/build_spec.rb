@@ -35,6 +35,20 @@ describe Build do
     end
   end
 
+  context '.user_builds' do
+    it 'returns all builds by a user' do
+      user    = create_user(id: 99,  uid: '1', login: 'main')
+      user2   = create_user(id: 100, uid: 'a', login: 'other')
+
+      repo    = Repo.new(user: user)
+      repo2   = Repo.new(user: user2)
+      3.times { Build.create(repo: repo) }
+      2.times { Build.create(repo: repo2) }
+      expect(Build.user_builds(user).count).to eq(3)
+      expect(Build.user_builds(user2).count).to eq(2)
+    end
+  end
+
 
   context 'relationships' do
     before do
