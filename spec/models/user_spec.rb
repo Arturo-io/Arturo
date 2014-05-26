@@ -2,6 +2,19 @@ require 'spec_helper'
 
 describe User do
 
+  context '#plan' do
+    it 'gives a default plan when non are present' do
+      user = create_user
+      expect(user.plan[:name]).to eq("free")
+    end
+
+    it 'returns the plan when it is present' do
+      plan = Plan.find_by(name: :solo)
+      user = create_user(plan: plan)
+      expect(user.plan[:name]).to eq("solo")
+    end
+  end
+
   context '#digest' do
     it 'can create a hash of the username' do
       create_user(id: 1234, login: "some_user", uid: "uid")

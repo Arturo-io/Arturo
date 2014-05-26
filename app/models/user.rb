@@ -20,6 +20,11 @@ class User < ActiveRecord::Base
     save
   end
 
+  alias_method :user_plan, :plan
+  def plan
+    user_plan || Plan.find_by(name: :free)
+  end
+
   def self.create_with_omniauth(auth = {})
     return nil unless auth
     user       = User.new
