@@ -7,6 +7,5 @@ class CreatePlansData < ActiveRecord::Migration
     User.all.each do |user|
       user.update(plan: free)
     end
-
   end
 end

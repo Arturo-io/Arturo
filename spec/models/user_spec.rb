@@ -5,7 +5,7 @@ describe User do
   context '#plan' do
     it 'gives a default plan when non are present' do
       user = create_user
-      expect(user.plan[:name]).to eq("free")
+      expect(user.plan[:name]).to eq("open_source")
     end
 
     it 'returns the plan when it is present' do

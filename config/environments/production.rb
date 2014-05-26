@@ -88,6 +88,9 @@ Arturo::Application.configure do
   config.pusher_key    = ENV['PUSHER_KEY']
   config.pusher_secret = ENV['PUSHER_SECRET']
 
+  config.stripe_key     = ENV['STRIPE_KEY']
+  config.stripe_pub_key = ENV['STRIPE_PUB_KEY']
+
   config.sendgrid_user     = ENV['SENDGRID_USER']
   config.sendgrid_password = ENV['SENDGRID_PASSWORD']
 end

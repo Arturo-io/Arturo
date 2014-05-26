@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
 
   alias_method :user_plan, :plan
   def plan
-    user_plan || Plan.find_by(name: :free)
+    user_plan || Plan.find_by(name: :open_source)
   end
 
   def self.create_with_omniauth(auth = {})

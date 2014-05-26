@@ -1,0 +1,11 @@
+<form action="/charge" method="POST">
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="<%= Rails.configuration.stripe_pub_key %>"
+    data-email="<%= email %>"
+    data-name="Arturo.io"
+    data-description="<%= plan.stripe_description %>"
+    data-label="<%= text %>"
+    data-amount="<%= plan.price %>">
+  </script>
+</form>

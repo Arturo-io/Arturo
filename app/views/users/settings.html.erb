@@ -23,47 +23,21 @@
   </div>
   <section class="pricing">
     <div class="row">
-      <div class="small-4 columns">
-        <ul class="pricing-table">
-          <li class="title">Open Source</li>
-          <li class="price">Free</li>
-          <li class="description">For public open source projects.</li>
-          <li class="bullet-item">∞ public repos</li>
-          <li class="bullet-item">0 private repo</li>
-          <li class="bullet-item">Public Builds</li>
-          <li class="cta-button">
-            <a class="button radius disabled" href="#">Switch</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="small-4 columns">
-        <ul class="pricing-table">
-          <li class="title">Solo</li>
-          <li class="price">$4.99</li>
-          <li class="description">For solo writers</li>
-          <li class="bullet-item">∞ public repos</li>
-          <li class="bullet-item">1 private repo</li>
-          <li class="bullet-item">Private Builds</li>
-          <li class="cta-button">
-            <a class="button radius" href="#">Switch</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="small-4 columns">
-        <ul class="pricing-table last">
-          <li class="title">Multi Pass</li>
-          <li class="price">$19.99</li>
-          <li class="description">For serial writers</li>
-          <li class="bullet-item">∞ public repos</li>
-          <li class="bullet-item">10 private repos</li>
-          <li class="bullet-item">Priority + Private builds</li>
-          <li class="cta-button">
-            <a class="button radius" href="#">Switch</a>
-          </li>
-        </ul>
-      </div>
+      <% Plan.all.each do |plan| %>
+        <div class="small-4 columns">
+          <ul class="pricing-table">
+            <li class="title"><%= plan.name.titleize %></li>
+            <li class="price"><%= price(plan.price) %></li>
+            <li class="description"><%= plan.description %></li>
+            <li class="bullet-item">∞ public repos</li>
+            <li class="bullet-item"><%= plan.repos %> private repo</li>
+            <li class="bullet-item"><%= builds(plan.priority) %></li>
+            <li class="cta-button">
+            <%= plan_button(@user.plan, plan, @user.email) %>
+            </li>
+          </ul>
+        </div>
+      <% end %>
     </div>
   </section>
 </section>
