@@ -6,9 +6,12 @@ describe UsersController do
   context '#charge' do
 
     before do
+      @user   = create_user
       @double = double("Stripe::Subscribe").as_null_object
       allow(Stripe::Subscribe).to receive(:new)
         .and_return(@double)
+
+      session[:user_id] = @user.id
     end
 
     it 'errors when a plan is invalid' do
@@ -23,7 +26,7 @@ describe UsersController do
 
     it 'creates a user subscription' do
       expect(Stripe::Subscribe).to receive(:new)
-        .with(plan: "solo", token: "1", email: "some_email") 
+        .with(plan: "solo", token: "1", email: "some_email", user: @user) 
 
       post :charge, plan: :solo, stripeToken: '1', stripeEmail: 'some_email'
     end

@@ -16,6 +16,7 @@ class UsersController < ApplicationController
   def charge
     options = { token: params[:stripeToken], 
                 email: params[:stripeEmail],
+                user:  current_user,
                 plan:  params[:plan] }
 
     Stripe::Subscribe.new(options).execute
