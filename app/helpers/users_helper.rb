@@ -1,12 +1,20 @@
 module UsersHelper
   def plan_button(user_plan, plan, email)
     text    = plan_button_text(user_plan, plan.name)
-    render 'stripe_button', text: text, plan: plan, email: email
+    render partial(user_plan, plan, email), text: text, plan: plan, email: email
+  end
+
+  def partial(user_plan, plan, email)
+    user = User.find_by(email: email)
+
+    return 'disabled_button'       if current_plan?(user_plan, plan.name)
+    return 'existing_subscription' if user.stripe_subscription_token
+    'stripe_button'
   end
 
   def plan_button_text(user_plan, plan)
     return "Current" if current_plan?(user_plan, plan)
-    return "Switch"
+    return "Subscribe"
   end
 
   def current_plan?(user_plan, plan)
