@@ -14,6 +14,7 @@ Arturo::Application.routes.draw do
     get '/logout',          to: 'users#logout'
     get '/login/callback',  to: 'omniauth_github#callback'
     get '/settings',        to: 'users#settings'
+    post '/charge/:plan',   to: 'users#charge', as: :charge
   end
 
   scope '/repositories',  as: :repositories do

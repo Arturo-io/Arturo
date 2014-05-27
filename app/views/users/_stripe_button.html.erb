@@ -1,4 +1,4 @@
-<form action="/charge" method="POST">
+<form action="<%= user_charge_path(plan.name) %>" method="POST">
   <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
     data-key="<%= Rails.configuration.stripe_pub_key %>"
@@ -6,6 +6,8 @@
     data-name="Arturo.io"
     data-description="<%= plan.stripe_description %>"
     data-label="<%= text %>"
-    data-amount="<%= plan.price %>">
+    data-panel-label="Subscribe"
+    data-amount="<%= plan.price %>"
+    data-allow-remember-me="false">
   </script>
 </form>

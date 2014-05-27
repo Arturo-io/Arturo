@@ -12,6 +12,16 @@ class UsersController < ApplicationController
     @follow_count  = follow_count
   end
 
+  def charge
+    token  = params[:stripeToken]
+    email  = params[:stripeEmail]
+    plan   = params[:plan]
+
+    Stripe::CreateCustomer
+      .new(token: token, email: email, plan: plan)
+      .execute
+  end
+
   private
   def follow_count(user = current_user)
     Follower

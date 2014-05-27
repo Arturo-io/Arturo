@@ -10,7 +10,7 @@
         <%= image_tag @user.image_url, class: 'avatar' %>
         <h1><%= @user.name %></h1>
         <p class="plan-info">
-        Your current plan is "<%= @user.plan.name.capitalize %>"
+        Your current plan is "<%= @user.plan.human_name %>"
         </p>
       </div>
 
@@ -26,7 +26,7 @@
       <% Plan.all.each do |plan| %>
         <div class="small-4 columns">
           <ul class="pricing-table">
-            <li class="title"><%= plan.name.titleize %></li>
+            <li class="title"><%= plan.human_name %></li>
             <li class="price"><%= price(plan.price) %></li>
             <li class="description"><%= plan.description %></li>
             <li class="bullet-item">∞ public repos</li>
