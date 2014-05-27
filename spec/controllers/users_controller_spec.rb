@@ -3,6 +3,40 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
+  context '#charge' do
+
+    before do
+      @double = double("Stripe::Subscribe").as_null_object
+      allow(Stripe::Subscribe).to receive(:new)
+        .and_return(@double)
+    end
+
+    it 'errors when a plan is invalid' do
+      post :charge, plan: :something_bad_plan 
+      assert_response :forbidden
+    end
+
+    it 'redirects to settings page' do
+      post :charge, plan: :solo, stripeToken: '1', stripeEmail: 'some_email'
+      assert_redirected_to controller: 'users', action: 'settings'
+    end
+
+    it 'creates a user subscription' do
+      expect(Stripe::Subscribe).to receive(:new)
+        .with(plan: "solo", token: "1", email: "some_email") 
+
+      post :charge, plan: :solo, stripeToken: '1', stripeEmail: 'some_email'
+    end
+
+    it 'flashes an invalid transaction' do
+      allow(Stripe::Subscribe).to receive(:new).and_call_original
+
+      expect(Stripe::Customer).to receive(:create) { raise Stripe::CardError }
+      post :charge, plan: :solo, stripeToken: '1', stripeEmail: 'some_email'
+      expect(flash[:alert]).to eq("Could not complete transaction")
+    end
+  end
+
   context '#settings' do
     it 'cant view when not logged in' do
       session[:user_id] = nil

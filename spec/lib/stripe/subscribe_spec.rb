@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Stripe::CreateCustomer do
-  let(:subject) { Stripe::CreateCustomer }
+describe Stripe::Subscribe do
+  let(:subject) { Stripe::Subscribe }
 
   it 'creates a plan with Stripe' do
     input  = { email: 'someuser@google.com', token: 'sometoken', plan: 'solo' }

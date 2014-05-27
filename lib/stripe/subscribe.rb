@@ -1,5 +1,5 @@
 module Stripe
-  class CreateCustomer
+  class Subscribe 
     attr_reader :token, :email, :plan
     def initialize(opts)
       @token = opts[:token]

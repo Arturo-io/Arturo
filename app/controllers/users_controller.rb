@@ -1,5 +1,6 @@
 class UsersController < ApplicationController 
   before_filter :check_login, only: [:settings]
+  before_filter :validate_plan, only: [:charge]
 
   def logout
     reset_session
@@ -13,16 +14,28 @@ class UsersController < ApplicationController
   end
 
   def charge
-    token  = params[:stripeToken]
-    email  = params[:stripeEmail]
-    plan   = params[:plan]
+    options = { token: params[:stripeToken], 
+                email: params[:stripeEmail],
+                plan:  params[:plan] }
 
-    Stripe::CreateCustomer
-      .new(token: token, email: email, plan: plan)
-      .execute
+    Stripe::Subscribe.new(options).execute
+  rescue
+    flash[:alert] = "Could not complete transaction"
+  ensure
+    redirect_to user_settings_path
   end
 
   private
+  def validate_plan
+    unless valid_plan?(params[:plan])
+      render status: :forbidden, nothing: true 
+    end
+  end
+
+  def valid_plan?(plan_name) 
+    Plan.find_by(name: plan_name) || false
+  end
+
   def follow_count(user = current_user)
     Follower
       .includes(:repo)
