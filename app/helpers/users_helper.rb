@@ -27,7 +27,7 @@ module UsersHelper
   end
 
   def price(string)
-    return "Free" if string == "0"
+    return "Free" if string == 0
     return "$#{string.to_f/100}"
   end
 end
