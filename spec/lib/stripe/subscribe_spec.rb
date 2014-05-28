@@ -10,7 +10,7 @@ describe Stripe::Subscribe do
   end
 
   it 'creates a plan with Stripe' do
-    expect = { email: 'someuser@google.com', card: 'sometoken', plan: 'solo' }
+    expect = { email: 'someuser@google.com', card: 'sometoken'}
     expect(Stripe::Customer).to receive(:create)
       .with(expect).and_return(double.as_null_object)
 
