@@ -25,6 +25,10 @@ class User < ActiveRecord::Base
     user_plan || Plan.find_by(name: :open_source)
   end
 
+  def repo_limit_reached?
+    private_follow_count >= plan.repos
+  end
+
   def self.create_with_omniauth(auth = {})
     return nil unless auth
     user       = User.new
@@ -51,6 +55,13 @@ class User < ActiveRecord::Base
   end
 
   private
+  def private_follow_count 
+    Follower
+      .includes(:repo)
+      .where(repos: {user_id: id, private: true})
+      .count
+  end
+
   def self.send_email(user_id)
     UserSignupEmailWorker.perform_async(user_id) 
   end

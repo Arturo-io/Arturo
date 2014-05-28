@@ -15,6 +15,47 @@ describe User do
     end
   end
 
+  context '#repo_limit_reached' do
+    it 'returns true for zero allowed' do
+      plan = Plan.create(name: :zero, repos: 0)
+      user = create_user(plan: plan)
+      expect(user.repo_limit_reached?).to eq(true)
+    end
+
+    context 'with plan' do
+      before do
+        @plan = Plan.create(name: :plan, repos: 1)
+        @user = create_user(plan: @plan)
+        @repo = Repo.create(id: 99, user: @user, name: 'test', private: false)
+      end
+
+      it 'returns true' do
+        @plan.update(repos: 0)
+        expect(@user.repo_limit_reached?).to eq(true)
+      end
+
+      it 'returns false' do
+        Follower.create(repo: @repo, user: @user)
+        expect(@user.repo_limit_reached?).to eq(false)
+      end
+
+      it 'returns true' do
+        @repo.update(private: true)
+        Follower.create(repo: @repo, user: @user)
+        expect(@user.repo_limit_reached?).to eq(true)
+      end
+
+      it 'returns false' do
+        @plan.update(repos: 4)
+        repos = 3.times.map { Repo.create(user: @user, name: 'test', private: true) }
+        repos.each { |repo| Follower.create(repo: repo, user: @user) }
+
+        expect(@user.repo_limit_reached?).to eq(false)
+      end
+
+    end
+  end
+
   context '#digest' do
     it 'can create a hash of the username' do
       create_user(id: 1234, login: "some_user", uid: "uid")

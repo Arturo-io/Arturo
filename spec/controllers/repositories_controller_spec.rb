@@ -228,6 +228,7 @@ describe RepositoriesController do
       create_user(id: 41, uid: "other")
       Repo.create(id: 99, user_id: 42, name: 'test')
       Repo.create(id: 11, user_id: 41, name: 'test')
+      Repo.create(id: 33, user_id: 42, name: 'test', private: true)
     end
 
     it 'can follow a repo' do
@@ -249,8 +250,6 @@ describe RepositoriesController do
 
     it 'cant follow someone elses repo' do
       put :follow, id: 11 
-
-      assert_response :forbidden
       expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(0)
     end
 
@@ -279,6 +278,25 @@ describe RepositoriesController do
 
       delete :unfollow, id: 99 
       assert_redirected_to repositories_path
+    end
+
+    context 'private repo limits' do
+      it 'does not allow following on a limited plan' do
+        put :follow, id: 33 
+        expect(Follower.where(repo_id: 33, user_id: 42).count).to eq(0)
+      end
+
+      it 'sets the flash error message' do 
+        msg = 'You have reached your private repo limit, please upgrade your account on the settings page.'
+        put :follow, id: 33 
+        expect(flash[:alert]).to eq(msg)
+      end
+
+      it 'redirects to repos_path' do
+        put :follow, id: 33 
+        assert_redirected_to repositories_path
+      end
+
     end
   end
 

@@ -3,8 +3,8 @@ class RepositoriesController < ApplicationController
   before_filter :check_login, except: [:show, :last_build]
 
   authorize_actions_for RepoAuthorizer
-  authority_actions follow:     'update', 
-                    unfollow:   'update', 
+  authority_actions follow:     'create',
+                    unfollow:   'update',
                     build:      'update',
                     sync:       'read',
                     last_build: 'read'
@@ -80,10 +80,20 @@ class RepositoriesController < ApplicationController
   end
 
   private
+  def authority_forbidden(error)
+    return super unless action_name == "follow"
+    Authority.logger.warn(error.message)
+    redirect_to repositories_path || root_path, :alert => 'You have reached your private repo limit, please upgrade your account on the settings page.'
+  end
+
   def find_and_authorize(repo_id)
-    Repo.find(repo_id).tap do |repo|
+    find_repo(repo_id).tap do |repo|
       authorize_action_for repo
     end
+  end
+
+  def find_repo(repo_id)
+    Repo.find(repo_id)
   end
 
   def user_repositories(user_id, org)
