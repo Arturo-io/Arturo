@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   def logout
     reset_session
-    redirect_to root_path, notice: "You have been logged out"
+    redirect_to root_path
   end
 
   def settings
