@@ -73,6 +73,22 @@ describe UsersController do
         get :settings
         expect(assigns(:follow_count)).to eq(3)
       end
+
+      it 'assigns the private repo follow count' do
+        repos = 3.times.map { Repo.create(name: 'some repo', user: @user) }
+        repos[0].update(private: true)
+        repos[1].update(private: true)
+        3.times { |i| Follower.create(user: @user, repo: repos[i]) }
+
+        get :settings
+        expect(assigns(:private_follow_count)).to eq(2)
+      end 
+
+      it 'sets the user email' do
+        @user.update(email: 'some@user.com')
+        get :settings
+        expect(assigns(:email)).to eq("some@user.com")
+      end
     end
   end
 

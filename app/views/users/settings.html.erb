@@ -3,7 +3,8 @@
     <div class="row">
 
       <div class="small-4 columns stats">
-        <h3><%= @build_count %> Builds</h3>
+        <h3><%= pluralize(@build_count, 'Build') %></h3>
+        <h5><%= @email %></h5>
       </div>
 
       <div class="small-4 columns">
@@ -15,7 +16,8 @@
       </div>
 
       <div class="small-4 columns stats">
-        <h3><%= @follow_count %> Followed Repos</h3>
+        <h3><%= pluralize(@follow_count, 'Followed Repo') %></h3>
+        <h5><%= pluralize(@private_follow_count, 'Private Repo') %></h5>
       </div>
 
  

@@ -8,9 +8,11 @@ class UsersController < ApplicationController
   end
 
   def settings
-    @user        = current_user
-    @build_count = build_count
+    @user          = current_user
+    @build_count   = build_count
     @follow_count  = follow_count
+    @private_follow_count = private_follow_count
+    @email         = current_user[:email]
   end
 
   def charge
@@ -37,12 +39,23 @@ class UsersController < ApplicationController
     Plan.find_by(name: plan_name) || false
   end
 
+  def private_follow_count(user = current_user)
+    follows(user, true).count
+  end
+
   def follow_count(user = current_user)
+    follows(user).count
+  end
+
+  def follows(user = current_user, private_only = false)
+    options = { user_id: user.id }
+    options[:private] = true if private_only
+
     Follower
       .includes(:repo)
-      .where(repos: { user_id: user.id}) 
-      .count
+      .where(repos: options) 
   end
+
 
   def build_count(user = current_user)
     Build.user_builds(user).count
