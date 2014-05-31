@@ -202,6 +202,11 @@ describe RepositoriesController do
       expect(repos.count).to eq(25)
     end
 
+    it 'doesnt render the orgs tabs when repos are empty' do
+      subject = get(:index)
+      expect(subject).not_to render_template("repositories/_org_list")
+    end
+
     context 'followers' do
       it 'assigns a list of repo ids that are being followed' do
         Repo.create(id: 99, user_id: 42, name: 'test')

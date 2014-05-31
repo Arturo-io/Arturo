@@ -18,7 +18,7 @@
     </div>
 
     <div class="small-12 columns org-list">
-      <%= render 'org_list' %>
+      <%= render 'org_list' unless @repositories.empty? %>
     </div>
     <%= render(@partial) %> 
   </div>
