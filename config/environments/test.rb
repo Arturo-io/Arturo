@@ -46,4 +46,7 @@ Arturo::Application.configure do
 
   config.sendgrid_user     = 'none'
   config.sendgrid_password = 'none'
+  
+  config.stripe_key = 'none'
+  config.stripe_pub_key = 'none'
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140414013753) do
+ActiveRecord::Schema.define(version: 20140527015120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,13 +57,14 @@ ActiveRecord::Schema.define(version: 20140414013753) do
   end
 
   create_table "plans", force: true do |t|
-    t.integer  "repos"
     t.string   "name"
-    t.string   "label"
-    t.integer  "tier"
-    t.decimal  "price"
+    t.integer  "repos"
+    t.boolean  "priority"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
+    t.integer  "price"
+    t.string   "stripe_description"
   end
 
   create_table "repos", force: true do |t|
@@ -85,15 +86,6 @@ ActiveRecord::Schema.define(version: 20140414013753) do
     t.string   "org"
   end
 
-  create_table "subscriptions", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "plan_id"
-    t.string   "card"
-    t.string   "stripe_customer_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", force: true do |t|
     t.string   "uid"
     t.string   "provider"
@@ -105,10 +97,12 @@ ActiveRecord::Schema.define(version: 20140414013753) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "last_sync_at"
-    t.boolean  "loading_repos", default: false
+    t.boolean  "loading_repos",             default: false
     t.string   "email"
     t.string   "stripe_token"
-    t.string   "plan"
+    t.integer  "plan_id"
+    t.string   "stripe_customer_token"
+    t.string   "stripe_subscription_token"
   end
 
 end

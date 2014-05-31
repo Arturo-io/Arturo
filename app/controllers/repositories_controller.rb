@@ -3,8 +3,8 @@ class RepositoriesController < ApplicationController
   before_filter :check_login, except: [:show, :last_build]
 
   authorize_actions_for RepoAuthorizer
-  authority_actions follow:     'update', 
-                    unfollow:   'update', 
+  authority_actions follow:     'create',
+                    unfollow:   'update',
                     build:      'update',
                     sync:       'read',
                     last_build: 'read'
@@ -20,6 +20,7 @@ class RepositoriesController < ApplicationController
   end
 
   def index
+    @user           = current_user
     @last_updated   = current_user[:last_sync_at]
     @following      = Follower.where(user: current_user).map(&:repo_id)
     @org            = (params[:org] || current_user[:login]).downcase
@@ -64,8 +65,7 @@ class RepositoriesController < ApplicationController
     @asset = Build
       .last_successful_build(repo.id)
       .assets
-      .where("url LIKE ?", "%.#{format}")
-      .first
+      .find_by("url LIKE ?", "%.#{format}")
 
     @asset.nil? ? 
       render(nothing: true, status: 404) : redirect_to(@asset.url)
@@ -74,15 +74,26 @@ class RepositoriesController < ApplicationController
   def build
     repo = find_and_authorize(params[:id])
 
-    QueueBuild.queue_build(repo[:id])
+    QueueBuildWorker.perform_async(repo[:id])
     redirect_to repositories_show_path(repo[:id]), notice: "A build has been queued for #{repo.name}"
   end
 
   private
+  def authority_forbidden(error)
+    return super unless action_name == "follow"
+    Authority.logger.warn(error.message)
+    redirect_to repositories_path, 
+        alert: 'You have reached your private repo limit, please upgrade your account on the settings page.'
+  end
+
   def find_and_authorize(repo_id)
-    Repo.find(repo_id).tap do |repo|
+    find_repo(repo_id).tap do |repo|
       authorize_action_for repo
     end
+  end
+
+  def find_repo(repo_id)
+    Repo.find(repo_id)
   end
 
   def user_repositories(user_id, org)

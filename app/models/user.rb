@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   has_many :repos, dependent: :destroy
   has_many :followers, dependent: :destroy
 
+  belongs_to :plan
+
   validates_presence_of   :uid, :provider, :name, :auth_token
   validates_uniqueness_of :uid
 
@@ -16,6 +18,19 @@ class User < ActiveRecord::Base
     return unless token
     self[:auth_token] = token
     save
+  end
+
+  alias_method :user_plan, :plan
+  def plan
+    user_plan || Plan.find_by(name: :open_source)
+  end
+
+  def within_repo_limit? 
+    private_follow_count <= plan.repos
+  end
+
+  def repo_limit_reached?
+    private_follow_count >= plan.repos
   end
 
   def self.create_with_omniauth(auth = {})
@@ -44,6 +59,13 @@ class User < ActiveRecord::Base
   end
 
   private
+  def private_follow_count 
+    Follower
+      .includes(:repo)
+      .where(repos: {user_id: id, private: true})
+      .count
+  end
+
   def self.send_email(user_id)
     UserSignupEmailWorker.perform_async(user_id) 
   end

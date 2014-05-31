@@ -22,11 +22,11 @@ describe RepositoriesController do
   context '#build' do
     before do
       Repo.create(id: 99, user_id: 42, name: 'test')
-      allow(QueueBuild).to receive(:queue_build)
+      allow(QueueBuildWorker).to receive(:perform_async)
     end
 
     it 'calls queue_build for the repo' do
-      expect(QueueBuild).to receive(:queue_build).with(99)
+      expect(QueueBuildWorker).to receive(:perform_async).with(99)
       get :build, id: 99 
     end
 
@@ -34,7 +34,7 @@ describe RepositoriesController do
       create_user(id: 41, uid: "secondary_user")
       session[:user_id] = 41
 
-      expect(QueueBuild).to_not receive(:queue_build)
+      expect(QueueBuildWorker).to_not receive(:perform_async)
 
       get :build, id: 99 
       assert_response :forbidden
@@ -202,6 +202,20 @@ describe RepositoriesController do
       expect(repos.count).to eq(25)
     end
 
+    context 'Org list tabs' do
+      it 'doesnt render the orgs tabs when repos are empty' do
+        subject = get(:index)
+        expect(subject).not_to render_template("repositories/_org_list")
+      end
+
+      it 'render the orgs tabs when there are repos' do
+        Repo.create(user_id: 42, name: 'test', org: "ortuna")
+
+        subject = get(:index)
+        expect(subject).to render_template("repositories/_org_list")
+      end
+    end
+
     context 'followers' do
       it 'assigns a list of repo ids that are being followed' do
         Repo.create(id: 99, user_id: 42, name: 'test')
@@ -228,6 +242,7 @@ describe RepositoriesController do
       create_user(id: 41, uid: "other")
       Repo.create(id: 99, user_id: 42, name: 'test')
       Repo.create(id: 11, user_id: 41, name: 'test')
+      Repo.create(id: 33, user_id: 42, name: 'test', private: true)
     end
 
     it 'can follow a repo' do
@@ -249,8 +264,6 @@ describe RepositoriesController do
 
     it 'cant follow someone elses repo' do
       put :follow, id: 11 
-
-      assert_response :forbidden
       expect(Follower.where(repo_id: 99, user_id: 42).count).to eq(0)
     end
 
@@ -279,6 +292,25 @@ describe RepositoriesController do
 
       delete :unfollow, id: 99 
       assert_redirected_to repositories_path
+    end
+
+    context 'private repo limits' do
+      it 'does not allow following on a limited plan' do
+        put :follow, id: 33 
+        expect(Follower.where(repo_id: 33, user_id: 42).count).to eq(0)
+      end
+
+      it 'sets the flash error message' do 
+        msg = 'You have reached your private repo limit, please upgrade your account on the settings page.'
+        put :follow, id: 33 
+        expect(flash[:alert]).to eq(msg)
+      end
+
+      it 'redirects to repos_path' do
+        put :follow, id: 33 
+        assert_redirected_to repositories_path
+      end
+
     end
   end
 

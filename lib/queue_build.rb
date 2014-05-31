@@ -1,4 +1,5 @@
 class QueueBuild
+
   attr_reader :repo, :sha, :client, :options
 
   def initialize(repo_id, options = {})
@@ -12,7 +13,7 @@ class QueueBuild
     create_build_from_github.tap do |build|
       self.class.assign_and_update(build, options)
       cancel_previous_builds
-      self.class.perform_async(build)
+      queue_worker(build)
       self.class.update_status(build)
     end
   end
@@ -43,23 +44,24 @@ class QueueBuild
   end
 
   private
-  def repo_full_name
-    repo[:full_name]
-  end
-
-  def self.perform_async(build)
+  def queue_worker(build)
     job_id = BuildWorker.perform_async(build[:id])
     build.update(job_id: job_id)
   end
 
+  def repo_full_name
+    repo[:full_name]
+  end
+
   def self.assign_and_update(build, options)
-    build.assign_attributes(options)
-    build.save
+    build.update(options)
   end
 
   def self.update_status(build)
     status = BuildStatus.new(build)
-    Pusher.trigger(status.new_pusher_channel, 'new', status.render_string)
+    status.pusher_channels.each do |channel|
+      Pusher.trigger(channel, 'new', status.render_string)
+    end
   end
 
   def self.client(user)

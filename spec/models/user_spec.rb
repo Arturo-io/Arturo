@@ -2,6 +2,89 @@ require 'spec_helper'
 
 describe User do
 
+  context '#plan' do
+    it 'gives a default plan when non are present' do
+      user = create_user
+      expect(user.plan[:name]).to eq("open_source")
+    end
+
+    it 'returns the plan when it is present' do
+      plan = Plan.find_by(name: :solo)
+      user = create_user(plan: plan)
+      expect(user.plan[:name]).to eq("solo")
+    end
+  end
+
+  context '#within_repo_limit?' do
+    before do
+      @plan  = Plan.create(name: :plan, repos: 1)
+      @user  = create_user(plan: @plan)
+      @repo  = Repo.create(id: 99, user: @user, name: 'test', private: true)
+      @repo2 = Repo.create(id: 89, user: @user, name: 'test', private: true)
+    end
+
+    it 'returns true when limit is not reached' do
+      expect(@user.within_repo_limit?).to eq(true)
+    end
+
+    it 'returns true when limit is same as followed' do
+      Follower.create(repo: @repo, user: @user)
+      expect(@user.within_repo_limit?).to eq(true)
+    end
+
+    it 'returns false when followed is more than limit' do
+      Follower.create(repo: @repo, user: @user)
+      Follower.create(repo: @repo, user: @user)
+
+      expect(@user.within_repo_limit?).to eq(false)
+
+      @plan.update(repos: 2)
+      expect(@user.within_repo_limit?).to eq(true)
+    end
+
+  end
+
+  context '#repo_limit_reached?' do
+    it 'returns true for zero allowed' do
+      plan = Plan.create(name: :zero, repos: 0)
+      user = create_user(plan: plan)
+      expect(user.repo_limit_reached?).to eq(true)
+    end
+
+    context 'with plan' do
+      before do
+        @plan = Plan.create(name: :plan, repos: 1)
+        @user = create_user(plan: @plan)
+        @repo = Repo.create(id: 99, user: @user, name: 'test', private: false)
+      end
+
+      it 'returns true' do
+        @plan.update(repos: 0)
+        expect(@user.repo_limit_reached?).to eq(true)
+      end
+
+      it 'returns false' do
+        Follower.create(repo: @repo, user: @user)
+        expect(@user.repo_limit_reached?).to eq(false)
+      end
+
+      it 'returns true' do
+        @repo.update(private: true)
+        Follower.create(repo: @repo, user: @user)
+        expect(@user.repo_limit_reached?).to eq(true)
+      end
+
+      it 'returns false' do
+        @plan.update(repos: 4)
+        repos = 3.times.map { Repo.create(user: @user, name: 'test', private: true) }
+        repos.each { |repo| Follower.create(repo: repo, user: @user) }
+
+        expect(@user.repo_limit_reached?).to eq(false)
+      end
+
+    end
+  end
+
   context '#digest' do
     it 'can create a hash of the username' do
       create_user(id: 1234, login: "some_user", uid: "uid")

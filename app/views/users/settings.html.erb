@@ -1,0 +1,44 @@
+<section class="settings">
+  <div class="heading">
+    <div class="row">
+
+      <div class="small-4 columns stats">
+        <h3><%= @build_count %> Builds</h3>
+      </div>
+
+      <div class="small-4 columns">
+        <%= image_tag @user.image_url, class: 'avatar' %>
+        <h1><%= @user.name %></h1>
+        <p class="plan-info">
+        Your current plan is "<%= @user.plan.human_name %>"
+        </p>
+      </div>
+
+      <div class="small-4 columns stats">
+        <h3><%= @follow_count %> Followed Repos</h3>
+      </div>
+
+ 
+    </div>
+  </div>
+  <section class="pricing">
+    <div class="row">
+      <% Plan.all.each do |plan| %>
+        <div class="small-4 columns">
+          <ul class="pricing-table">
+            <li class="title"><%= plan.human_name %></li>
+            <li class="price"><%= price(plan.price) %></li>
+            <li class="description"><%= plan.description %></li>
+            <li class="bullet-item">∞ public repos</li>
+            <li class="bullet-item"><%= plan.repos %> private repo</li>
+            <li class="bullet-item"><%= builds(plan.priority) %></li>
+            <li class="cta-button">
+            <%= plan_button(@user.plan, plan, @user.email) %>
+            </li>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</section>
+

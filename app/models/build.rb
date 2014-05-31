@@ -16,6 +16,12 @@ class Build < ActiveRecord::Base
     attributes.each { |key, value| send("#{key}=", value) }
   end
 
+  def self.user_builds(user)
+    Build
+      .includes(:repo)
+      .where(repos: { user_id: user.id}) 
+  end
+
   def self.last_successful_build(repo_id, branch = :master)
     branch ||= :master
     where(repo_id: repo_id, branch: branch, status: :success).first
