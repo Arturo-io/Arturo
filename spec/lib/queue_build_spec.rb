@@ -37,15 +37,18 @@ describe QueueBuild do
 
     context '.perform_async' do
       it 'does a perform_async for BuildWorker' do
+        instance = subject.new(2, before: '123', after: 'abc')
+
         expect(BuildWorker).to receive(:perform_async).with(1)
-        subject.perform_async(@build)
+        instance.send(:queue_worker, @build)
       end
 
       it 'updates the builds job_id' do
         allow(BuildWorker).to receive(:perform_async).and_return 'j-123'
 
+        instance = subject.new(2, before: '123', after: 'abc')
         expect(@build).to receive(:update).with(job_id: 'j-123')
-        subject.perform_async(@build)
+        instance.send(:queue_worker, @build)
       end
     end
 
@@ -89,6 +92,7 @@ describe QueueBuild do
         allow(subject).to receive(:update_status)
 
         allow(@instance).to receive(:cancel_previous_builds)
+        allow(@instance).to receive(:queue_worker)
         allow(@instance).to receive(:create_build_from_github).and_return(@double)
       end
 
@@ -103,8 +107,8 @@ describe QueueBuild do
         @instance.execute
       end
 
-      it 'calls perform_async' do
-        expect(subject).to receive(:perform_async).with(@double)
+      it 'calls queue_worker' do
+        expect(@instance).to receive(:queue_worker).with(@double)
         @instance.execute
       end
 

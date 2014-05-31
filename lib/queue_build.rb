@@ -12,7 +12,7 @@ class QueueBuild
     create_build_from_github.tap do |build|
       self.class.assign_and_update(build, options)
       cancel_previous_builds
-      self.class.perform_async(build)
+      queue_worker(build)
       self.class.update_status(build)
     end
   end
@@ -43,13 +43,13 @@ class QueueBuild
   end
 
   private
-  def repo_full_name
-    repo[:full_name]
-  end
-
-  def self.perform_async(build)
+  def queue_worker(build)
     job_id = BuildWorker.perform_async(build[:id])
     build.update(job_id: job_id)
+  end
+
+  def repo_full_name
+    repo[:full_name]
   end
 
   def self.assign_and_update(build, options)
