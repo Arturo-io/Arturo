@@ -24,23 +24,24 @@ class Generate::Book
   end
 
   def lookup_manifest
-    @build ||= ::Build.find(@build_id)
-    sha    = @build[:commit]
-    client = client(@build.user[:auth_token])
+    sha    = build[:commit]
+    client = client(build.user[:auth_token])
     Generate::Manifest
-      .new(@build.repo[:full_name], sha, client)
+      .new(build.repo[:full_name], sha, client)
       .has_manifest?
   end
 
   private
   def private_repo?
-    @build ||= ::Build.find(@build_id)
-    @build.repo.private
+    build.repo.private
   end
   
   def check_build_limit
+    raise_error unless build.user.within_repo_limit?
+  end
+
+  def build
     @build ||= ::Build.find(@build_id)
-    raise_error unless @build.user.within_repo_limit?
   end
 
   def raise_error
