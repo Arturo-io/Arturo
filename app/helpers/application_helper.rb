@@ -18,6 +18,10 @@ module ApplicationHelper
     "<span data-livestamp='#{time.to_i}'></span>".html_safe
   end
 
+  def menu_active_class(controller)
+    controller == controller_name ? "active" : "inactive"
+  end
+
   private
   def create_link(repo, is_following, icon)
     method = is_following ? :delete : :put 
