@@ -1,4 +1,12 @@
 module RepositoryHelper
+  def asset_button_link(asset)
+    url       = asset.url
+    extension = File.extname(url) 
+    content_tag(:a, class: 'button secondary radius', href: url) do
+      ext_icon(extension) + human_readable_ext(extension)
+    end
+  end
+
   def tab_link(user, org) 
     disabled_class = org == @org ? 'disabled' : 'secondary'
     link_to tab_label(user, org), 
@@ -25,6 +33,28 @@ module RepositoryHelper
   end
 
   private
+  def ext_icon(extension)
+    fa_icon(icons[extension])
+  end
+
+  def human_readable_ext(extension)
+    return extensions[extension] if extensions.include?(extension)
+  end
+
+  def icons
+   { ".pdf" => 'file-pdf-o',
+     ".html" => 'file-code-o',
+     ".epub" => 'file-o',
+     ".mobi" => 'file-o'}
+  end
+
+  def extensions
+    { ".pdf" => 'PDF',
+      ".html" => 'Read Online',
+      ".epub" => 'EPUB',
+      ".mobi" => 'MOBI'}
+  end
+
   def tab_label(user, org)
     count = followed_org_count(user, org)
     tag   = content_tag(:span, count, class: "label secondary radius")
