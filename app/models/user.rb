@@ -25,6 +25,10 @@ class User < ActiveRecord::Base
     user_plan || Plan.find_by(name: :open_source)
   end
 
+  def within_repo_limit? 
+    private_follow_count <= plan.repos
+  end
+
   def repo_limit_reached?
     private_follow_count >= plan.repos
   end

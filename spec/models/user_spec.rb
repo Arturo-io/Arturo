@@ -15,7 +15,36 @@ describe User do
     end
   end
 
-  context '#repo_limit_reached' do
+  context '#within_repo_limit?' do
+    before do
+      @plan  = Plan.create(name: :plan, repos: 1)
+      @user  = create_user(plan: @plan)
+      @repo  = Repo.create(id: 99, user: @user, name: 'test', private: true)
+      @repo2 = Repo.create(id: 89, user: @user, name: 'test', private: true)
+    end
+
+    it 'returns true when limit is not reached' do
+      expect(@user.within_repo_limit?).to eq(true)
+    end
+
+    it 'returns true when limit is same as followed' do
+      Follower.create(repo: @repo, user: @user)
+      expect(@user.within_repo_limit?).to eq(true)
+    end
+
+    it 'returns false when followed is more than limit' do
+      Follower.create(repo: @repo, user: @user)
+      Follower.create(repo: @repo, user: @user)
+
+      expect(@user.within_repo_limit?).to eq(false)
+
+      @plan.update(repos: 2)
+      expect(@user.within_repo_limit?).to eq(true)
+    end
+
+  end
+
+  context '#repo_limit_reached?' do
     it 'returns true for zero allowed' do
       plan = Plan.create(name: :zero, repos: 0)
       user = create_user(plan: plan)
