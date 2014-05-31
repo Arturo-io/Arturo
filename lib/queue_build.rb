@@ -53,8 +53,7 @@ class QueueBuild
   end
 
   def self.assign_and_update(build, options)
-    build.assign_attributes(options)
-    build.save
+    build.update(options)
   end
 
   def self.update_status(build)

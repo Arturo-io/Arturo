@@ -54,7 +54,7 @@ class BuildStatus
   end
 
   def render_string
-    action_view.render(:partial => 'builds/build_list_single', locals: { build: build })
+    action_view.render(partial: 'builds/build_list_single', locals: { build: build })
   end
 
   private
