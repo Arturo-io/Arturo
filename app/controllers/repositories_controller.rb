@@ -74,7 +74,7 @@ class RepositoriesController < ApplicationController
   def build
     repo = find_and_authorize(params[:id])
 
-    QueueBuild.queue_build(repo[:id])
+    QueueBuildWorker.perform_async(repo[:id])
     redirect_to repositories_show_path(repo[:id]), notice: "A build has been queued for #{repo.name}"
   end
 

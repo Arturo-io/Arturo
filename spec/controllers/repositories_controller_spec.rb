@@ -22,11 +22,11 @@ describe RepositoriesController do
   context '#build' do
     before do
       Repo.create(id: 99, user_id: 42, name: 'test')
-      allow(QueueBuild).to receive(:queue_build)
+      allow(QueueBuildWorker).to receive(:perform_async)
     end
 
     it 'calls queue_build for the repo' do
-      expect(QueueBuild).to receive(:queue_build).with(99)
+      expect(QueueBuildWorker).to receive(:perform_async).with(99)
       get :build, id: 99 
     end
 
@@ -34,7 +34,7 @@ describe RepositoriesController do
       create_user(id: 41, uid: "secondary_user")
       session[:user_id] = 41
 
-      expect(QueueBuild).to_not receive(:queue_build)
+      expect(QueueBuildWorker).to_not receive(:perform_async)
 
       get :build, id: 99 
       assert_response :forbidden

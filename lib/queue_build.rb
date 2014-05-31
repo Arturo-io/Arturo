@@ -1,4 +1,5 @@
 class QueueBuild
+
   attr_reader :repo, :sha, :client, :options
 
   def initialize(repo_id, options = {})
