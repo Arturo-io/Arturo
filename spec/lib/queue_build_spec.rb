@@ -11,7 +11,7 @@ describe QueueBuild do
 
   context 'utility methods' do
     it '.update_status' do
-      allow(Pusher).to receive(:trigger) 
+      expect(Pusher).to receive(:trigger).twice
       subject.update_status(@build)
     end
 

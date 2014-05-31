@@ -57,12 +57,12 @@ class BuildStatus
     action_view.render(partial: 'builds/build_list_single', locals: { build: build })
   end
 
-  private
   def pusher_channels
     [new_pusher_channel,
      build.user.digest << "-builds-#{build[:repo_id]}"]
   end
 
+  private
   def status_html(status)
     action_view.build_status(status)
   end
