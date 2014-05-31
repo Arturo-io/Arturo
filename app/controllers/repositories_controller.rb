@@ -65,8 +65,7 @@ class RepositoriesController < ApplicationController
     @asset = Build
       .last_successful_build(repo.id)
       .assets
-      .where("url LIKE ?", "%.#{format}")
-      .first
+      .find_by("url LIKE ?", "%.#{format}")
 
     @asset.nil? ? 
       render(nothing: true, status: 404) : redirect_to(@asset.url)
