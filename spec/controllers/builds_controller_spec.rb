@@ -139,7 +139,7 @@ describe BuildsController do
       session[:user_id] = nil
 
       get :index
-      assert_response :forbidden
+      assert_redirected_to :root
     end
 
   end

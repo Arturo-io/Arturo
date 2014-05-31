@@ -11,11 +11,11 @@ describe RepositoriesController do
   context '#check_login' do
     it 'requires a user to be logged in' do
       session[:user_id] = nil
-      get :sync;  assert_response :forbidden
-      get :index; assert_response :forbidden
+      get :sync;  assert_redirected_to :root
+      get :index; assert_redirected_to :root
 
-      get :follow,   id: 1; assert_response :forbidden
-      get :unfollow, id: 1; assert_response :forbidden
+      get :follow,   id: 1; assert_redirected_to :root
+      get :unfollow, id: 1; assert_redirected_to :root
     end
   end
 

@@ -44,7 +44,7 @@ describe UsersController do
     it 'cant view when not logged in' do
       session[:user_id] = nil
       get :settings
-      assert_response :forbidden
+      assert_redirected_to :root
     end
 
     context 'with user' do
