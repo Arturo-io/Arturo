@@ -84,7 +84,7 @@ class RepositoriesController < ApplicationController
     return super unless action_name == "follow"
     Authority.logger.warn(error.message)
     redirect_to repositories_path, 
-        :alert => 'You have reached your private repo limit, please upgrade your account on the settings page.'
+        alert: 'You have reached your private repo limit, please upgrade your account on the settings page.'
   end
 
   def find_and_authorize(repo_id)
