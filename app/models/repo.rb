@@ -30,7 +30,7 @@ class Repo < ActiveRecord::Base
 
   def self.user_orgs(user_id)
     login = User.find(user_id).login.downcase
-    Repo.unscoped.uniq.pluck(:org).tap do |repos|
+    Repo.where(user_id: user_id).unscoped.uniq.pluck(:org).tap do |repos|
       repos.delete(login)
     end.compact.unshift(login)
   end
