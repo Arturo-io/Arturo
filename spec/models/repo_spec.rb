@@ -60,13 +60,16 @@ describe Repo do
   context '.user_orgs' do
     it 'fetches the distinct users orgs from repos' do
       create_user(id: 42, login: "User")
+      create_user(id: 41, login: "User", uid: "other")
 
       Repo.create(id: 1, user_id: 42, name: "repo 1", org: "org1")
       Repo.create(id: 2, user_id: 42, name: "repo 2", org: "org2")
       Repo.create(id: 3, user_id: 42, name: "repo 3", org: "org3")
       Repo.create(id: 4, user_id: 42, name: "repo 1", org: "user")
+      Repo.create(id: 5, user_id: 41, name: "repo 1", org: "dont_show")
 
       expect(Repo.user_orgs(42)).to eq(["user", "org1", "org2", "org3"]) 
+      expect(Repo.user_orgs(42)).not_to include("dont_show")
     end
   end
 
