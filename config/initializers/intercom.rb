@@ -7,7 +7,7 @@ IntercomRails.config do |config|
   # This is required to enable secure mode, you can find it on your Intercom 
   # "security" configuration page.
   # 
-  config.api_secret = "4wP02hDZuEN9tjmQ-yl1IQ34ab7is1cd-r-CbhNb"
+  config.api_secret = "z4uoZ5t3-BoBDPV3jMPxj9mck8c-aNiXYsuIJARp"
 
   # == Intercom API Key
   # This is required for some Intercom rake tasks like importing your users;
