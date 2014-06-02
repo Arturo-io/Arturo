@@ -29,7 +29,7 @@ Arturo::Application.routes.draw do
   end
 
 
-  if(Rails.env.development?) 
+  constraints lambda { |request| AdminConstraint.admin?(request) } do
     require 'sidekiq/web'
     mount Sidekiq::Web, at: '/sidekiq'
   end

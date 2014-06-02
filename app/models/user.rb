@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   validates_presence_of   :uid, :provider, :name, :auth_token
   validates_uniqueness_of :uid
 
+  def admin?
+    email && email == 'ortuna@gmail.com'
+  end
+  
   def digest
     Digest::MD5.hexdigest("#{login}#{uid}")
   end
