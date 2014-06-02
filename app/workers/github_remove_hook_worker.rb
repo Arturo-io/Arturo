@@ -1,5 +1,6 @@
 class GithubRemoveHookWorker 
  include Sidekiq::Worker
+ sidekiq_options retry: 1
   
   def perform(repo_id)
     Github::Hook.remove_hook(repo_id)
