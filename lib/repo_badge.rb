@@ -19,7 +19,7 @@ class RepoBadge
   end
 
   def build_date
-    build.ended_at.strftime("%Y/%m/%d")
+    (build.ended_at || Time.now).strftime("%Y/%m/%d")
   end 
 
   def color
