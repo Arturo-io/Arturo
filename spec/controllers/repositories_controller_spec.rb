@@ -288,7 +288,7 @@ describe RepositoriesController do
 
     it 'redirects after a follow and unfollow' do
       put :follow, id: 99 
-      assert_redirected_to repositories_path
+      assert_redirected_to repositories_show_path(99)
 
       delete :unfollow, id: 99 
       assert_redirected_to repositories_path

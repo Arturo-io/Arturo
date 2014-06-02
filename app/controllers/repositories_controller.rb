@@ -47,7 +47,7 @@ class RepositoriesController < ApplicationController
 
     Follower.create(user: current_user, repo: repo)
     GithubCreateHookWorker.perform_async(repo[:id])
-    redirect_to repositories_path, notice: "You are now following #{repo.name}"
+    redirect_to repositories_show_path(repo), notice: "You are now following #{repo.name}"
   end
 
   def unfollow
