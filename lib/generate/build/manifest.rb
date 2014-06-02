@@ -22,6 +22,7 @@ module Generate
          .with_indifferent_access
          .tap do |opts|
           opts.delete(:pages)
+          opts.delete(:author)
         end
       end
 
