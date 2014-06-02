@@ -4,7 +4,6 @@ class Notifier < ActionMailer::Base
   def send_failed_hook_create(repo_id)
     @repo = Repo.find(repo_id)
     @user = @repo.user
-    
     mail(to: @user.email, subject: 'Failed to create a webhook')
   end
 
