@@ -1,5 +1,6 @@
 class HooksController < ApplicationController
   def github
+    render(nothing: true) and return if params[:zen].present?
     repo_id = params[:repository][:id]
     sha     = params[:head_commit][:id]
     branch  = params[:ref] && params[:ref].split('/').last

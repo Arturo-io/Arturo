@@ -27,6 +27,11 @@ describe HooksController do
       get :github,  repository: { id: 99}, head_commit: { id: 'abc1234'}
     end
 
+    it 'skips zen payload' do
+      get :github, zen: 'Speak like a human.'
+      assert_response :success
+    end
+
     it 'sends the compare url for the commit' do
       expect(QueueBuild).to receive(:queue_build) do |_repo, options|
         expect(options[:before]).to eq('123')
