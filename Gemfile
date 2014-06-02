@@ -30,6 +30,7 @@ gem 'intercom-rails', '~> 0.2.24'
 gem 'newrelic_rpm'
 
 gem 'rails-assets-momentjs'
+gem 'sinatra'
 
 group :development do
   gem 'spring'
@@ -37,7 +38,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'sinatra'
   gem 'dotenv-rails'
   gem 'rspec',  '~> 3.0.0.beta2'
   gem 'rspec-rails',  '~> 3.0.0.beta2'
