@@ -12,7 +12,7 @@ class Generate::Manifest
   end
 
   def pages
-    config[:pages]
+    config.try(:pages) || []
   end
 
   def book_content
