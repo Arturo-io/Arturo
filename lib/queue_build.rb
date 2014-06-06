@@ -19,16 +19,15 @@ class QueueBuild
   end
   
   def create_build_from_github
-    Build.new(branch:        repo[:default_branch],
-              repo:          repo,
-              started_at:    Time.now,
-              commit:        commit.sha,
-              author:        commit.author.name,
-              author_url:    commit.author.rels[:html].href,
-              author_avatar: commit.author.rels[:avatar].href,
-              message:       commit.commit.message,
-              commit_url:    commit.rels[:html].href,
-              status:        :queued)
+    options = { branch:        repo[:default_branch],
+                repo:          repo,
+                started_at:    Time.now,
+                commit:        commit.sha,
+                message:       commit.commit.message,
+                commit_url:    commit.rels[:html].href,
+                status:        :queued }
+    options.merge! author(commit)
+    Build.new(options)
   end
 
   def commit
@@ -43,7 +42,24 @@ class QueueBuild
     repo.cancel_builds
   end
 
+  def author(commit)
+    author = commit.try(:author)
+    if author
+      {author:        commit.author.name,
+       author_url:    commit.author.rels[:html].href,
+       author_avatar: commit.author.rels[:avatar].href}
+    else
+      default_author
+    end
+  end
+
   private
+  def default_author
+    {author:        'N/A',
+     author_url:    '',
+     author_avatar: ''}
+  end
+
   def queue_worker(build)
     job_id = BuildWorker.perform_async(build[:id])
     build.update(job_id: job_id)

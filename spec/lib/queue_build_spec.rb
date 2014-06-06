@@ -84,6 +84,16 @@ describe QueueBuild do
       end
     end
 
+    context '#author' do
+      it 'returns an author struct' do
+        commit = {author: nil}
+        output = @instance.author(commit)
+        expect(output[:author]).to eq('N/A')
+        expect(output[:author_url]).to eq('')
+        expect(output[:author_avatar]).to eq('')
+      end
+    end
+
     context '#execute' do
       before do
         @double = double("build")
@@ -94,6 +104,25 @@ describe QueueBuild do
         allow(@instance).to receive(:cancel_previous_builds)
         allow(@instance).to receive(:queue_worker)
         allow(@instance).to receive(:create_build_from_github).and_return(@double)
+      end
+
+      it 'sends the right author' do
+        fake_author = {author: 'some_author',
+                       author_url: 'some_url',
+                       author_avatar: 'some_url'}
+
+        commit = double().as_null_object
+        allow(@instance).to receive(:create_build_from_github).and_call_original
+        allow(@instance).to receive(:author).and_return(fake_author)
+        allow(@instance).to receive(:commit).and_return(commit)
+
+        expect(Build).to receive(:new).with(anything) do |options|
+          expect(options[:author]).to eq('some_author')
+          expect(options[:author_url]).to eq('some_url')
+          expect(options[:author_avatar]).to eq('some_url')
+        end
+
+        @instance.execute
       end
 
       it 'calls assign_and_update' do
