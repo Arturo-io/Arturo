@@ -17,12 +17,13 @@ describe Generate::Build::Manifest do
 
   context '#pages' do
     it 'returns a list of pages from the config' do
-      allow_any_instance_of(Generate::Manifest).to receive(:pages)
-        .and_return(['first.md','second.md'])
+      allow_any_instance_of(Generate::Manifest).to receive(:config)
+        .and_return(pages: ['first.md','second.md'])
 
       pages = @build.pages("ortuna/some_repo", "some_sha")
       expect(pages).to eq(['first.md', 'second.md'])
     end
+
   end
 
   context '#content' do
