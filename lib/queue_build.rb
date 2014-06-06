@@ -23,7 +23,7 @@ class QueueBuild
               repo:          repo,
               started_at:    Time.now,
               commit:        commit.sha,
-              author:        commit.author.login || commit.author.name,
+              author:        commit.author.name,
               author_url:    commit.author.rels[:html].href,
               author_avatar: commit.author.rels[:avatar].href,
               message:       commit.commit.message,
