@@ -24,7 +24,12 @@ describe Generate::Manifest do
 
       allow(manifest).to receive(:read_config) { raise Octokit::NotFound }
       expect(manifest.has_manifest?).to eq(false)
+
+      allow(manifest).to receive(:read_config) { raise }
+      expect(manifest.has_manifest?).to eq(false)
+
     end
+
   end
 
   context '#pages' do

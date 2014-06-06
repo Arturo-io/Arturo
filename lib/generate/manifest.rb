@@ -27,7 +27,7 @@ class Generate::Manifest
 
   def has_manifest?
     return true if read_config 
-  rescue Octokit::NotFound
+  rescue
     false
   end
 
