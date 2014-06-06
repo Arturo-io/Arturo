@@ -45,7 +45,7 @@ class QueueBuild
   def author(commit)
     author = commit.try(:author)
     if author
-      {author:        commit.author.name,
+      {author:        commit.author.login,
        author_url:    commit.author.rels[:html].href,
        author_avatar: commit.author.rels[:avatar].href}
     else
